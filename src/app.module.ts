@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DepartamentosModule } from './departamentos/departamentos.module';
+import { UsuarioModule } from './usuario/usuario.module';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { DepartamentosModule } from './departamentos/departamentos.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env'
-    }), DepartamentosModule, 
+    }), DepartamentosModule, UsuarioModule, 
 
   ],
   controllers: [AppController],
