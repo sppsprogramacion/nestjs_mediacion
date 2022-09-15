@@ -7,6 +7,7 @@ import { TYPEORM_CONFIG } from './config/constants';
 import databaseConfig from './config/database.config';
 import { DepartamentosModule } from './departamentos/departamentos.module';
 import { UsuarioModule } from './usuario/usuario.module';
+import { ProvinciasModule } from './provincias/provincias.module';
 
 @Module({
   imports: [
@@ -35,7 +36,7 @@ import { UsuarioModule } from './usuario/usuario.module';
       isGlobal: true,
       load: [databaseConfig],
       envFilePath: '.env'
-    }), DepartamentosModule, UsuarioModule, 
+    }), DepartamentosModule, UsuarioModule, ProvinciasModule, 
 
   ],
   controllers: [AppController],
