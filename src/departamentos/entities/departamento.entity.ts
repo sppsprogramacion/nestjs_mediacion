@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Provincia } from '../../provincias/entities/provincia.entity';
 
 @Entity('departamentos')
 export class Departamento {
@@ -13,4 +14,19 @@ export class Departamento {
         unique: true
     })
     departamento: string;
+
+    //PROVINCIA
+    @Column({
+        type: "int",
+        nullable:false
+    })
+    provincia_id: number;
+
+    @ManyToOne(type => Provincia,{eager : true})
+    @JoinColumn({
+        name : 'provincia_id',
+        referencedColumnName : 'id_provincia'
+    })
+    provincia : Provincia;
+    //FIN PROINCIA............................
 }

@@ -8,6 +8,7 @@ import databaseConfig from './config/database.config';
 import { DepartamentosModule } from './departamentos/departamentos.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { ProvinciasModule } from './provincias/provincias.module';
+import { MunicipiosModule } from './municipios/municipios.module';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import { ProvinciasModule } from './provincias/provincias.module';
       isGlobal: true,
       load: [databaseConfig],
       envFilePath: '.env'
-    }), DepartamentosModule, UsuarioModule, ProvinciasModule, 
+    }), DepartamentosModule, UsuarioModule, ProvinciasModule, MunicipiosModule, 
 
   ],
   controllers: [AppController],

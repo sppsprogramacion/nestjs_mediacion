@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put } from '@nestjs/common';
 import { DepartamentosService } from './departamentos.service';
 import { CreateDepartamentoDto } from './dto/create-departamento.dto';
 import { UpdateDepartamentoDto } from './dto/update-departamento.dto';
@@ -8,8 +8,8 @@ export class DepartamentosController {
   constructor(private readonly departamentosService: DepartamentosService) {}
 
   @Post()
-  create(@Body() createDepartamentoDto: CreateDepartamentoDto) {
-    return this.departamentosService.create(createDepartamentoDto);
+  create(@Body() data: CreateDepartamentoDto) {
+    return this.departamentosService.create(data);
   }
 
   @Get()
@@ -19,16 +19,26 @@ export class DepartamentosController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.departamentosService.findOne(+id);
+    
+    if(isNaN(Number(id))) throw new NotFoundException("El id del departamento debe ser un número.")
+    let id_departamento: number = parseFloat(id);
+    if(!Number.isInteger(id_departamento)) throw new NotFoundException("El id del departamento debe ser un número entero.")
+    return this.departamentosService.findOne(id_departamento);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDepartamentoDto: UpdateDepartamentoDto) {
-    return this.departamentosService.update(+id, updateDepartamentoDto);
+  @Put(':id')
+  update(@Param('id') id: string, @Body() dataDto: UpdateDepartamentoDto) {
+    if(isNaN(Number(id))) throw new NotFoundException("El id del departamento debe ser un número.")
+    let id_departamento: number = parseFloat(id);
+    if(!Number.isInteger(id_departamento)) throw new NotFoundException("El id del departamento debe ser un número entero.")
+    return this.departamentosService.update(id_departamento, dataDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.departamentosService.remove(+id);
+    if(isNaN(Number(id))) throw new NotFoundException("El id del departamento debe ser un número.")
+    let id_departamento: number = parseFloat(id);
+    if(!Number.isInteger(id_departamento)) throw new NotFoundException("El id del departamento debe ser un número entero.")
+    return this.departamentosService.remove(id_departamento);
   }
 }
