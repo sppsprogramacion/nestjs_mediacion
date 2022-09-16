@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Provincia } from '../../provincias/entities/provincia.entity';
+import { Municipio } from '../../municipios/entities/municipio.entity';
 
 @Entity('departamentos')
 export class Departamento {
@@ -29,4 +30,9 @@ export class Departamento {
     })
     provincia : Provincia;
     //FIN PROINCIA............................
+
+    //MUNICIPIOS
+    @OneToMany(() => Municipio, (municipio) => municipio.departamento)
+    municipios : Municipio[];
+    //FIN MUNICIPIOS
 }

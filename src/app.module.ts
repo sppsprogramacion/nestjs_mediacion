@@ -9,6 +9,8 @@ import { DepartamentosModule } from './departamentos/departamentos.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { ProvinciasModule } from './provincias/provincias.module';
 import { MunicipiosModule } from './municipios/municipios.module';
+import { CiudadanosModule } from './ciudadanos/ciudadanos.module';
+import { ConvocadosModule } from './convocados/convocados.module';
 
 @Module({
   imports: [
@@ -37,7 +39,7 @@ import { MunicipiosModule } from './municipios/municipios.module';
       isGlobal: true,
       load: [databaseConfig],
       envFilePath: '.env'
-    }), DepartamentosModule, UsuarioModule, ProvinciasModule, MunicipiosModule, 
+    }), DepartamentosModule, UsuarioModule, ProvinciasModule, MunicipiosModule, CiudadanosModule, ConvocadosModule, 
 
   ],
   controllers: [AppController],
