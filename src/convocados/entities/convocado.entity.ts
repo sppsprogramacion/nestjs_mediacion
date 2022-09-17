@@ -118,7 +118,7 @@ export class Convocado {
     @Column({
         type: 'varchar',
         length: 200,
-        nullable: false
+        nullable: true
     })
     correo:string;
 }

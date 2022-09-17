@@ -18,7 +18,7 @@ async function bootstrap() {
   }));
   app.enableCors();
 
-  await app.listen(port);  
+  await app.listen(3000);  
   const logger = new Logger();
   logger.log(`corriendo en el servidor ${await app.getUrl()}`)
 }

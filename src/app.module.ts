@@ -39,7 +39,13 @@ import { ConvocadosModule } from './convocados/convocados.module';
       isGlobal: true,
       load: [databaseConfig],
       envFilePath: '.env'
-    }), DepartamentosModule, UsuarioModule, ProvinciasModule, MunicipiosModule, CiudadanosModule, ConvocadosModule, 
+    }), 
+    DepartamentosModule, 
+    UsuarioModule, 
+    ProvinciasModule, 
+    MunicipiosModule, 
+    CiudadanosModule, 
+    ConvocadosModule, 
 
   ],
   controllers: [AppController],
