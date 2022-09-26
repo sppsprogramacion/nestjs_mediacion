@@ -11,6 +11,9 @@ import { ProvinciasModule } from './provincias/provincias.module';
 import { MunicipiosModule } from './municipios/municipios.module';
 import { CiudadanosModule } from './ciudadanos/ciudadanos.module';
 import { ConvocadosModule } from './convocados/convocados.module';
+import { SexoModule } from './sexo/sexo.module';
+import { CentrosMediacionModule } from './centros-mediacion/centros-mediacion.module';
+import { UsuariosCentrosModule } from './usuarios-centros/usuarios-centros.module';
 
 @Module({
   imports: [
@@ -40,12 +43,16 @@ import { ConvocadosModule } from './convocados/convocados.module';
       load: [databaseConfig],
       envFilePath: '.env'
     }), 
-    DepartamentosModule, 
-    UsuarioModule, 
-    ProvinciasModule, 
-    MunicipiosModule, 
+    CentrosMediacionModule,
     CiudadanosModule, 
-    ConvocadosModule, 
+    ConvocadosModule,
+    DepartamentosModule, 
+    MunicipiosModule,
+    ProvinciasModule,
+    SexoModule,
+    UsuarioModule,
+    UsuariosCentrosModule,
+         
 
   ],
   controllers: [AppController],

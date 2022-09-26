@@ -119,9 +119,10 @@ export class Ciudadano {
     @Column({
         type: 'varchar',
         length: 200,
+        unique: true,
         nullable: false
     })
-    correo:string;
+    email:string;
 
     @Column({
         type: 'varchar',

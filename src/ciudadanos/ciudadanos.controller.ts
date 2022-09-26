@@ -50,7 +50,7 @@ export class CiudadanosController {
     return this.ciudadanosService.update(dnix, dataDto);
   }
 
-  @Delete(':id')
+  @Delete(':dni')
   remove(@Param('dni') dni: string) {
     if(isNaN(Number(dni))) throw new NotFoundException("El dni debe ser un número.")
     let dnix: number = parseFloat(dni);

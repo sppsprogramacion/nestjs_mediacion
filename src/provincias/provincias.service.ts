@@ -33,7 +33,7 @@ export class ProvinciasService {
   async findOne(id: number) {
 
     const respuesta = await this.provinciasRepository.findOneBy({id_provincia: id});
-    if (!respuesta) throw new NotFoundException("No se encontró el registro de movimiento de tramite solicitado.");
+    if (!respuesta) throw new NotFoundException("No se encontró el registro de provincia solicitado.");
     return respuesta;
   }
   //FIN BUSCAR  XID..................................................................

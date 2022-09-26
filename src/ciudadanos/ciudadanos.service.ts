@@ -16,7 +16,15 @@ export class CiudadanosService {
     const existe = await this.ciudadanoRepository.findOneBy({dni: data.dni});
     if(existe) throw new BadRequestException ("El dni del ciudadano que intenta crear ya existe.");
     const nuevo = await this.ciudadanoRepository.create(data);
-    return await this.ciudadanoRepository.save(nuevo);
+    try {
+      return await this.ciudadanoRepository.save(nuevo);
+    } catch (error) {
+      if(error.code=='ER_DUP_ENTRY'){
+        const existe = await this.ciudadanoRepository.findOneBy({email: data.email});
+        if(existe) throw new BadRequestException ("El email que se intentó crear ya existe. Intente guardar nuevamente");
+      }      
+      throw new NotFoundException('Error al crear el nuevo ciudadano: ',error.message);  
+    }       
   }
 
   async findAll() {

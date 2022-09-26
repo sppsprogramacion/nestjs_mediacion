@@ -1,20 +1,9 @@
 import { IsInt, IsNotEmpty, Length, Matches, MaxLength } from "class-validator";
 
-export class CreateConvocadoDto {
-    @IsInt({message: "El dni debe ser un número entero."})
-    dni: number;
-
-    @Length(1,100,{message: "El apellido debe tener entre $constraint1 y $constraint2 caracteres."})
-    @IsNotEmpty({message: "Debe ingresar el apellido."})
-    apellido: string;
-
-    @Length(1,100,{message: "El nombre debe tener entre $constraint1 y $constraint2 caracteres."})
-    @IsNotEmpty({message: "Debe ingresar el nombre."})
-    nombre: string;
-
-    @IsInt({message: "El id de provincia debe ser un número entero"})
-    @IsNotEmpty({message: "Debe ingresar el id de provincia."})
-    provincia_id: number;
+export class CreateCentroMediacionDto {
+    @Length(1,100,{message: "El centro de mediación debe tener entre $constraint1 y $constraint2 caracteres."})
+    @IsNotEmpty({message: "Debe ingresar el centro de mediación."})
+    centro_mediacion: string;   
 
     @IsInt({message: "El id de departamento debe ser un número entero."})
     @IsNotEmpty({message: "Debe ingresar el id de departamento."})
@@ -30,13 +19,7 @@ export class CreateConvocadoDto {
 
     @MaxLength(100,{message: "La calle debe tener hasta $constraint1 caracteres."})
     calle: string;
-
-    @MaxLength(50,{message: "El departamento de domicilio debe tener hasta  $constraint1 caracteres."})
-    departamento_dom: string
-
-    @MaxLength(10,{message: "El piso debe tener hasta $constraint1 caracteres."})
-    piso: string;
-
+    
     @IsInt({message: "El numero de domicilio debe ser un número entero."})
     @IsNotEmpty({message: "Debe ingresar el numero de domicilio."})
     numero_dom: number;
@@ -45,7 +28,7 @@ export class CreateConvocadoDto {
     @IsNotEmpty({message: "Debe ingresar el teléfono."})
     telefono: string;
 
-    @Matches(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/,{message:'El formato del email no es válido.'})
+    @Matches(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/,{message:'El formato del email no es válido'})
     @Length(1,200,{message: "El correo debe tener entre $constraint1 y $constraint2 caracteres."})
     @IsNotEmpty({message: "Debe ingresar el correo."})
     email:string;

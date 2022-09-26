@@ -1,48 +1,20 @@
 import { Departamento } from "src/departamentos/entities/departamento.entity";
 import { Municipio } from "src/municipios/entities/municipio.entity";
-import { Provincia } from "src/provincias/entities/provincia.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity('convocados')
-export class Convocado {
-    
+@Entity('centros_mediacion')
+export class CentroMediacion {
+
     @PrimaryGeneratedColumn()
-    id_convocado: number;
+    id_centro_mediacion: number;
 
     @Column({
-        type: 'int',
-        nullable: true
-    })
-    dni: number;
-
-    @Column({
-        type:'varchar',
+        type: 'varchar',
         length: 100,
-        nullable: false
+        nullable: false,
+        unique: true
     })
-    apellido: string;
-
-    @Column({
-        type:'varchar',
-        length: 100,
-        nullable: false
-    })
-    nombre: string;
-
-    //PROVINCIA
-    @Column({
-        type: 'int',
-        nullable: false
-    })
-    provincia_id: number;
-
-    @ManyToOne(type => Provincia, {eager: true} )
-    @JoinColumn({
-        name: 'provincia_id',
-        referencedColumnName: 'id_provincia'
-    })
-    provincia: Provincia;
-    //FIN PROVINCIA
+    centro_mediacion: string;
 
     //DEPARTAMENTO
     @Column({
@@ -86,21 +58,7 @@ export class Convocado {
         length: 100,
         nullable: true
     })
-    calle: string;
-
-    @Column({
-        type: 'varchar',
-        length: 50,
-        nullable: true
-    })
-    departamento_dom: string
-
-    @Column({
-        type: 'varchar',
-        length: 10,
-        nullable: true
-    })
-    piso: string;
+    calle: string;    
 
     @Column({
         type: 'int',
@@ -113,13 +71,13 @@ export class Convocado {
         length: 100,
         nullable: true
     })
-    telefono: string;    
+    telefono: string;
 
     @Column({
         type: 'varchar',
         length: 200,
-        nullable: true,
-        unique: true
+        unique: true,
+        nullable: false
     })
     email:string;
 }
