@@ -28,11 +28,11 @@ export class UsuarioCentro {
         type: 'int',
         nullable: false
     })
-    usuario_dni: number
+    dni_usuario: number
 
     @ManyToOne(type => Usuario, {eager:true})
     @JoinColumn({
-        name: 'usuario_dni',
+        name: 'dni_usuario',
         referencedColumnName: 'dni'
     })
     usuario: Usuario;
@@ -53,9 +53,9 @@ export class UsuarioCentro {
 
     @Column({
         type: "boolean",
+        default: true
     })
     activo: boolean;
-
 
     
 }

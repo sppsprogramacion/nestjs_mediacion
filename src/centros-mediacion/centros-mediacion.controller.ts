@@ -31,18 +31,18 @@ export class CentrosMediacionController {
 
 
   @Put(':id')
-  update(@Param('id') dni: string, @Body() dataDto: UpdateCentroMediacionDto) {
-    if(isNaN(Number(dni))) throw new NotFoundException("El id debe ser un número.")
-    let id_centro: number = parseFloat(dni);
-    if(!Number.isInteger(id_centro)) throw new NotFoundException("El id debe ser un número entero.")
-    return this.centrosMediacionService.update(id_centro, dataDto);
+  update(@Param('id') id: string, @Body() dataDto: UpdateCentroMediacionDto) {
+    if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")
+    let idx: number = parseFloat(id);
+    if(!Number.isInteger(idx)) throw new NotFoundException("El id debe ser un número entero.")
+    return this.centrosMediacionService.update(idx, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') dni: string) {
-    if(isNaN(Number(dni))) throw new NotFoundException("El id debe ser un número.")
-    let dnix: number = parseFloat(dni);
-    if(!Number.isInteger(dnix)) throw new NotFoundException("El id debe ser un número entero.")
-    return this.centrosMediacionService.remove(dnix);
+  remove(@Param('id') id: string) {
+    if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")
+    let idx: number = parseFloat(id);
+    if(!Number.isInteger(idx)) throw new NotFoundException("El id debe ser un número entero.")
+    return this.centrosMediacionService.remove(idx);
   }
 }

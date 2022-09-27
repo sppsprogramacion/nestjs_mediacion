@@ -14,6 +14,9 @@ import { ConvocadosModule } from './convocados/convocados.module';
 import { SexoModule } from './sexo/sexo.module';
 import { CentrosMediacionModule } from './centros-mediacion/centros-mediacion.module';
 import { UsuariosCentrosModule } from './usuarios-centros/usuarios-centros.module';
+import { VinculdadosModule } from './vinculdados/vinculdados.module';
+import { CategoriasModule } from './categorias/categorias.module';
+import { ObjetosModule } from './objetos/objetos.module';
 
 @Module({
   imports: [
@@ -42,16 +45,21 @@ import { UsuariosCentrosModule } from './usuarios-centros/usuarios-centros.modul
       isGlobal: true,
       load: [databaseConfig],
       envFilePath: '.env'
-    }), 
+    }),
+    CategoriasModule, 
     CentrosMediacionModule,
     CiudadanosModule, 
     ConvocadosModule,
     DepartamentosModule, 
     MunicipiosModule,
+    ObjetosModule,
     ProvinciasModule,
     SexoModule,
     UsuarioModule,
     UsuariosCentrosModule,
+    VinculdadosModule,
+    
+    
          
 
   ],

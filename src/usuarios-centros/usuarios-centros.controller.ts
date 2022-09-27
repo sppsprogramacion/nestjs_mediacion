@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, NotFoundException, Put } from '@nestjs/common';
+import { Request } from 'express';
 import { UsuariosCentrosService } from './usuarios-centros.service';
 import { CreateUsuarioCentroDto } from './dto/create-usuario-centro.dto';
 import { UpdateUsuarioCentroDto } from './dto/update-usuario-centro.dto';
@@ -8,8 +9,8 @@ export class UsuariosCentrosController {
   constructor(private readonly usuariosCentrosService: UsuariosCentrosService) {}
 
   @Post()
-  create(@Body() createUsuariosCentroDto: CreateUsuarioCentroDto) {
-    return this.usuariosCentrosService.create(createUsuariosCentroDto);
+  create(@Body() data: CreateUsuarioCentroDto) {
+    return this.usuariosCentrosService.create(data);
   }
 
   @Get()
@@ -19,16 +20,28 @@ export class UsuariosCentrosController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usuariosCentrosService.findOne(+id);
+    
+    if(isNaN(Number(id))) throw new NotFoundException("El id del usuario-centro debe ser un número.")
+    let idx: number = parseFloat(id);
+    if(!Number.isInteger(idx)) throw new NotFoundException("El id del usuario-centro debe ser un número entero.")
+    return this.usuariosCentrosService.findOne(idx);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUsuariosCentroDto: UpdateUsuarioCentroDto) {
-    return this.usuariosCentrosService.update(+id, updateUsuariosCentroDto);
+
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() dataDto: UpdateUsuarioCentroDto) {
+    if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")
+    let idx: number = parseFloat(id);
+    if(!Number.isInteger(idx)) throw new NotFoundException("El id debe ser un número entero.")
+    return this.usuariosCentrosService.update(idx, dataDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usuariosCentrosService.remove(+id);
+    if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")
+    let idx: number = parseFloat(id);
+    if(!Number.isInteger(idx)) throw new NotFoundException("El id debe ser un número entero.")
+    return this.usuariosCentrosService.remove(idx);
   }
 }
