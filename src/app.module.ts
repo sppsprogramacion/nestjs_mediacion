@@ -17,6 +17,7 @@ import { UsuariosCentrosModule } from './usuarios-centros/usuarios-centros.modul
 import { VinculdadosModule } from './vinculdados/vinculdados.module';
 import { CategoriasModule } from './categorias/categorias.module';
 import { ObjetosModule } from './objetos/objetos.module';
+import { ModalidadModule } from './modalidad/modalidad.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { ObjetosModule } from './objetos/objetos.module';
     UsuarioModule,
     UsuariosCentrosModule,
     VinculdadosModule,
+    ModalidadModule,
     
     
          
