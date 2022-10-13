@@ -18,6 +18,8 @@ import { VinculdadosModule } from './vinculdados/vinculdados.module';
 import { CategoriasModule } from './categorias/categorias.module';
 import { ObjetosModule } from './objetos/objetos.module';
 import { ModalidadModule } from './modalidad/modalidad.module';
+import { TiposAudienciaModule } from './tipos-audiencia/tipos-audiencia.module';
+import { VariantesModule } from './variantes/variantes.module';
 
 @Module({
   imports: [
@@ -60,6 +62,8 @@ import { ModalidadModule } from './modalidad/modalidad.module';
     UsuariosCentrosModule,
     VinculdadosModule,
     ModalidadModule,
+    TiposAudienciaModule,
+    VariantesModule,
     
     
          
