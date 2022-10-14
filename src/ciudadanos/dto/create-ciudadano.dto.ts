@@ -14,6 +14,10 @@ export class CreateCiudadanoDto {
     @IsNotEmpty({message: "Debe ingresar el nombre."})
     nombre: string;
 
+    @IsInt({message: "El id de sexo debe ser un número entero"})
+    @IsNotEmpty({message: "Debe ingresar el id de sexo."})
+    sexo_id: number;
+
     @IsInt({message: "El id de provincia debe ser un número entero"})
     @IsNotEmpty({message: "Debe ingresar el id de provincia."})
     provincia_id: number;
