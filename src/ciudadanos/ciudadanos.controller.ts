@@ -10,6 +10,7 @@ export class CiudadanosController {
 
   @Post()
   create(@Body() data: CreateCiudadanoDto) {
+    data.fecha_nac= new Date();
     return this.ciudadanosService.create(data);
   }
 

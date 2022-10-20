@@ -97,21 +97,7 @@ export class Ciudadano {
         length: 100,
         nullable: true
     })
-    calle: string;
-
-    @Column({
-        type: 'varchar',
-        length: 50,
-        nullable: true
-    })
-    departamento_dom: string
-
-    @Column({
-        type: 'varchar',
-        length: 10,
-        nullable: true
-    })
-    piso: string;
+    calle_direccion: string;
 
     @Column({
         type: 'int',

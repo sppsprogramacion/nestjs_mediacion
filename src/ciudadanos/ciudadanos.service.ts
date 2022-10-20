@@ -13,6 +13,7 @@ export class CiudadanosService {
   ){}
 
   async create(data: CreateCiudadanoDto): Promise<Ciudadano> {
+    
     const existe = await this.ciudadanoRepository.findOneBy({dni: data.dni});
     if(existe) throw new BadRequestException ("El dni del ciudadano que intenta crear ya existe.");
     const nuevo = await this.ciudadanoRepository.create(data);
@@ -23,7 +24,7 @@ export class CiudadanosService {
         const existe = await this.ciudadanoRepository.findOneBy({email: data.email});
         if(existe) throw new BadRequestException ("El email que se intentó crear ya existe. Intente guardar nuevamente");
       }      
-      throw new NotFoundException('Error al crear el nuevo ciudadano: ',error.message);  
+      throw new NotFoundException(error.message);  
     }       
   }
 
