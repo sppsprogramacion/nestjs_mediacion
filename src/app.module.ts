@@ -20,6 +20,7 @@ import { ObjetosModule } from './objetos/objetos.module';
 import { ModalidadModule } from './modalidad/modalidad.module';
 import { TiposAudienciaModule } from './tipos-audiencia/tipos-audiencia.module';
 import { VariantesModule } from './variantes/variantes.module';
+import { TramitesModule } from './tramites/tramites.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { VariantesModule } from './variantes/variantes.module';
     ModalidadModule,
     TiposAudienciaModule,
     VariantesModule,
+    TramitesModule,
     
     
          
