@@ -1,19 +1,31 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Objeto } from '../../objetos/entities/objeto.entity';
 import { Modalidad } from '../../modalidad/entities/modalidad.entity';
 import { Variante } from '../../variantes/entities/variante.entity';
+import { EstadoTramite } from '../../estados-tramite/entities/estados-tramite.entity';
+import { Ciudadano } from '../../ciudadanos/entities/ciudadano.entity';
 
 
 @Entity('tramites')
 export class Tramite {
-    @PrimaryGeneratedColumn()
-    id_tramite: number;
+    @PrimaryColumn()
+    numero_tramite: number;
 
+    //CIUDADANO
     @Column({
-        type: "boolean",
-        default: false
+        type: "int",
+        nullable:false,
+        default: 1
     })
-    esta_asesorado: boolean;
+    dni_ciudadano: number;
+
+    @ManyToOne(type => Ciudadano,{eager : true})
+    @JoinColumn({
+        name : 'dni_ciudadano',
+        referencedColumnName : 'dni'
+    })
+    ciudadano : Ciudadano;
+    //FIN CIUDADANO..................................
 
     @Column({
         type: 'date',
@@ -37,10 +49,16 @@ export class Tramite {
 
     @Column({
         type: 'date',
-        nullable: false
+        nullable: true
     })
     fecha_expediente: Date;
 
+    @Column({
+        type: "boolean",
+        default: false
+    })
+    esta_asesorado: boolean;
+    
     //OBJETO
     @Column({
         type: "int",
@@ -133,6 +151,23 @@ export class Tramite {
     })
     variante : Variante;
     //FIN VARIANTE............................
+    
+    //ESTADO TRAMITE
+    @Column({
+        type: "int",
+        nullable:false,
+        default: 1
+    })
+    estado_tramite_id: number;
+
+    @ManyToOne(type => EstadoTramite,{eager : true})
+    @JoinColumn({
+        name : 'estado_tramite_id',
+        referencedColumnName : 'id_estado_tramite'
+    })
+    estado_tramite : EstadoTramite;
+    //FIN ESTADO TRAMITE............................
+
     
 
 }

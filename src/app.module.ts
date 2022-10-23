@@ -21,6 +21,7 @@ import { ModalidadModule } from './modalidad/modalidad.module';
 import { TiposAudienciaModule } from './tipos-audiencia/tipos-audiencia.module';
 import { VariantesModule } from './variantes/variantes.module';
 import { TramitesModule } from './tramites/tramites.module';
+import { EstadosTramiteModule } from './estados-tramite/estados-tramite.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { TramitesModule } from './tramites/tramites.module';
     TiposAudienciaModule,
     VariantesModule,
     TramitesModule,
+    EstadosTramiteModule,
     
     
          

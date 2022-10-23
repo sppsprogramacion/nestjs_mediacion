@@ -40,6 +40,12 @@ export class Ciudadano {
     sexo: Sexo;
     //FIN SEXO
 
+    @Column({
+        type: 'date',
+        nullable: false
+    })
+    fecha_nac: Date;
+
     //PROVINCIA
     @Column({
         type: 'int',
@@ -110,13 +116,7 @@ export class Ciudadano {
         length: 100,
         nullable: true
     })
-    telefono: string;
-
-    @Column({
-        type: 'date',
-        nullable: false
-    })
-    fecha_nac: Date;
+    telefono: string;    
 
     @Column({
         type: 'varchar',
