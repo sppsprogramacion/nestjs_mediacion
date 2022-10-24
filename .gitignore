@@ -1,6 +1,6 @@
 !.env.sample
 .env*
-# compiled output
+# compiled output -
 /dist
 /node_modules
 
