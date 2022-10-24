@@ -27,8 +27,6 @@ export class UsuariosCentrosController {
     return this.usuariosCentrosService.findOne(idx);
   }
 
-
-
   @Put(':id')
   update(@Param('id') id: string, @Body() dataDto: UpdateUsuarioCentroDto) {
     if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")
