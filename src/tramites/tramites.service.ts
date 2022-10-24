@@ -65,6 +65,22 @@ export class TramitesService {
     );
   }
 
+  //BUSCAR TRAMITES NUEVOS
+  async findNuevos() {
+    const tramites = await this.tramiteRepository.findAndCount(
+      {
+        
+        where: {
+          estado_tramite_id: 1
+        }
+      }
+    );   
+    console.log(tramites);
+
+    return tramites;
+  }
+  //FIN BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE Y SECTOR..........................................
+
   //BUSCAR  Xnumero tramite
   async findXNumeroTramite(numero_tramitex: number) {
 

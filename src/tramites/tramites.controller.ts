@@ -48,6 +48,18 @@ export class TramitesController {
     return this.tramitesService.findXNumeroTramite(numero_tramitex);
   }
   
+  //BUSCAR TRAMITES NUEVOS
+  @Get('nuevos')
+  async findNuevos(
+    @Req()
+    req: Request
+  ) {
+    // let sector: number = parseInt(req.query.id_sector.toString());
+    // if(isNaN(sector)) throw new NotFoundException("El id de sector no es un número entero");
+    return this.tramitesService.findNuevos();
+  }
+  //BUSCAR TRAMITES NUEVOS.....................................................
+
 
   @Get()
   findAll() {
