@@ -7,6 +7,23 @@ import { TYPEORM_CONFIG } from './config/constants';
 import databaseConfig from './config/database.config';
 import { DepartamentosModule } from './departamentos/departamentos.module';
 import { UsuarioModule } from './usuario/usuario.module';
+import { ProvinciasModule } from './provincias/provincias.module';
+import { MunicipiosModule } from './municipios/municipios.module';
+import { CiudadanosModule } from './ciudadanos/ciudadanos.module';
+import { ConvocadosModule } from './convocados/convocados.module';
+import { SexoModule } from './sexo/sexo.module';
+import { CentrosMediacionModule } from './centros-mediacion/centros-mediacion.module';
+import { UsuariosCentrosModule } from './usuarios-centros/usuarios-centros.module';
+import { VinculdadosModule } from './vinculdados/vinculdados.module';
+import { CategoriasModule } from './categorias/categorias.module';
+import { ObjetosModule } from './objetos/objetos.module';
+import { ModalidadModule } from './modalidad/modalidad.module';
+import { TiposAudienciaModule } from './tipos-audiencia/tipos-audiencia.module';
+import { VariantesModule } from './variantes/variantes.module';
+import { TramitesModule } from './tramites/tramites.module';
+import { EstadosTramiteModule } from './estados-tramite/estados-tramite.module';
+import { FuncionTramiteModule } from './funcion-tramite/funcion-tramite.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -35,7 +52,29 @@ import { UsuarioModule } from './usuario/usuario.module';
       isGlobal: true,
       load: [databaseConfig],
       envFilePath: '.env'
-    }), DepartamentosModule, UsuarioModule, 
+    }),
+    CategoriasModule, 
+    CentrosMediacionModule,
+    CiudadanosModule, 
+    ConvocadosModule,
+    DepartamentosModule, 
+    MunicipiosModule,
+    ObjetosModule,
+    ProvinciasModule,
+    SexoModule,
+    UsuarioModule,
+    UsuariosCentrosModule,
+    VinculdadosModule,
+    ModalidadModule,
+    TiposAudienciaModule,
+    VariantesModule,
+    TramitesModule,
+    EstadosTramiteModule,
+    FuncionTramiteModule,
+    AuthModule,
+    
+    
+         
 
   ],
   controllers: [AppController],
