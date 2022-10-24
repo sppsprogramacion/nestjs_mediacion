@@ -24,6 +24,7 @@ import { TramitesModule } from './tramites/tramites.module';
 import { EstadosTramiteModule } from './estados-tramite/estados-tramite.module';
 import { FuncionTramiteModule } from './funcion-tramite/funcion-tramite.module';
 import { AuthModule } from './auth/auth.module';
+import { UsuariosTramiteModule } from './usuarios-tramite/usuarios-tramite.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { AuthModule } from './auth/auth.module';
     EstadosTramiteModule,
     FuncionTramiteModule,
     AuthModule,
+    UsuariosTramiteModule,
     
     
          

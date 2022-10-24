@@ -11,6 +11,8 @@ export class UsuariosCentrosService {
     @InjectRepository(UsuarioCentro)
     private readonly usuariosCentroRepository: Repository<UsuarioCentro>
   ){}
+
+  
   async create(data: CreateUsuarioCentroDto): Promise<UsuarioCentro> {
     // const existe = await this.usuariosCentroRepository.findOne(
     //   {
