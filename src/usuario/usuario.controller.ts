@@ -14,7 +14,7 @@ export class UsuarioController {
   }
 
   @Get('buscar-xdni')  
-  async findCiudadanoXDni(
+  async findUsuarioXDni(
     @Req()
     req: Request
   ) {
