@@ -10,6 +10,7 @@ import { Usuario } from './entities/usuario.entity';
       Usuario
     ])
   ],
+  exports: [UsuarioService],
   controllers: [UsuarioController],
   providers: [UsuarioService]
 })

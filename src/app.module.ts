@@ -23,6 +23,7 @@ import { VariantesModule } from './variantes/variantes.module';
 import { TramitesModule } from './tramites/tramites.module';
 import { EstadosTramiteModule } from './estados-tramite/estados-tramite.module';
 import { FuncionTramiteModule } from './funcion-tramite/funcion-tramite.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { FuncionTramiteModule } from './funcion-tramite/funcion-tramite.module';
     TramitesModule,
     EstadosTramiteModule,
     FuncionTramiteModule,
+    AuthModule,
     
     
          

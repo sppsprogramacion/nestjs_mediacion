@@ -10,6 +10,7 @@ import { Ciudadano } from './entities/ciudadano.entity';
       Ciudadano
     ])
   ],
+  exports: [CiudadanosService],
   controllers: [CiudadanosController],
   providers: [CiudadanosService]
 })
