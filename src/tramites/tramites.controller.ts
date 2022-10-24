@@ -20,7 +20,7 @@ export class TramitesController {
 
   @Post('prueba-crear')
   prueba(
-    @Body('tramite') dataTramite: CreateTramiteDto,
+    @Body('dataTramite') dataTramite: CreateTramiteDto,
     @Body('dni_ciudadano') data2: string,
     
   ) {
