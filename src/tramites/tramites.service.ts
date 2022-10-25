@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ciudadano } from 'src/ciudadanos/entities/ciudadano.entity';
+import databaseConfig from 'src/config/database.config';
 import { Repository } from 'typeorm';
 import { CreateTramiteDto } from './dto/create-tramite.dto';
 import { UpdateTramiteDto } from './dto/update-tramite.dto';
@@ -65,13 +66,13 @@ export class TramitesService {
     );
   }
 
-  //BUSCAR TRAMITES NUEVOS
-  async findNuevos() {
+  //BUSCAR TRAMITES X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
+  async findxestado(id_estado: number) {
     const tramites = await this.tramiteRepository.findAndCount(
       {
         
         where: {
-          estado_tramite_id: 1
+          estado_tramite_id: id_estado
         }
       }
     );   
@@ -79,7 +80,8 @@ export class TramitesService {
 
     return tramites;
   }
-  //FIN BUSCAR HISTORIAL DEL TRAMITE XNUM_TRAMITE Y SECTOR..........................................
+  //FIN BUSCAR TRAMITES NUEVOS..........................................
+  
 
   //BUSCAR  Xnumero tramite
   async findXNumeroTramite(numero_tramitex: number) {
@@ -101,6 +103,20 @@ export class TramitesService {
 
   async update(num_tramitex: number, data: UpdateTramiteDto) {
     try{
+      const respuesta = await this.tramiteRepository.update({numero_tramite: num_tramitex}, data);
+      if((respuesta).affected == 0) throw new NotFoundException("No se modificó el tramite.");
+      return respuesta;
+    }
+    catch(error){
+      throw new NotFoundException('Error al modificar el tramite: ',error.message);
+    }
+  }
+
+  async cambiarEstadoTramite(num_tramitex: number, id_estado_tramite:number) {
+    try{
+      let data: UpdateTramiteDto = new UpdateTramiteDto;
+      data.estado_tramite_id=id_estado_tramite;
+      console.log("data",data);
       const respuesta = await this.tramiteRepository.update({numero_tramite: num_tramitex}, data);
       if((respuesta).affected == 0) throw new NotFoundException("No se modificó el tramite.");
       return respuesta;

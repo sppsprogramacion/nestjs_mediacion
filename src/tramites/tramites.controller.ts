@@ -51,15 +51,26 @@ export class TramitesController {
   //BUSCAR TRAMITES NUEVOS
   @Get('nuevos')
   async findNuevos(
-    @Req()
-    req: Request
   ) {
-    // let sector: number = parseInt(req.query.id_sector.toString());
-    // if(isNaN(sector)) throw new NotFoundException("El id de sector no es un número entero");
-    return this.tramitesService.findNuevos();
+    return this.tramitesService.findxestado(1);
   }
   //BUSCAR TRAMITES NUEVOS.....................................................
 
+  //BUSCAR TRAMITES ASIGNADOS A MEDIADOR
+  @Get('asignados-mediador')
+  async findAsignadosMEdiador(    
+  ) {    
+    return this.tramitesService.findxestado(2);
+  }
+  //FIN BUSCAR TRAMITES ASIGNADOS A MEDIADORS.....................................................
+
+  //BUSCAR TRAMITES FINALIZADOS
+  @Get('finalizados')
+  async findFinalizados(    
+  ) {    
+    return this.tramitesService.findxestado(3);
+  }
+  //FIN BUSCAR TRAMITES FINALIZADOS.....................................................
 
   @Get()
   findAll() {
