@@ -34,7 +34,8 @@ export class CreateCiudadanoDto {
     @IsNotEmpty({message: "Debe ingresar la localidad o barrio."})
     localidad_barrio: string;
 
-    @MaxLength(100,{message: "La calle/direccion debe tener hasta $constraint1 caracteres."})
+    @Length(1,100,{message: "La calle/direccion debe tener entre $constraint1 y $constraint2 caracteres."})
+    @IsNotEmpty({message: "Debe ingresar la calle/direccion."})
     calle_direccion: string;
     
     @IsInt({message: "El numero de domicilio debe ser un número entero."})
