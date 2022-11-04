@@ -128,7 +128,7 @@ export class Ciudadano {
 
     @Column({
         type: 'varchar',
-        length: 100,
+        length: 16,
         nullable: false
     })
     clave: string;

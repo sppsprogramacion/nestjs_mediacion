@@ -54,7 +54,8 @@ export class CreateCiudadanoDto {
     @IsNotEmpty({message: "Debe ingresar el correo."})
     email:string;
 
-    @Length(1,100,{message: "La clave debe tener entre $constraint1 y $constraint2 caracteres."})
+    @Matches(/(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{0,17}$/,{message:'El formato de la contraseña no es válido'})
+    @Length(8,16,{message: "La clave debe tener entre $constraint1 y $constraint2 caracteres."})
     @IsNotEmpty({message: "Debe ingresar la clave."})
     clave: string;
 }
