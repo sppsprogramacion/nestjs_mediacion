@@ -46,7 +46,7 @@ export class CreateCiudadanoDto {
     @IsNotEmpty({message: "Debe ingresar el teléfono."})
     telefono: string;
 
-    @IsDateString({message: "El formato de fecha ingresada no es válida."})
+    @IsDateString({message: "El formato de la fecha de nacimiento ingresada no es válida."})
     fecha_nac: Date;
 
     @Matches(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/,{message:'El formato del email no es válido'})

@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, Length, Matches } from "class-validator";
+import { IsDateString, IsInt, IsNotEmpty, Length, Matches } from "class-validator";
 
 export class CreateUsuarioDto {
 
@@ -22,6 +22,9 @@ export class CreateUsuarioDto {
     @Length(1,200,{message: "El correo debe tener entre $constraint1 y $constraint2 caracteres."})
     @IsNotEmpty({message: "Debe ingresar el correo."})
     email: string;
+
+    @IsDateString({message: "El formato de fecha de vencimiento de la licencia ingresada no es válida."})
+    fecha_venc_licencia: Date;
 
     @Length(1,100,{message: "La clave debe tener entre $constraint1 y $constraint2 caracteres."})
     @IsNotEmpty({message: "Debe ingresar la clave."})

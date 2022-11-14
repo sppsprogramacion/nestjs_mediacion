@@ -40,6 +40,12 @@ export class Usuario {
     email: string;
 
     @Column({
+        type: 'date',
+        nullable: false
+    })
+    fecha_venc_licencia: Date;
+
+    @Column({
         type: 'varchar',
         length: 100,
         nullable: false,
