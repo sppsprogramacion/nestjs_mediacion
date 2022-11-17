@@ -1,5 +1,6 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import {hash} from 'bcryptjs';
+import { Sexo } from "src/sexo/entities/sexo.entity";
 
 @Entity('usuarios')
 export class Usuario {
@@ -22,6 +23,21 @@ export class Usuario {
         unique: false
     })
     nombre: string;
+
+    //SEXO
+    @Column({
+        type: 'int',
+        nullable: true
+    })
+    sexo_id: number;
+
+    @ManyToOne(type => Sexo, {eager: true} )
+    @JoinColumn({
+        name: 'sexo_id',
+        referencedColumnName: 'id_sexo'
+    })
+    sexo: Sexo;
+    //FIN SEXO
 
     @Column({
         type: 'varchar',
