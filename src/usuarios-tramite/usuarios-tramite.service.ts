@@ -47,7 +47,7 @@ export class UsuariosTramiteService {
     );
   }
 
-
+  
   //BUSCAR  XID
   async findOne(id: number) {    
     //const respuesta = await this.usuariosCentroRepository.findOneBy({id_usuario_centro: id});

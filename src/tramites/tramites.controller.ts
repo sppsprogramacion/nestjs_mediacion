@@ -58,7 +58,7 @@ export class TramitesController {
 
   //BUSCAR TRAMITES ASIGNADOS A MEDIADOR
   @Get('asignados-mediador')
-  async findAsignadosMEdiador(    
+  async findAsignadosMediador(    
   ) {    
     return this.tramitesService.findxestado(2);
   }
@@ -71,6 +71,25 @@ export class TramitesController {
     return this.tramitesService.findxestado(3);
   }
   //FIN BUSCAR TRAMITES FINALIZADOS.....................................................
+
+  //BUSCAR TRAMITES con ASIGNACIONES
+  @Get('asignados-datos')
+  async findAsignaciones(    
+  ) {    
+    return this.tramitesService.findAsignadosConDatos();
+  }
+  //FIN BUSCAR TRAMITES ASIGNADOS A MEDIADORS.....................................................
+
+  //CONTAR TRAMITES
+  @Get('totales-tramites')
+  async TotalesTramitesXEstado(    
+  ) {    
+    let cant_nuevos = await this.tramitesService.contarTramitesXEstado(1);
+    let cant_asignado = await this.tramitesService.contarTramitesXEstado(2);
+    let cant_finalizados = await this.tramitesService.contarTramitesXEstado(3);
+    return {nuevos: cant_nuevos,asignados: cant_asignado, finalizados: cant_finalizados};
+  }
+  //FIN CONTAR TRAMITES............................................................................
 
   @Get()
   findAll() {

@@ -69,10 +69,40 @@ export class TramitesService {
   //BUSCAR TRAMITES X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
   async findxestado(id_estado: number) {
     const tramites = await this.tramiteRepository.findAndCount(
-      {
-        
+      {        
         where: {
           estado_tramite_id: id_estado
+        }
+      }
+    );   
+    console.log(tramites);
+
+    return tramites;
+  }
+  //FIN BUSCAR TRAMITES NUEVOS..........................................
+
+  //CONTAR TRAMITES X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
+  async contarTramitesXEstado(id_estado: number) {
+    const tramites = await this.tramiteRepository.count(
+      {        
+        where: {
+          estado_tramite_id: id_estado
+        }
+      }
+    );   
+
+    return tramites;
+  }
+  //FIN BUSCAR TRAMITES NUEVOS..........................................
+
+  //BUSCAR TRAMITES ASIGNADOS Usuario - (2 CON MEDIADOR) -  
+  async findAsignadosConDatos() {
+    const tramites = await this.tramiteRepository.findAndCount(
+      {
+        relations: ['asignaciones'], 
+        where: {
+          estado_tramite_id: 2,
+          
         }
       }
     );   

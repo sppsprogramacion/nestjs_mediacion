@@ -30,10 +30,12 @@ export class UsuariosTramiteController {
     return usuarioTramite;
   }
 
+  //TODAS LAS ASIGNACIONES
   @Get()
   findAll() {
     return this.usuariosTramiteService.findAll();
   }
+  //FIN TODAS LAS ASIGNACIONES
 
   @Get(':id')
   findOne(@Param('id') id: string) {

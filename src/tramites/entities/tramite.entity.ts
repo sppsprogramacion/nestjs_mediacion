@@ -1,9 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Objeto } from '../../objetos/entities/objeto.entity';
 import { Modalidad } from '../../modalidad/entities/modalidad.entity';
 import { Variante } from '../../variantes/entities/variante.entity';
 import { EstadoTramite } from '../../estados-tramite/entities/estados-tramite.entity';
 import { Ciudadano } from '../../ciudadanos/entities/ciudadano.entity';
+import { UsuariosTramite } from '../../usuarios-tramite/entities/usuarios-tramite.entity';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 
 @Entity('tramites')
@@ -167,6 +169,17 @@ export class Tramite {
     })
     estado_tramite : EstadoTramite;
     //FIN ESTADO TRAMITE............................
+
+    @Column({
+        type: 'date',
+        nullable: true
+    })
+    fecha_finalizacion: Date;
+
+    //TRAMITES ASIGNADOS
+    @OneToMany(() => UsuariosTramite, (asignacion) => asignacion.tramite)
+    asignaciones : UsuariosTramite[];
+    //FIN TRAMITES ASIGNADOS
 
     
 
