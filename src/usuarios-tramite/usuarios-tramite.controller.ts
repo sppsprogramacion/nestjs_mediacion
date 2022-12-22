@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { UsuariosTramiteService } from './usuarios-tramite.service';
 import { CreateUsuariosTramiteDto } from './dto/create-usuarios-tramite.dto';
 import { UpdateUsuariosTramiteDto } from './dto/update-usuarios-tramite.dto';
@@ -29,6 +30,21 @@ export class UsuariosTramiteController {
     }
     return usuarioTramite;
   }
+
+  //BUSCAR TRAMITES ASIGNADOS POR DNI DE USUARIO
+  @Get('buscar-xdni-usuario')  
+  async findTramiteXNumero(
+    @Req()
+    req: Request
+  ) {
+    
+    if(!req.query.dni_usuario) throw new NotFoundException("El numero de dni no fue ingresado.")
+    if(isNaN(Number(req.query.dni_usuario.toString()))) throw new NotFoundException("El numero de dni debe ser un número.")
+    let dni_usuariox: number = parseFloat(req.query.dni_usuario.toString());
+    if(!Number.isInteger(dni_usuariox)) throw new NotFoundException("El numero de tramite debe ser un número entero.")
+    return this.usuariosTramiteService.findTramitesXUsuario(dni_usuariox);
+  }
+  //FIN BUSCAR TRAMITES ASIGNADOS POR DNI DE USUARIO....................................................
 
   //TODAS LAS ASIGNACIONES
   @Get()
