@@ -33,6 +33,8 @@ export class UsuariosTramiteService {
     }       
   }
 
+  
+
   //BUSCAR  XID
   async findTramitesXUsuario(num_dni: number) {    
     //const respuesta = await this.usuariosCentroRepository.findOneBy({id_usuario_centro: id});
@@ -41,6 +43,7 @@ export class UsuariosTramiteService {
         //relations: ['usuario','centro_mediacion'],
         where: {
           dni_usuario: num_dni,
+          activo: true
         }      
           
       }
@@ -49,6 +52,23 @@ export class UsuariosTramiteService {
     return respuesta;
   }
   //FIN BUSCAR  XID..................................................................
+
+  //BUSCAR  TRAMITES ASIGNADOS ACTIVOS
+  async findTramitesActivos() {    
+    //const respuesta = await this.usuariosCentroRepository.findOneBy({id_usuario_centro: id});
+    const respuesta = await this.usuariosTramiteRepository.findAndCount(
+      {
+        //relations: ['usuario','centro_mediacion'],
+        where: {
+          activo: true,
+        }      
+          
+      }
+    );
+    if (!respuesta) throw new NotFoundException("No se encontró el tramites para este usuario.");
+    return respuesta;
+  }
+  //FIN BUSCAR  TRAMITES ASIGNADOS ACTIVOS..................................................................
 
   async findAll() {
     return await this.usuariosTramiteRepository.findAndCount(

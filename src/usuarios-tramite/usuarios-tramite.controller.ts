@@ -46,6 +46,14 @@ export class UsuariosTramiteController {
   }
   //FIN BUSCAR TRAMITES ASIGNADOS POR DNI DE USUARIO....................................................
 
+  //BUSCAR TRAMITES ASIGNADOS   ACTIVOS
+  @Get('buscar-activos')  
+  async findTramitesActivos() 
+  {    
+    return this.usuariosTramiteService.findTramitesActivos();
+  }
+  //FIN BUSCAR TRAMITES ASIGNADOS ACTIVOS....................................................
+
   //TODAS LAS ASIGNACIONES
   @Get()
   findAll() {
