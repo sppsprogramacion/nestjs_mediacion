@@ -35,7 +35,7 @@ export class TramitesController {
     return this.tramitesService.create(dataTramite);
   }
 
-  @Get('buscar-xnum-tramite')  
+  @Get('buscar-xnumtramite')  
   async findTramiteXNumero(
     @Req()
     req: Request
@@ -61,7 +61,7 @@ export class TramitesController {
   async findAsignadosMediador(    
   ) {    
     return this.tramitesService.findxestado(2);
-  }
+  } 
   //FIN BUSCAR TRAMITES ASIGNADOS A MEDIADORS.....................................................
 
   //BUSCAR TRAMITES FINALIZADOS
