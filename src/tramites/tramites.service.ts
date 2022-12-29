@@ -116,28 +116,18 @@ export class TramitesService {
   //BUSCAR  Xnumero tramite
   async findXNumeroTramite(numero_tramitex: number) {
 
-    // const respuesta = await this.tramiteRepository.find(
-    //   {
-    //     relations: ['asignaciones'],
-    //     where: {
-    //       numero_tramite: numero_tramitex
-    //     }
-    //   }
-    // );
-    // if (!respuesta) throw new NotFoundException("No se encontró el registro de tramite solicitado.");
-    // return respuesta;
+    const respuesta = await this.tramiteRepository.find(
+      {
+        relations: ['asignaciones'],
+        where: {
+          numero_tramite: numero_tramitex
+        }
+      }
+    );
+    if (!respuesta) throw new NotFoundException("No se encontró el registro de tramite solicitado.");
+    return respuesta;
     
-    const tramite = await this.tramiteRepository.createQueryBuilder('tramites')
-    .leftJoin('tramites.asignaciones', 'asignacion')
-    .leftJoinAndSelect('tramites.ciudadano', 'ciudadano')
-    .leftJoinAndSelect('tramites.objeto', 'objeto')
-    .leftJoinAndSelect('tramites.modalidad', 'modalidad')
-    .leftJoinAndSelect('tramites.variante', 'variante')
-    .leftJoinAndSelect('tramites.variante', 'estado_tramite')
-    .getManyAndCount();
-
-
-    return tramite;
+    
   }
   //FIN BUSCAR  XDni..................................................................
 
