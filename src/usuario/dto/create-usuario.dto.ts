@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, Length, Matches } from "class-validator";
+import { IsDateString, IsInt, IsNotEmpty, Length, Matches } from "class-validator";
 
 export class CreateUsuarioDto {
 
@@ -13,6 +13,10 @@ export class CreateUsuarioDto {
     @Length(1,100,{message: "El nombre debe tener entre $constraint1 y $constraint2 caracteres."})
     @IsNotEmpty({message: "Debe ingresar el nombre."})
     nombre: string;
+
+    @IsInt({message: "El id de sexo debe ser un número entero"})
+    @IsNotEmpty({message: "Debe ingresar el id de sexo."})
+    sexo_id: number;
 
     @Length(1,100,{message: "El teléfono debe tener entre $constraint1 y $constraint2 caracteres."})
     @IsNotEmpty({message: "Debe ingresar el teléfono."})

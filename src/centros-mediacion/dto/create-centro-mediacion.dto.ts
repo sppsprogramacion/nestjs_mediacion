@@ -18,7 +18,7 @@ export class CreateCentroMediacionDto {
     localidad_barrio: string;
 
     @MaxLength(100,{message: "La calle debe tener hasta $constraint1 caracteres."})
-    calle: string;
+    calle_direccion: string;
     
     @IsInt({message: "El numero de domicilio debe ser un número entero."})
     @IsNotEmpty({message: "Debe ingresar el numero de domicilio."})

@@ -12,6 +12,7 @@ import { Ciudadano } from 'src/ciudadanos/entities/ciudadano.entity';
       Ciudadano
     ])
   ],
+  exports: [TramitesService],
   controllers: [TramitesController],
   providers: [TramitesService]
 })
