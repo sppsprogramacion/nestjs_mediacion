@@ -9,17 +9,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class UsuarioService {
   constructor(
     @InjectRepository(Usuario)
-    private readonly usuiariosRepository: Repository<Usuario>
+    private readonly usuariosRepository: Repository<Usuario>
   ){}
   async create(data: CreateUsuarioDto): Promise<Usuario> {
-    const existe = await this.usuiariosRepository.findOneBy({dni: data.dni});
+    const existe = await this.usuariosRepository.findOneBy({dni: data.dni});
     if(existe) throw new BadRequestException ("El dni del usuario que intenta crear ya existe.");
-    const nuevo = await this.usuiariosRepository.create(data);
+    const nuevo = await this.usuariosRepository.create(data);
     try {
-      return await this.usuiariosRepository.save(nuevo);
+      return await this.usuariosRepository.save(nuevo);
     } catch (error) {
       if(error.code=='ER_DUP_ENTRY'){
-        const existe = await this.usuiariosRepository.findOneBy({email: data.email});
+        const existe = await this.usuariosRepository.findOneBy({email: data.email});
         if(existe) throw new BadRequestException ("El email que se intentó crear ya existe. Intente guardar nuevamente");
       }      
       throw new NotFoundException('Error al crear el nuevo usuario: ',error.message);  
@@ -27,7 +27,7 @@ export class UsuarioService {
   }
 
   async findAll() {
-    return await this.usuiariosRepository.findAndCount(
+    return await this.usuariosRepository.findAndCount(
       {
           order:{
               apellido: "ASC"
@@ -36,10 +36,39 @@ export class UsuarioService {
     );
   }
 
+  //BUSCAR USUARIOS ACTIVOS O INACTIVOS
+  async findUsuarios(activox: boolean) {
+    const usuarios = await this.usuariosRepository.findAndCount(
+      {        
+        where: {
+          activo: activox,
+          
+        }
+      }
+    );   
+    return usuarios;
+  }
+  //FIN BUSCAR USUARIOS ACTIVOS ..........................................
+  
+  //BUSCAR USUARIOS ACTIVOS O INACTIVOS CON CENTROS DE MEDIACION
+  async findUsuariosCentrosMediacion(activox: boolean) {
+    const usuarios_centros = await this.usuariosRepository.findAndCount(
+      {
+        relations: ['centros_mediacion'], 
+        where: {
+          activo: activox,
+          
+        }
+      }
+    );   
+    return usuarios_centros;
+  }
+  //FIN BUSCAR TRAMITES NUEVOS..........................................
+
   //BUSCAR  XDni
   async findXDni(dnix: number) {
     console.log("dni en servciio usuario", dnix);
-    const respuesta = await this.usuiariosRepository.findOneBy({dni: dnix});
+    const respuesta = await this.usuariosRepository.findOneBy({dni: dnix});
     if (!respuesta) throw new NotFoundException("No se encontró el registro de usuario solicitado.");
     return respuesta;
   }
@@ -56,7 +85,7 @@ export class UsuarioService {
 
   async update(dnix: number, data: UpdateUsuarioDto) {
     try{
-      const respuesta = await this.usuiariosRepository.update({dni: dnix}, data);
+      const respuesta = await this.usuariosRepository.update({dni: dnix}, data);
       if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de usuario.");
       return respuesta;
     }
@@ -66,9 +95,9 @@ export class UsuarioService {
   }
 
   async remove(dnix: number) {
-    const respuesta = await this.usuiariosRepository.findOneBy({dni: dnix});
+    const respuesta = await this.usuariosRepository.findOneBy({dni: dnix});
     if(!respuesta) throw new NotFoundException("No existe el registro de usuario que intenta eliminar");
-    return await this.usuiariosRepository.remove(respuesta);
+    return await this.usuariosRepository.remove(respuesta);
   }
 
 }

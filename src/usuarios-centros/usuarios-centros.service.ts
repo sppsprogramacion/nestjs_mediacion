@@ -65,6 +65,22 @@ export class UsuariosCentrosService {
   }
   //FIN BUSCAR  XID..................................................................
 
+  //BUSCAR  XID
+  async findXCentroMediacion(id_centro: number) {    
+    //const respuesta = await this.usuariosCentroRepository.findOneBy({id_usuario_centro: id});
+    const respuesta = await this.usuariosCentroRepository.findAndCount(
+      {
+        //relations: ['usuario','centro_mediacion'],
+        where: {
+          centro_mediacion_id: id_centro
+        }      
+          
+      }
+    );
+    return respuesta;
+  }
+  //FIN BUSCAR  XID..................................................................
+
   async update(id: number, data: UpdateUsuarioCentroDto) {
     try{
       const respuesta = await this.usuariosCentroRepository.update({id_usuario_centro: id}, data);

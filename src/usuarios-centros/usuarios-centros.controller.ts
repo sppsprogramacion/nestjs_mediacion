@@ -18,6 +18,19 @@ export class UsuariosCentrosController {
     return this.usuariosCentrosService.findAll();
   }
 
+  @Get('buscar-xcentro-mediacion')  
+  async findUsuarioXDni(
+    @Req()
+    req: Request
+  ) {
+    
+    if(!req.query.id_centro) throw new NotFoundException("El id del centro no fue ingresado.")
+    if(isNaN(Number(req.query.id_centro.toString()))) throw new NotFoundException("El id del centro debe ser un número.")
+    let id_centrox: number = parseFloat(req.query.id_centro.toString());
+    if(!Number.isInteger(id_centrox)) throw new NotFoundException("El id del centro debe ser un número entero.")
+    return this.usuariosCentrosService.findXCentroMediacion(id_centrox);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     
