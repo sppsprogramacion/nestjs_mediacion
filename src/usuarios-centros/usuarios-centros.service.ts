@@ -14,16 +14,16 @@ export class UsuariosCentrosService {
 
   
   async create(data: CreateUsuarioCentroDto): Promise<UsuarioCentro> {
-    // const existe = await this.usuariosCentroRepository.findOne(
-    //   {
-    //     where:{
-    //       usuario_dni: data.usuario_dni,
-    //       centro_mediacion_id: data.centro_mediacion_id,
-    //       activo: true
-    //     }
-    //   }
-    // );
-    // if(existe) throw new BadRequestException ("La asignación de usuario a un centro de mediación que intenta crear ya existe.");
+    const existe = await this.usuariosCentroRepository.findOne(
+      {
+        where:{
+          dni_usuario: data.dni_usuario,
+          centro_mediacion_id: data.centro_mediacion_id,
+          activo: true
+        }
+      }
+    );
+    if(existe) throw new BadRequestException ("Este usuario ya se encuentra asignado a este centro de mediación");
     const nuevo = await this.usuariosCentroRepository.create(data);
     try {
       return await this.usuariosCentroRepository.save(nuevo);

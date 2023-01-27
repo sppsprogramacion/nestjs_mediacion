@@ -14,7 +14,7 @@ export class CreateUsuarioCentroDto {
     @IsNotEmpty({message: "Debe ingresar el detalle."})
     detalles: string;
     
-    @IsDateString({message: "El formato de fecha ingresada no es válida."})
+    // @IsDateString({message: "El formato de fecha ingresada no es válida."})
     fecha_designacion: Date;
     
     @IsEmpty({message: "No debe enviar el campo activo."})

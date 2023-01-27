@@ -10,6 +10,9 @@ export class UsuariosCentrosController {
 
   @Post()
   create(@Body() data: CreateUsuarioCentroDto) {
+    let fecha_actual: any = new Date().toISOString().split('T')[0];
+    data.fecha_designacion = fecha_actual;
+    
     return this.usuariosCentrosService.create(data);
   }
 

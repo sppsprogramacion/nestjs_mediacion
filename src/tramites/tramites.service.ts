@@ -54,7 +54,7 @@ export class TramitesService {
       throw new NotFoundException('Error al crear el nuevo tramite: ',error.message);  
     }    
   }
-  //FIN NUEVO TRAMITE
+  //FIN NUEVO TRAMITE..................................................................
 
   //TODOS LOS TRAMITES
   async findAll() {
