@@ -56,15 +56,17 @@ export class TramitesService {
   }
   //FIN NUEVO TRAMITE
 
+  //TODOS LOS TRAMITES
   async findAll() {
     return await this.tramiteRepository.findAndCount(
       {
           order:{
-              numero_tramite: "ASC"
+              numero_tramite: "DESC"
           }
       }
     );
   }
+  //FIN TODOS LOS TRAMITES..............................
 
   //BUSCAR TRAMITES X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
   async findxestado(id_estado: number) {
@@ -72,7 +74,10 @@ export class TramitesService {
       {        
         where: {
           estado_tramite_id: id_estado
-        }
+        },
+        order:{
+          numero_tramite: "DESC"
+      }
       }
     );   
     console.log(tramites);
