@@ -57,4 +57,6 @@ export class CreateTramiteDto {
     @IsInt({message: "El dni debe ser un número entero."})
     @IsNotEmpty({message: "Debe ingresar el dni."})
     dni_ciudadano:number;
+
+    fecha_finalizacion: Date;
 }

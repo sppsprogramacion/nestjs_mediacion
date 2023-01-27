@@ -58,7 +58,7 @@ export class CentroMediacion {
         length: 100,
         nullable: true
     })
-    calle: string;    
+    calle_direccion: string;    
 
     @Column({
         type: 'int',

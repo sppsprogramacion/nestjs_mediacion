@@ -19,7 +19,7 @@ export class CentrosMediacionService {
     } catch (error) {
       if(error.code=='ER_DUP_ENTRY'){
         let existe = await this.centrosMediacionRepository.findOneBy({email: data.email});
-        if(existe) throw new BadRequestException ("El email que se intentó crear ya existe. Intente guardar nuevamente");
+        if(existe) throw new BadRequestException ("El email que se intentó crear ya existe.");
       
         existe = null;
         existe = await this.centrosMediacionRepository.findOneBy({centro_mediacion: data.centro_mediacion});

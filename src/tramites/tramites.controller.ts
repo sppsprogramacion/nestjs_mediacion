@@ -35,7 +35,7 @@ export class TramitesController {
     return this.tramitesService.create(dataTramite);
   }
 
-  @Get('buscar-xnum-tramite')  
+  @Get('buscar-xnumtramite')  
   async findTramiteXNumero(
     @Req()
     req: Request
@@ -51,15 +51,45 @@ export class TramitesController {
   //BUSCAR TRAMITES NUEVOS
   @Get('nuevos')
   async findNuevos(
-    @Req()
-    req: Request
   ) {
-    // let sector: number = parseInt(req.query.id_sector.toString());
-    // if(isNaN(sector)) throw new NotFoundException("El id de sector no es un número entero");
-    return this.tramitesService.findNuevos();
+    return this.tramitesService.findxestado(1);
   }
   //BUSCAR TRAMITES NUEVOS.....................................................
 
+  //BUSCAR TRAMITES ASIGNADOS A MEDIADOR
+  @Get('asignados-mediador')
+  async findAsignadosMediador(    
+  ) {    
+    return this.tramitesService.findxestado(2);
+  } 
+  //FIN BUSCAR TRAMITES ASIGNADOS A MEDIADORS.......................................
+
+  //BUSCAR TRAMITES FINALIZADOS
+  @Get('finalizados')
+  async findFinalizados(    
+  ) {    
+    return this.tramitesService.findxestado(3);
+  }
+  //FIN BUSCAR TRAMITES FINALIZADOS.....................................................
+
+  //BUSCAR TRAMITES con ASIGNACIONES
+  @Get('asignados-datos')
+  async findAsignaciones(    
+  ) {    
+    return this.tramitesService.findAsignadosConDatos();
+  }
+  //FIN BUSCAR TRAMITES ASIGNADOS A MEDIADORS.....................................................
+
+  //CONTAR TRAMITES
+  @Get('totales-tramites')
+  async TotalesTramitesXEstado(    
+  ) {    
+    let cant_nuevos = await this.tramitesService.contarTramitesXEstado(1);
+    let cant_asignado = await this.tramitesService.contarTramitesXEstado(2);
+    let cant_finalizados = await this.tramitesService.contarTramitesXEstado(3);
+    return {nuevos: cant_nuevos,asignados: cant_asignado, finalizados: cant_finalizados};
+  }
+  //FIN CONTAR TRAMITES............................................................................
 
   @Get()
   findAll() {
