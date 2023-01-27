@@ -26,9 +26,17 @@ export class UsuarioController {
     return this.usuarioService.findXDni(dnix);
   }
 
+  //BUSCAR USUARIOS CON CENTRO DE MEDIACION
+  @Get('centros-asignados')
+  async findCentrosAsignados(    
+  ) {    
+    return this.usuarioService.findUsuariosCentrosMediacion(true);
+  } 
+  //FIN BUSCAR USUARIOS CON CENTRO DE MEDIACION.......................................
+
   @Get()
   findAll() {
-    return this.usuarioService.findAll();
+    return this.usuarioService.findUsuarios(true);
   }
 
   // @Get(':id')

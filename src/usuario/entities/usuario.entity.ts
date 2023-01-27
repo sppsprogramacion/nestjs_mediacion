@@ -1,6 +1,8 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import {hash} from 'bcryptjs';
 import { Sexo } from "src/sexo/entities/sexo.entity";
+import { UsuarioCentro } from '../../usuarios-centros/entities/usuario-centro.entity';
+import { CentroMediacion } from '../../centros-mediacion/entities/centro-mediacion.entity';
 
 @Entity('usuarios')
 export class Usuario {
@@ -72,6 +74,17 @@ export class Usuario {
         }
         this.clave = await hash(this.clave,10);
     }
+
+    @Column({
+        type: "boolean",
+        default: true
+    })
+    activo: boolean;
+
+    //CENTROS DE MEDIACION ASIGNADOS
+    @OneToMany(() => UsuarioCentro, (usuarioCentro) => usuarioCentro.usuario)
+    centros_mediacion : UsuarioCentro[];
+    //FIN CENTROS DE MEDIACION ASIGNADOS ASIGNADOS
 }
 
 

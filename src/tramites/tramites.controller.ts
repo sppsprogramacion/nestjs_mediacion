@@ -62,7 +62,7 @@ export class TramitesController {
   ) {    
     return this.tramitesService.findxestado(2);
   } 
-  //FIN BUSCAR TRAMITES ASIGNADOS A MEDIADORS.....................................................
+  //FIN BUSCAR TRAMITES ASIGNADOS A MEDIADORS.......................................
 
   //BUSCAR TRAMITES FINALIZADOS
   @Get('finalizados')
