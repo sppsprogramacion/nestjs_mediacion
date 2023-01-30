@@ -41,14 +41,16 @@ export class UsuarioService {
     const usuarios = await this.usuariosRepository.findAndCount(
       {        
         where: {
-          activo: activox,
-          
+          activo: activox,          
+        },
+        order:{
+          apellido: "ASC"
         }
       }
     );   
     return usuarios;
   }
-  //FIN BUSCAR USUARIOS ACTIVOS ..........................................
+  //FIN BUSCAR USUARIOS ACTIVOS O INACTIVOS ..........................................
   
   //BUSCAR USUARIOS ACTIVOS O INACTIVOS CON CENTROS DE MEDIACION
   async findUsuariosCentrosMediacion(activox: boolean) {
@@ -56,8 +58,10 @@ export class UsuarioService {
       {
         relations: ['centros_mediacion'], 
         where: {
-          activo: activox,
-          
+          activo: activox,          
+        },
+        order: {
+          apellido: "ASC"
         }
       }
     );   

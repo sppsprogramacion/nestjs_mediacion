@@ -23,6 +23,7 @@ export class UsuariosCentrosService {
         }
       }
     );
+    console.log("dta sservicio susario centro: ", existe);
     if(existe) throw new BadRequestException ("Este usuario ya se encuentra asignado a este centro de mediación");
     const nuevo = await this.usuariosCentroRepository.create(data);
     try {
