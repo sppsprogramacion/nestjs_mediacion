@@ -12,7 +12,7 @@ export class UsuariosCentrosService {
     private readonly usuariosCentroRepository: Repository<UsuarioCentro>
   ){}
 
-  
+  //NUEVO USUARIO-CENRO
   async create(data: CreateUsuarioCentroDto): Promise<UsuarioCentro> {
     const existe = await this.usuariosCentroRepository.findOne(
       {
@@ -33,7 +33,9 @@ export class UsuariosCentrosService {
       throw new NotFoundException('Error al asignar el usuario a un centro de mediación: ',error.message);  
     }       
   }
+  //FIN NUEVO USUARIO-CENRO........................................
 
+  //BUSCAR TODOS
   async findAll() {
     return await this.usuariosCentroRepository.findAndCount(
       {
@@ -47,7 +49,7 @@ export class UsuariosCentrosService {
       }
     );
   }
-
+  //FIN BUSCAR TODOS.................................................
 
   //BUSCAR  XID
   async findOne(id: number) {    
@@ -99,6 +101,7 @@ export class UsuariosCentrosService {
   }
   //FIN BUSCAR  XID CENTRO DE MEDIACION..................................................................
 
+  //MODIFICAR UNO
   async update(id: number, data: UpdateUsuarioCentroDto) {
     try{
       const respuesta = await this.usuariosCentroRepository.update({id_usuario_centro: id}, data);
@@ -106,10 +109,13 @@ export class UsuariosCentrosService {
       return respuesta;
     }
     catch(error){
+      
       throw new NotFoundException('Error al modificar el usuario-centro: ',error.message);
     }
   }
-
+  //FIN MODIFICAR UNO....................................................
+  
+  
   async remove(id: number) {
     const respuesta = await this.usuariosCentroRepository.findOneBy({id_usuario_centro: id});
     if(!respuesta) throw new NotFoundException("No existe el registro de usuario-centro que intenta eliminar");
