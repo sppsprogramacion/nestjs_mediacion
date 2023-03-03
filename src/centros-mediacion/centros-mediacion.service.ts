@@ -56,7 +56,10 @@ export class CentrosMediacionService {
       return respuesta;
     }
     catch(error){
-      throw new NotFoundException('Error al modificar el centro de mediación: ',error.message);
+      if(error.code=='ER_DUP_ENTRY'){
+        throw new NotFoundException('El centro de mediacion ingresado ya existe. Intente guardar nuevamente');
+      }   
+      throw new NotFoundException('Error al modificar el centro de mediación: ' + error.message);
     }
   }
 

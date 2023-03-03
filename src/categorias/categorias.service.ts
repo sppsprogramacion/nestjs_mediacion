@@ -39,9 +39,18 @@ export class CategoriasService {
   //FIN BUSCAR  XID..................................................................
 
   async update(id: number, data: UpdateCategoriaDto) {
-    const respuesta = await this.categoriaRepository.update(id, data);
-    if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de categoría.");
-    return respuesta;
+    try{
+      const respuesta = await this.categoriaRepository.update(id, data);
+      if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de categoría.");
+      return respuesta;
+    }
+    catch(error){
+      if(error.code=='ER_DUP_ENTRY'){
+        throw new NotFoundException('La categoría ingresada ya existe. Intente guardar nuevamente');
+      }      
+      throw new NotFoundException('Error al modificar la categoría: ',error.message);
+    }
+    
   }
 
   async remove(id: number) {
