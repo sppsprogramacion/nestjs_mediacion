@@ -13,12 +13,10 @@ export class CategoriasController {
   }
   
 
-  // @Get()
-  // findAll() {
-  //   return this.categoriasService.findAll();
-  // }
-
-  
+  @Get()
+  findAll() {
+    return this.categoriasService.findAll();
+  }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {    
@@ -27,25 +25,24 @@ export class CategoriasController {
   }
 
   //PARA RUTA NO DEFINIDA
-  // @Get('*')
-  // rutasNoDefinidas() {
-  //   throw new NotFoundException('No se encontro la ruta especificada. Verifique si la ruta es correcta');
-  // }
+  @Get('*')
+  rutasNoDefinidas() {
+    throw new NotFoundException('No se encontro la ruta especificada. Verifique si la ruta es correcta');
+  }
   //FIN PARA RUTA NO DEFINIDA...........
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() dataDto: UpdateCategoriaDto) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id debe ser un número entero.")
-    return this.categoriasService.update(idx, dataDto);
+  update(
+    @Param('id', ParseIntPipe) id: number, 
+    @Body() dataDto: UpdateCategoriaDto
+  ) {
+    console.log("id put: ", id);
+    return this.categoriasService.update(id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id debe ser un número entero.")
-    return this.categoriasService.remove(idx);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    
+    return this.categoriasService.remove(id);
   }
 }
