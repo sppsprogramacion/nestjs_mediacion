@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
 import { ModalidadService } from './modalidad.service';
 import { CreateModalidadDto } from './dto/create-modalidad.dto';
 import { UpdateModalidadDto } from './dto/update-modalidad.dto';
@@ -18,27 +18,29 @@ export class ModalidadController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     
-    if(isNaN(Number(id))) throw new NotFoundException("El id de modalidad debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de modalidad debe ser un número entero.")
-    return this.modalidadService.findOne(idx);
+    return this.modalidadService.findOne(id);
   }
 
+  //PARA RUTA NO DEFINIDA
+  @Get('*')
+  rutasNoDefinidas() {
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
+  }
+  //FIN PARA RUTA NO DEFINIDA...........
+
   @Put(':id')
-  update(@Param('id') id: string, @Body() dataDto: UpdateModalidadDto) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id de modalidad debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de modalidad debe ser un número entero.")
-    return this.modalidadService.update(idx, dataDto);
+  update(
+    @Param('id') id: number, 
+    @Body() dataDto: UpdateModalidadDto) {
+    
+    return this.modalidadService.update(id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id de modalidad debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de modalidad debe ser un número entero.")
-    return this.modalidadService.remove(idx);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    
+    return this.modalidadService.remove(id);
   }
 }

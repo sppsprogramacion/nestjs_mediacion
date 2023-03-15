@@ -11,8 +11,7 @@ export class CentrosMediacionController {
   @Post()
   create(@Body() data: CreateCentroMediacionDto) {
     return this.centrosMediacionService.create(data);
-  }
-  
+  }  
 
   @Get()
   findAll() {
@@ -28,7 +27,7 @@ export class CentrosMediacionController {
   //PARA RUTA NO DEFINIDA
   @Get('*')
   rutasNoDefinidas() {
-    throw new NotFoundException('No se encontro la ruta especificada. Verifique si la ruta es correcta');
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
   }
   //FIN PARA RUTA NO DEFINIDA...........
 

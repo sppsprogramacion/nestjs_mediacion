@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateMunicipioDto } from './dto/create-municipio.dto';
 import { UpdateMunicipioDto } from './dto/update-municipio.dto';
 import { Repository } from 'typeorm';
@@ -15,8 +15,19 @@ export class MunicipiosService {
 
   
   async create(data: CreateMunicipioDto): Promise<Municipio> {
+
     const nuevo = await this.municipiosRepository.create(data);
-    return await this.municipiosRepository.save(nuevo);
+    try {
+
+      return await this.municipiosRepository.save(nuevo);
+    }catch (error) {
+      if(error.code == 'ER_DUP_ENTRY'){
+        let existe = await this.municipiosRepository.findOneBy({municipio: data.municipio});
+        if(existe) throw new InternalServerErrorException ("El municipio que intenta crear ya existe.");      
+      } 
+
+      throw new InternalServerErrorException('Error al crear el municipio: ',error.message);  
+    } 
   }
 
   async findAll() {
@@ -39,9 +50,24 @@ export class MunicipiosService {
   //FIN BUSCAR  XID..................................................................
 
   async update(id: number, data: UpdateMunicipioDto) {
-    const respuesta = await this.municipiosRepository.update(id, data);
-    if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de municipio.");
-    return respuesta;
+    // const respuesta = await this.municipiosRepository.update(id, data);
+    // if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de municipio.");
+    // return respuesta;
+
+    try{
+      const respuesta = await this.municipiosRepository.update(id, data);
+      if((await respuesta).affected == 0){
+        await this.findOne(id);
+        throw new InternalServerErrorException("No se modificó el registro.");
+      } 
+      return respuesta;
+    }
+    catch(error){
+      if(error.code=='ER_DUP_ENTRY'){
+        throw new InternalServerErrorException('El municipio ingresada ya existe.');
+      }      
+      throw new InternalServerErrorException('Error al modificar el municipio: ',error.message);
+    } 
   }
 
   async remove(id: number) {

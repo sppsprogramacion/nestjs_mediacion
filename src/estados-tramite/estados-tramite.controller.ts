@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
 import { EstadosTramiteService } from './estados-tramite.service';
 import { CreateEstadoTramiteDto } from './dto/create-estado-tramite.dto';
 import { UpdateEstadoTramiteDto } from './dto/update-estado-tramite.dto';
@@ -18,27 +18,30 @@ export class EstadosTramiteController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     
-    if(isNaN(Number(id))) throw new NotFoundException("El id de estado de tramite debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de estado de tramite debe ser un número entero.")
-    return this.estadosTramiteService.findOne(idx);
+    return this.estadosTramiteService.findOne(id);
   }
 
+  //PARA RUTA NO DEFINIDA
+  @Get('*')
+  rutasNoDefinidas() {
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
+  }
+  //FIN PARA RUTA NO DEFINIDA...........
+
   @Put(':id')
-  update(@Param('id') id: string, @Body() dataDto: UpdateEstadoTramiteDto) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id de estado de tramite debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de estado de tramite debe ser un número entero.")
-    return this.estadosTramiteService.update(idx, dataDto);
+  update(
+    @Param('id', ParseIntPipe) id: number, 
+    @Body() dataDto: UpdateEstadoTramiteDto
+  ) {
+
+    return this.estadosTramiteService.update(id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id de estado de tramite debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de estado de tramite debe ser un número entero.")
-    return this.estadosTramiteService.remove(idx);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    
+    return this.estadosTramiteService.remove(id);
   }
 }

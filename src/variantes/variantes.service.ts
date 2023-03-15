@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateVarianteDto } from './dto/create-variante.dto';
@@ -13,10 +13,19 @@ export class VariantesService {
   ){}
 
   async create(data: CreateVarianteDto): Promise<Variante> {
-    const existe = await this.varianteRepository.findOneBy({variante: data.variante});
-    if(existe) throw new BadRequestException ("La variante que intenta crear ya existe.");
+
     const nuevo = await this.varianteRepository.create(data);
-    return await this.varianteRepository.save(nuevo);
+    try {
+
+      return await this.varianteRepository.save(nuevo);
+    }catch (error) {
+      if(error.code == 'ER_DUP_ENTRY'){
+        let existe = await this.varianteRepository.findOneBy({variante: data.variante});
+        if(existe) throw new InternalServerErrorException ("La variante que intenta crear ya existe.");      
+      } 
+
+      throw new InternalServerErrorException('Error al crear la variante: ',error.message);  
+    }
   }
 
   async findAll() {
@@ -39,9 +48,21 @@ export class VariantesService {
   //FIN BUSCAR  XID..................................................................
 
   async update(id: number, data: UpdateVarianteDto) {
-    const respuesta = await this.varianteRepository.update(id, data);
-    if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de variante.");
-    return respuesta;
+
+    try{
+      const respuesta = await this.varianteRepository.update(id, data);
+      if((await respuesta).affected == 0){
+        await this.findOne(id);
+        throw new InternalServerErrorException("No se modificó el registro.");
+      } 
+      return respuesta;
+    }
+    catch(error){
+      if(error.code=='ER_DUP_ENTRY'){
+        throw new InternalServerErrorException('La variante ingresada ya existe.');
+      }      
+      throw new InternalServerErrorException('Error al modificar la variante: ',error.message);
+    } 
   }
 
   async remove(id: number) {

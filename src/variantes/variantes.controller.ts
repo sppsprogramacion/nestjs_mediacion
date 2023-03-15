@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
 import { VariantesService } from './variantes.service';
 import { CreateVarianteDto } from './dto/create-variante.dto';
 import { UpdateVarianteDto } from './dto/update-variante.dto';
@@ -18,27 +18,30 @@ export class VariantesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     
-    if(isNaN(Number(id))) throw new NotFoundException("El id de variante debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de variante debe ser un número entero.")
-    return this.variantesService.findOne(idx);
+    return this.variantesService.findOne(id);
   }
 
+  //PARA RUTA NO DEFINIDA
+  @Get('*')
+  rutasNoDefinidas() {
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
+  }
+  //FIN PARA RUTA NO DEFINIDA...........
+
   @Put(':id')
-  update(@Param('id') id: string, @Body() dataDto: UpdateVarianteDto) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id de modalidad debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de variante debe ser un número entero.")
-    return this.variantesService.update(idx, dataDto);
+  update(
+    @Param('id', ParseIntPipe) id: number, 
+    @Body() dataDto: UpdateVarianteDto
+  ) {
+    
+    return this.variantesService.update(id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id de variante debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de variante debe ser un número entero.")
-    return this.variantesService.remove(idx);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    
+    return this.variantesService.remove(id);
   }
 }

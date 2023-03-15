@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateSexoDto } from './dto/create-sexo.dto';
 import { UpdateSexoDto } from './dto/update-sexo.dto';
 import { Repository } from 'typeorm';
@@ -13,10 +13,19 @@ export class SexoService {
   ){}
 
   async create(data: CreateSexoDto): Promise<Sexo> {
-    const existe = await this.sexoRepository.findOneBy({sexo: data.sexo});
-    if(existe) throw new BadRequestException ("El sexo que intenta crear ya existe.");
+
     const nuevo = await this.sexoRepository.create(data);
-    return await this.sexoRepository.save(nuevo);
+    try {
+
+      return await this.sexoRepository.save(nuevo);
+    }catch (error) {
+      if(error.code == 'ER_DUP_ENTRY'){
+        let existe = await this.sexoRepository.findOneBy({sexo: data.sexo});
+        if(existe) throw new InternalServerErrorException ("El sexo que intenta crear ya existe.");      
+      } 
+
+      throw new InternalServerErrorException('Error al crear el sexo: ',error.message);  
+    }     
   }
 
   async findAll() {
@@ -33,15 +42,27 @@ export class SexoService {
   async findOne(id: number) {
 
     const respuesta = await this.sexoRepository.findOneBy({id_sexo: id});
-    if (!respuesta) throw new NotFoundException("No se encontró el registro de sexo solicitado.");
+    if (!respuesta) throw new NotFoundException("El registro solicitado no existe.");
     return respuesta;
   }
   //FIN BUSCAR  XID..................................................................
 
   async update(id: number, data: UpdateSexoDto) {
-    const respuesta = await this.sexoRepository.update(id, data);
-    if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de sexo.");
-    return respuesta;
+
+    try{
+      const respuesta = await this.sexoRepository.update(id, data);
+      if((await respuesta).affected == 0){
+        await this.findOne(id);
+        throw new InternalServerErrorException("No se modificó el registro.");
+      } 
+      return respuesta;
+    }
+    catch(error){
+      if(error.code=='ER_DUP_ENTRY'){
+        throw new InternalServerErrorException('El sexo ingresada ya existe.');
+      }      
+      throw new InternalServerErrorException('Error al modificar el sexo: ',error.message);
+    }   
   }
 
   async remove(id: number) {

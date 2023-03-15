@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateTipoAudienciaDto } from './dto/create-tipo-audiencia.dto';
@@ -13,10 +13,19 @@ export class TiposAudienciaService {
   ){}
 
   async create(data: CreateTipoAudienciaDto): Promise<TipoAudiencia> {
-    const existe = await this.tipoAudienciaRepository.findOneBy({tipo_audiencia: data.tipo_audiencia});
-    if(existe) throw new BadRequestException ("El tipo de audiencia que intenta crear ya existe.");
+
     const nuevo = await this.tipoAudienciaRepository.create(data);
-    return await this.tipoAudienciaRepository.save(nuevo);
+    try {
+
+      return await this.tipoAudienciaRepository.save(nuevo);
+    }catch (error) {
+      if(error.code == 'ER_DUP_ENTRY'){
+        let existe = await this.tipoAudienciaRepository.findOneBy({tipo_audiencia: data.tipo_audiencia});
+        if(existe) throw new InternalServerErrorException ("El tipo-audiencia que intenta crear ya existe.");      
+      } 
+
+      throw new InternalServerErrorException('Error al crear el tipo-audiencia: ',error.message);  
+    }      
   }
 
   async findAll() {
@@ -33,20 +42,32 @@ export class TiposAudienciaService {
   async findOne(id: number) {
 
     const respuesta = await this.tipoAudienciaRepository.findOneBy({id_tipo_audiencia: id});
-    if (!respuesta) throw new NotFoundException("No se encontró el registro de tipo de audiencia solicitado.");
+    if (!respuesta) throw new NotFoundException("No se encontró el registro de tipo-audiencia solicitado.");
     return respuesta;
   }
   //FIN BUSCAR  XID..................................................................
 
   async update(id: number, data: UpdateTipoAudienciaDto) {
-    const respuesta = await this.tipoAudienciaRepository.update(id, data);
-    if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de tipo de audiencia.");
-    return respuesta;
+
+    try{
+      const respuesta = await this.tipoAudienciaRepository.update(id, data);
+      if((await respuesta).affected == 0){
+        await this.findOne(id);
+        throw new InternalServerErrorException("No se modificó el registro.");
+      } 
+      return respuesta;
+    }
+    catch(error){
+      if(error.code=='ER_DUP_ENTRY'){
+        throw new InternalServerErrorException('El tipo-audiencia  ingresada ya existe.');
+      }      
+      throw new InternalServerErrorException('Error al modificar el tipo-audiencia : ',error.message);
+    }
   }
 
   async remove(id: number) {
     const respuesta = await this.tipoAudienciaRepository.findOneBy({id_tipo_audiencia: id});
-    if(!respuesta) throw new NotFoundException("No existe el registro de tipo de audiencia que intenta eliminar");
+    if(!respuesta) throw new NotFoundException("No existe el registro de tipo-audiencia que intenta eliminar");
     return await this.tipoAudienciaRepository.remove(respuesta);
   }
 }

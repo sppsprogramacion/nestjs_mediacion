@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateEstadoTramiteDto } from './dto/create-estado-tramite.dto';
@@ -13,10 +13,19 @@ export class EstadosTramiteService {
   ){}
 
   async create(data: CreateEstadoTramiteDto): Promise<EstadoTramite> {
-    const existe = await this.estadoTramiteRepository.findOneBy({estado_tramite: data.estado_tramite});
-    if(existe) throw new BadRequestException ("El estado de tramite que intenta crear ya existe.");
+
     const nuevo = await this.estadoTramiteRepository.create(data);
-    return await this.estadoTramiteRepository.save(nuevo);
+    try {
+      return await this.estadoTramiteRepository.save(nuevo);
+    } catch (error) {
+      if(error.code=='ER_DUP_ENTRY'){
+        let existe = await this.estadoTramiteRepository.findOneBy({estado_tramite: data.estado_tramite});
+        if(existe) throw new InternalServerErrorException ("El estado-tramite que intenta crear ya existe.");      
+      } 
+
+      throw new InternalServerErrorException('Error al crear el estado-tramite: ',error.message);  
+    }
+    
   }
 
   async findAll() {
@@ -31,16 +40,29 @@ export class EstadosTramiteService {
 
   //BUSCAR  XID
   async findOne(id: number) {
+
     const respuesta = await this.estadoTramiteRepository.findOneBy({id_estado_tramite: id});
-    if (!respuesta) throw new NotFoundException("No se encontró el registro de estado de tramite solicitado.");
+    if (!respuesta) throw new NotFoundException("El registro solicitado no existe.");
     return respuesta;
   }
   //FIN BUSCAR  XID..................................................................
 
   async update(id: number, data: UpdateEstadoTramiteDto) {
-    const respuesta = await this.estadoTramiteRepository.update(id, data);
-    if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de estado de tramite.");
-    return respuesta;
+
+    try{
+      const respuesta = await this.estadoTramiteRepository.update(id, data);
+      if((await respuesta).affected == 0){
+        await this.findOne(id);
+        throw new InternalServerErrorException("No se modificó el registro.");
+      } 
+      return respuesta;
+    }
+    catch(error){
+      if(error.code=='ER_DUP_ENTRY'){
+        throw new InternalServerErrorException('El estado-tramite ingresado ya existe.');
+      }      
+      throw new InternalServerErrorException('Error al modificar el estado-tramite: ',error.message);
+    }    
   }
 
   async remove(id: number) {

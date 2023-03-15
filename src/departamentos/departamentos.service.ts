@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateDepartamentoDto } from './dto/create-departamento.dto';
@@ -13,10 +13,19 @@ export class DepartamentosService {
   ){}
 
   async create(data: CreateDepartamentoDto): Promise<Departamento> {
-    const existe = await this.departamentoRepository.findOneBy({departamento: data.departamento});
-    if(existe) throw new BadRequestException ("El departamento que intenta crear ya existe.");
+
     const nuevo = await this.departamentoRepository.create(data);
-    return await this.departamentoRepository.save(nuevo);
+    try {
+      return await this.departamentoRepository.save(nuevo);
+    } catch (error) {
+      if(error.code=='ER_DUP_ENTRY'){
+        let existe = await this.departamentoRepository.findOneBy({departamento: data.departamento});
+        if(existe) throw new InternalServerErrorException ("El departamento que intenta crear ya existe.");      
+      } 
+
+      throw new InternalServerErrorException('Error al crear el departamento: ',error.message);  
+    }
+    
   }
 
   async findAll() {
@@ -35,13 +44,25 @@ export class DepartamentosService {
     const respuesta = await this.departamentoRepository.findOneBy({id_departamento: id});
     if (!respuesta) throw new NotFoundException("No se encontró el registro de departamento solicitado.");
     return respuesta;
+
   }
   //FIN BUSCAR  XID..................................................................
 
   async update(id: number, data: UpdateDepartamentoDto) {
-    const respuesta = await this.departamentoRepository.update(id, data);
-    if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de departamento.");
-    return respuesta;
+    try{
+      const respuesta = await this.departamentoRepository.update(id, data);
+      if((await respuesta).affected == 0){
+        await this.findOne(id);
+        throw new InternalServerErrorException("No se modificó el registro.");
+      } 
+      return respuesta;
+    }
+    catch(error){
+      if(error.code=='ER_DUP_ENTRY'){
+        throw new InternalServerErrorException('El departamento ingresado ya existe.');
+      }      
+      throw new InternalServerErrorException('Error al modificar el departamento: ',error.message);
+    }
   }
 
   async remove(id: number) {

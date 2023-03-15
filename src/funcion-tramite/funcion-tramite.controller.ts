@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
 import { FuncionTramiteService } from './funcion-tramite.service';
 import { CreateFuncionTramiteDto } from './dto/create-funcion-tramite.dto';
 import { UpdateFuncionTramiteDto } from './dto/update-funcion-tramite.dto';
@@ -18,27 +18,30 @@ export class FuncionTramiteController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     
-    if(isNaN(Number(id))) throw new NotFoundException("El id de la funcioncion en tramite debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de funcion en tramite debe ser un número entero.")
-    return this.funcionTramiteService.findOne(idx);
+    return this.funcionTramiteService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() dataDto: UpdateFuncionTramiteDto) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id de modalidad debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de funcion en tramite debe ser un número entero.")
-    return this.funcionTramiteService.update(idx, dataDto);
+  update(
+    @Param('id') id: number, 
+    @Body() dataDto: UpdateFuncionTramiteDto
+  ) {
+    
+    return this.funcionTramiteService.update(id, dataDto);
   }
 
+  //PARA RUTA NO DEFINIDA
+  @Get('*')
+  rutasNoDefinidas() {
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
+  }
+  //FIN PARA RUTA NO DEFINIDA...........
+
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id de funcion en tramite debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de funcion en tramite debe ser un número entero.")
-    return this.funcionTramiteService.remove(idx);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    
+    return this.funcionTramiteService.remove(id);
   }
 }

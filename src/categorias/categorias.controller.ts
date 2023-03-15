@@ -10,8 +10,7 @@ export class CategoriasController {
   @Post()
   create(@Body() data: CreateCategoriaDto) {
     return this.categoriasService.create(data);
-  }
-  
+  }  
 
   @Get()
   findAll() {
@@ -27,7 +26,7 @@ export class CategoriasController {
   //PARA RUTA NO DEFINIDA
   @Get('*')
   rutasNoDefinidas() {
-    throw new NotFoundException('No se encontro la ruta especificada. Verifique si la ruta es correcta');
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
   }
   //FIN PARA RUTA NO DEFINIDA...........
 
@@ -36,7 +35,7 @@ export class CategoriasController {
     @Param('id', ParseIntPipe) id: number, 
     @Body() dataDto: UpdateCategoriaDto
   ) {
-    console.log("id put: ", id);
+
     return this.categoriasService.update(id, dataDto);
   }
 

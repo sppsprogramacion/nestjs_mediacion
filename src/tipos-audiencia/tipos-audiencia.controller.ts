@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
 import { TiposAudienciaService } from './tipos-audiencia.service';
 import { CreateTipoAudienciaDto } from './dto/create-tipo-audiencia.dto';
 import { UpdateTipoAudienciaDto } from './dto/update-tipo-audiencia.dto';
@@ -18,27 +18,30 @@ export class TiposAudienciaController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     
-    if(isNaN(Number(id))) throw new NotFoundException("El id del tipo de audiencia debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id del tipo de audiencia debe ser un número entero.")
-    return this.tiposAudienciaService.findOne(idx);
+    return this.tiposAudienciaService.findOne(id);
   }
 
+  //PARA RUTA NO DEFINIDA
+  @Get('*')
+  rutasNoDefinidas() {
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
+  }
+  //FIN PARA RUTA NO DEFINIDA...........
+
   @Put(':id')
-  update(@Param('id') id: string, @Body() dataDto: UpdateTipoAudienciaDto) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id de tipo de audiencia debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id del tipo de audiencia debe ser un número entero.")
-    return this.tiposAudienciaService.update(idx, dataDto);
+  update(
+    @Param('id', ParseIntPipe) id: number, 
+    @Body() dataDto: UpdateTipoAudienciaDto
+  ) {
+    
+    return this.tiposAudienciaService.update(id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id del tipo de audiencia debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id del tipo de audiencia debe ser un número entero.")
-    return this.tiposAudienciaService.remove(idx);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    
+    return this.tiposAudienciaService.remove(id);
   }
 }

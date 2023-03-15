@@ -5,10 +5,10 @@ export class CreateCentroMediacionDto {
     @IsNotEmpty({message: "Debe ingresar el centro de mediación."})
     centro_mediacion: string;   
 
-    @IsInt({message: "El id de departamento debe ser un número entero."})
+    @IsInt({message: "El id-departamento debe ser un número entero."})
     departamento_id: number;
 
-    @IsInt({message: "El id de municipio debe ser un número entero."})
+    @IsInt({message: "El id-municipio debe ser un número entero."})
     municipio_id: number
 
     @Length(1,100,{message: "Localidad o barrio debe tener entre $constraint1 y $constraint2 caracteres."})

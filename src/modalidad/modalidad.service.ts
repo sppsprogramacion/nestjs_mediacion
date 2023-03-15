@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateModalidadDto } from './dto/create-modalidad.dto';
@@ -13,10 +13,19 @@ export class ModalidadService {
   ){}
 
   async create(data: CreateModalidadDto): Promise<Modalidad> {
-    const existe = await this.modalidadRepository.findOneBy({modalidad: data.modalidad});
-    if(existe) throw new BadRequestException ("La modalidad que intenta crear ya existe.");
+
     const nuevo = await this.modalidadRepository.create(data);
-    return await this.modalidadRepository.save(nuevo);
+    try{
+      
+      return await this.modalidadRepository.save(nuevo);
+    }catch (error) {
+      if(error.code == "ER_DUP_ENTRY"){
+        let existe = await this.modalidadRepository.findOneBy({modalidad: data.modalidad});
+        if(existe) throw new InternalServerErrorException ("La modalidad que intenta crear ya existe.");        
+      }
+
+      throw new InternalServerErrorException ("Error al crear la modalidad: ", error.message);
+    }
   }
 
   async findAll() {
@@ -39,9 +48,21 @@ export class ModalidadService {
   //FIN BUSCAR  XID..................................................................
 
   async update(id: number, data: UpdateModalidadDto) {
-    const respuesta = await this.modalidadRepository.update(id, data);
-    if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de modalidad.");
-    return respuesta;
+
+    try{
+      const respuesta = await this.modalidadRepository.update(id, data);
+      if((await respuesta).affected == 0){
+        await this.findOne(id);
+        throw new InternalServerErrorException("No se modificó el registro.");
+      } 
+      return respuesta;
+    }
+    catch(error){
+      if(error.code=='ER_DUP_ENTRY'){
+        throw new InternalServerErrorException('La modalidad ingresada ya existe.');
+      }      
+      throw new InternalServerErrorException('Error al modificar la modalidad: ',error.message);
+    }    
   }
 
   async remove(id: number) {

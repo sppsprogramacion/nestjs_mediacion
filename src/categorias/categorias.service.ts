@@ -13,16 +13,13 @@ export class CategoriasService {
   ){}
 
   async create(data: CreateCategoriaDto): Promise<Categoria> {
-    // const existe = await this.categoriaRepository.findOneBy({categoria: data.categoria});
-    // if(existe) throw new BadRequestException ("La categoría que intenta crear ya existe.");
-    // const nuevo = await this.categoriaRepository.create(data);
-    // return await this.categoriaRepository.save(nuevo);
-
+    
     const nuevo = await this.categoriaRepository.create(data);
     try {
+
       return await this.categoriaRepository.save(nuevo);
-    } catch (error) {
-      if(error.code=='ER_DUP_ENTRY'){
+    }catch (error) {
+      if(error.code == 'ER_DUP_ENTRY'){
         let existe = await this.categoriaRepository.findOneBy({categoria: data.categoria});
         if(existe) throw new InternalServerErrorException ("La categoría que intenta crear ya existe.");      
       } 
