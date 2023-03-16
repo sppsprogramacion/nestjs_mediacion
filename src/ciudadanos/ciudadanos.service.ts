@@ -42,7 +42,7 @@ export class CiudadanosService {
   async findXDni(dnix: number) {
 
     const respuesta = await this.ciudadanoRepository.findOneBy({dni: dnix});
-    if (!respuesta) throw new NotFoundException("No se encontró el registro de ciudadano solicitado.");
+    if (!respuesta) throw new NotFoundException("El registro solicitado no existe.");
     return respuesta;
   }
   //FIN BUSCAR  XDni..................................................................
@@ -59,10 +59,11 @@ export class CiudadanosService {
   async update(dnix: number, data: UpdateCiudadanoDto) {
     try{
       const respuesta = await this.ciudadanoRepository.update({dni: dnix}, data);
-      if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de ciudadano.");
+      if(( await respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de ciudadano.");
       return respuesta;
     }
     catch(error){
+      
       throw new NotFoundException('Error al modificar el ciudadano: ',error.message);
     }
   }

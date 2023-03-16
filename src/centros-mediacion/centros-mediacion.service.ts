@@ -61,7 +61,12 @@ export class CentrosMediacionService {
     }
     catch(error){
       if(error.code=='ER_DUP_ENTRY'){
-        throw new InternalServerErrorException('El centro de mediacion ingresado ya existe.');
+        let existe = await this.centrosMediacionRepository.findOneBy({email: data.email});
+        if(existe) throw new InternalServerErrorException ("El email que se intentó crear ya existe.");
+      
+        existe = null;
+        existe = await this.centrosMediacionRepository.findOneBy({centro_mediacion: data.centro_mediacion});
+        if(existe) throw new InternalServerErrorException ("El centro de mediación que intentó crear ya existe.");
       }   
       throw new InternalServerErrorException('Error al modificar el centro de mediación: ' + error.message);
     }    
