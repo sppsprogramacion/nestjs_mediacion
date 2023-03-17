@@ -19,9 +19,9 @@ export class ObjetosController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    return this.objetosService.findOne(id);
+    return this.objetosService.findOne(+id);
   }
 
   //PARA RUTA NO DEFINIDA
@@ -33,16 +33,16 @@ export class ObjetosController {
 
   @Put(':id')
   update(
-    @Param('id', ParseIntPipe) id: number, 
+    @Param('id', ParseIntPipe) id: string, 
     @Body() dataDto: UpdateObjetoDto
   ) {
     
-    return this.objetosService.update(id, dataDto);
+    return this.objetosService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: string) {
 
-    return this.objetosService.remove(id);
+    return this.objetosService.remove(+id);
   }
 }

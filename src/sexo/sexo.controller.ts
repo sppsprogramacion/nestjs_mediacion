@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, NotFoundException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { SexoService } from './sexo.service';
 import { CreateSexoDto } from './dto/create-sexo.dto';
 import { UpdateSexoDto } from './dto/update-sexo.dto';
@@ -18,9 +18,9 @@ export class SexoController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    return this.sexoService.findOne(id);
+    return this.sexoService.findOne(+id);
   }
 
   //PARA RUTA NO DEFINIDA
@@ -30,18 +30,18 @@ export class SexoController {
   }
   //FIN PARA RUTA NO DEFINIDA...........
 
-  @Put(':id')
+  @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number, 
+    @Param('id', ParseIntPipe) id: string, 
     @Body() dataDto: UpdateSexoDto
   ) {
     
-    return this.sexoService.update(id, dataDto);
+    return this.sexoService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: string) {
    
-    return this.sexoService.remove(id);
+    return this.sexoService.remove(+id);
   }
 }

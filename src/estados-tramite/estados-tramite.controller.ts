@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { EstadosTramiteService } from './estados-tramite.service';
 import { CreateEstadoTramiteDto } from './dto/create-estado-tramite.dto';
 import { UpdateEstadoTramiteDto } from './dto/update-estado-tramite.dto';
@@ -18,9 +18,9 @@ export class EstadosTramiteController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    return this.estadosTramiteService.findOne(id);
+    return this.estadosTramiteService.findOne(+id);
   }
 
   //PARA RUTA NO DEFINIDA
@@ -30,18 +30,18 @@ export class EstadosTramiteController {
   }
   //FIN PARA RUTA NO DEFINIDA...........
 
-  @Put(':id')
+  @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number, 
+    @Param('id', ParseIntPipe) id: string, 
     @Body() dataDto: UpdateEstadoTramiteDto
   ) {
 
-    return this.estadosTramiteService.update(id, dataDto);
+    return this.estadosTramiteService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: string) {
     
-    return this.estadosTramiteService.remove(id);
+    return this.estadosTramiteService.remove(+id);
   }
 }

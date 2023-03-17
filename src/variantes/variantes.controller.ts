@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { VariantesService } from './variantes.service';
 import { CreateVarianteDto } from './dto/create-variante.dto';
 import { UpdateVarianteDto } from './dto/update-variante.dto';
@@ -18,9 +18,9 @@ export class VariantesController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    return this.variantesService.findOne(id);
+    return this.variantesService.findOne(+id);
   }
 
   //PARA RUTA NO DEFINIDA
@@ -30,18 +30,18 @@ export class VariantesController {
   }
   //FIN PARA RUTA NO DEFINIDA...........
 
-  @Put(':id')
+  @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number, 
+    @Param('id', ParseIntPipe) id: string, 
     @Body() dataDto: UpdateVarianteDto
   ) {
     
-    return this.variantesService.update(id, dataDto);
+    return this.variantesService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: string) {
     
-    return this.variantesService.remove(id);
+    return this.variantesService.remove(+id);
   }
 }

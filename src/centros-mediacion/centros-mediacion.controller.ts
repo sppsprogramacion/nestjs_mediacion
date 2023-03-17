@@ -1,5 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
-import { Request } from 'express';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { CentrosMediacionService } from './centros-mediacion.service';
 import { CreateCentroMediacionDto } from './dto/create-centro-mediacion.dto';
 import { UpdateCentroMediacionDto } from './dto/update-centro-mediacion.dto';
@@ -19,9 +18,9 @@ export class CentrosMediacionController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    
-    return this.centrosMediacionService.findOne(id);
+  findOne(@Param('id', ParseIntPipe) id: string) {
+
+    return this.centrosMediacionService.findOne(+id);
   }
 
   //PARA RUTA NO DEFINIDA
@@ -31,18 +30,18 @@ export class CentrosMediacionController {
   }
   //FIN PARA RUTA NO DEFINIDA...........
 
-  @Put(':id')
+  @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number, 
+    @Param('id', ParseIntPipe) id: string, 
     @Body() dataDto: UpdateCentroMediacionDto
   ) {
     
-    return this.centrosMediacionService.update(id, dataDto);
+    return this.centrosMediacionService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: string) {
 
-    return this.centrosMediacionService.remove(id);
+    return this.centrosMediacionService.remove(+id);
   }
 }

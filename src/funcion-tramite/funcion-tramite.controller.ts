@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { FuncionTramiteService } from './funcion-tramite.service';
 import { CreateFuncionTramiteDto } from './dto/create-funcion-tramite.dto';
 import { UpdateFuncionTramiteDto } from './dto/update-funcion-tramite.dto';
@@ -18,18 +18,9 @@ export class FuncionTramiteController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    return this.funcionTramiteService.findOne(id);
-  }
-
-  @Put(':id')
-  update(
-    @Param('id') id: number, 
-    @Body() dataDto: UpdateFuncionTramiteDto
-  ) {
-    
-    return this.funcionTramiteService.update(id, dataDto);
+    return this.funcionTramiteService.findOne(+id);
   }
 
   //PARA RUTA NO DEFINIDA
@@ -39,9 +30,18 @@ export class FuncionTramiteController {
   }
   //FIN PARA RUTA NO DEFINIDA...........
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  @Patch(':id')
+  update(
+    @Param('id') id: string, 
+    @Body() dataDto: UpdateFuncionTramiteDto
+  ) {
     
-    return this.funcionTramiteService.remove(id);
+    return this.funcionTramiteService.update(+id, dataDto);
+  }  
+
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: string) {
+    
+    return this.funcionTramiteService.remove(+id);
   }
 }

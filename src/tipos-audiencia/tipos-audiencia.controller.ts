@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { TiposAudienciaService } from './tipos-audiencia.service';
 import { CreateTipoAudienciaDto } from './dto/create-tipo-audiencia.dto';
 import { UpdateTipoAudienciaDto } from './dto/update-tipo-audiencia.dto';
@@ -18,9 +18,9 @@ export class TiposAudienciaController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    return this.tiposAudienciaService.findOne(id);
+    return this.tiposAudienciaService.findOne(+id);
   }
 
   //PARA RUTA NO DEFINIDA
@@ -30,18 +30,18 @@ export class TiposAudienciaController {
   }
   //FIN PARA RUTA NO DEFINIDA...........
 
-  @Put(':id')
+  @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number, 
+    @Param('id', ParseIntPipe) id: string, 
     @Body() dataDto: UpdateTipoAudienciaDto
   ) {
     
-    return this.tiposAudienciaService.update(id, dataDto);
+    return this.tiposAudienciaService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: string) {
     
-    return this.tiposAudienciaService.remove(id);
+    return this.tiposAudienciaService.remove(+id);
   }
 }

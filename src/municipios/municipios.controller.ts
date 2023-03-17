@@ -18,9 +18,9 @@ export class MunicipiosController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    return this.municipiosService.findOne(id);
+    return this.municipiosService.findOne(+id);
   }
 
   //PARA RUTA NO DEFINIDA
@@ -32,16 +32,16 @@ export class MunicipiosController {
 
   @Put(':id')
   update(
-    @Param('id', ParseIntPipe) id: number, 
+    @Param('id', ParseIntPipe) id: string, 
     @Body() dataDto: UpdateMunicipioDto
   ) {
     
-    return this.municipiosService.update(id, dataDto);
+    return this.municipiosService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: string) {
     
-    return this.municipiosService.remove(id);
+    return this.municipiosService.remove(+id);
   }
 }

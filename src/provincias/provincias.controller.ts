@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { ProvinciasService } from './provincias.service';
 import { CreateProvinciaDto } from './dto/create-provincia.dto';
 import { UpdateProvinciaDto } from './dto/update-provincia.dto';
@@ -18,9 +18,9 @@ export class ProvinciasController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    return this.provinciasService.findOne(id);
+    return this.provinciasService.findOne(+id);
   }
 
   //PARA RUTA NO DEFINIDA
@@ -30,18 +30,18 @@ export class ProvinciasController {
   }
   //FIN PARA RUTA NO DEFINIDA...........
 
-  @Put(':id')
+  @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number, 
+    @Param('id', ParseIntPipe) id: string, 
     @Body() dataDto: UpdateProvinciaDto
   ) {
     
-    return this.provinciasService.update(id, dataDto);
+    return this.provinciasService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: string) {
     
-    return this.provinciasService.remove(id);
+    return this.provinciasService.remove(+id);
   }
 }

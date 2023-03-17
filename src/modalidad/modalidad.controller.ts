@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { ModalidadService } from './modalidad.service';
 import { CreateModalidadDto } from './dto/create-modalidad.dto';
 import { UpdateModalidadDto } from './dto/update-modalidad.dto';
@@ -18,9 +18,9 @@ export class ModalidadController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    return this.modalidadService.findOne(id);
+    return this.modalidadService.findOne(+id);
   }
 
   //PARA RUTA NO DEFINIDA
@@ -30,17 +30,17 @@ export class ModalidadController {
   }
   //FIN PARA RUTA NO DEFINIDA...........
 
-  @Put(':id')
+  @Patch(':id')
   update(
-    @Param('id') id: number, 
+    @Param('id') id: string, 
     @Body() dataDto: UpdateModalidadDto) {
     
-    return this.modalidadService.update(id, dataDto);
+    return this.modalidadService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: string) {
     
-    return this.modalidadService.remove(id);
+    return this.modalidadService.remove(+id);
   }
 }

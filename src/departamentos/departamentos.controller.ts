@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { DepartamentosService } from './departamentos.service';
 import { CreateDepartamentoDto } from './dto/create-departamento.dto';
 import { UpdateDepartamentoDto } from './dto/update-departamento.dto';
@@ -18,9 +18,9 @@ export class DepartamentosController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-  return this.departamentosService.findOne(id);
+  return this.departamentosService.findOne(+id);
   }
 
   //PARA RUTA NO DEFINIDA
@@ -31,18 +31,18 @@ export class DepartamentosController {
   }
   //FIN PARA RUTA NO DEFINIDA...........
 
-  @Put(':id')
+  @Patch(':id')
   update(
-    @Param('id', ParseIntPipe) id: number, 
+    @Param('id', ParseIntPipe) id: string, 
     @Body() dataDto: UpdateDepartamentoDto
   ) {
     
-    return this.departamentosService.update(id, dataDto);
+    return this.departamentosService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: string) {
    
-    return this.departamentosService.remove(id);
+    return this.departamentosService.remove(+id);
   }
 }
