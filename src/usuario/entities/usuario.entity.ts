@@ -6,8 +6,15 @@ import { CentroMediacion } from '../../centros-mediacion/entities/centro-mediaci
 
 @Entity('usuarios')
 export class Usuario {
-    
-    @PrimaryColumn()
+
+    @PrimaryGeneratedColumn()
+    id_usuario: number;
+
+    @Column({
+        type: 'int',
+        nullable: false,
+        unique: true
+    })
     dni: number;
 
     @Column({

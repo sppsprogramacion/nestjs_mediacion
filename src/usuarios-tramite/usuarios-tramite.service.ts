@@ -36,18 +36,19 @@ export class UsuariosTramiteService {
   
 
   //BUSCAR  XID
-  async findTramitesXUsuario(num_dni: number) {    
+  async findTramitesXUsuario(id_usuario: number) {    
     //const respuesta = await this.usuariosCentroRepository.findOneBy({id_usuario_centro: id});
     const respuesta = await this.usuariosTramiteRepository.findAndCount(
       {
         //relations: ['usuario','centro_mediacion'],
         where: {
-          dni_usuario: num_dni,
+          usuario_id: id_usuario,
           activo: true
         }      
           
       }
     );
+    
     if (!respuesta) throw new NotFoundException("No se encontró el tramites para este usuario.");
     return respuesta;
   }

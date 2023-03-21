@@ -17,13 +17,13 @@ export class UsuariosCentrosService {
     const existe = await this.usuariosCentroRepository.findOne(
       {
         where:{
-          dni_usuario: data.dni_usuario,
+          usuario_id: data.usuario_id,
           centro_mediacion_id: data.centro_mediacion_id,
           activo: true
         }
       }
     );
-    console.log("dta sservicio susario centro: ", existe);
+    
     if(existe) throw new BadRequestException ("Este usuario ya se encuentra asignado a este centro de mediación");
     const nuevo = await this.usuariosCentroRepository.create(data);
     try {

@@ -5,6 +5,10 @@ export class CreateTramiteDto {
    
     numero_tramite: number;
 
+    @IsInt({message: "El id-ciudadano debe ser un número entero."})
+    @IsNotEmpty({message: "Debe ingresar el id-ciudadano."})
+    ciudadano_id:number;
+
     @IsBoolean({message: "El campo esta asesorado debe ser verdadero o falso"})
     esta_asesorado: boolean;    
     
@@ -52,11 +56,8 @@ export class CreateTramiteDto {
     @IsNotEmpty({message: "Debe ingresar el id de la variante."})
     variante_id: number;
 
-    estado_tramite_id: number;
+    estado_tramite_id: number;   
     
-    @IsInt({message: "El dni debe ser un número entero."})
-    @IsNotEmpty({message: "Debe ingresar el dni."})
-    dni_ciudadano:number;
 
     fecha_finalizacion: Date;
 }

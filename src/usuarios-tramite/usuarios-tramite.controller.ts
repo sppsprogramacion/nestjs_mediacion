@@ -32,17 +32,17 @@ export class UsuariosTramiteController {
   }
 
   //BUSCAR TRAMITES ASIGNADOS POR DNI DE USUARIO
-  @Get('buscar-xdni-usuario')  
+  @Get('buscar-xusuario')  
   async findTramiteXNumero(
     @Req()
     req: Request
   ) {
     
-    if(!req.query.dni_usuario) throw new NotFoundException("El numero de dni no fue ingresado.")
-    if(isNaN(Number(req.query.dni_usuario.toString()))) throw new NotFoundException("El numero de dni debe ser un número.")
-    let dni_usuariox: number = parseFloat(req.query.dni_usuario.toString());
-    if(!Number.isInteger(dni_usuariox)) throw new NotFoundException("El numero de tramite debe ser un número entero.")
-    return this.usuariosTramiteService.findTramitesXUsuario(dni_usuariox);
+    if(!req.query.id_usuario) throw new NotFoundException("El numero de id-usuario no fue ingresado.")
+    if(isNaN(Number(req.query.id_usuario.toString()))) throw new NotFoundException("El numero de id-usuario debe ser un número.")
+    let id_usuariox: number = parseFloat(req.query.id_usuario.toString());
+    if(!Number.isInteger(id_usuariox)) throw new NotFoundException("El numero de id-usuario debe ser un número entero.")
+    return this.usuariosTramiteService.findTramitesXUsuario(id_usuariox);
   }
   //FIN BUSCAR TRAMITES ASIGNADOS POR DNI DE USUARIO....................................................
 

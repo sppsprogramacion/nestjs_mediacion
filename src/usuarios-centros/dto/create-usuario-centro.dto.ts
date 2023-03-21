@@ -6,9 +6,9 @@ export class CreateUsuarioCentroDto {
     @IsNotEmpty({message: "Debe ingresar el id del centro de mediacón."})
     centro_mediacion_id: number;
 
-    @IsInt({message: "El dni debe ser un número entero."})
-    @IsNotEmpty({message: "Debe ingresar el dni."})
-    dni_usuario: number
+    @IsInt({message: "El id-usuario debe ser un número entero."})
+    @IsNotEmpty({message: "Debe ingresar el id-usuario."})
+    usuario_id: number
    
     @Length(1,200,{message: "El detalle debe tener entre $constraint1 y $constraint2 caracteres."})
     @IsNotEmpty({message: "Debe ingresar el detalle."})
