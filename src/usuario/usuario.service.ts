@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
@@ -12,17 +12,21 @@ export class UsuarioService {
     private readonly usuariosRepository: Repository<Usuario>
   ){}
   async create(data: CreateUsuarioDto): Promise<Usuario> {
-    const existe = await this.usuariosRepository.findOneBy({dni: data.dni});
+    
+    let existe = await this.usuariosRepository.findOneBy({dni: data.dni});
     if(existe) throw new BadRequestException ("El dni del usuario que intenta crear ya existe.");
+
     const nuevo = await this.usuariosRepository.create(data);
     try {
+
       return await this.usuariosRepository.save(nuevo);
     } catch (error) {
       if(error.code=='ER_DUP_ENTRY'){
-        const existe = await this.usuariosRepository.findOneBy({email: data.email});
-        if(existe) throw new BadRequestException ("El email que se intentó crear ya existe. Intente guardar nuevamente");
+        existe = null;
+        existe = await this.usuariosRepository.findOneBy({email: data.email});
+        if(existe) throw new InternalServerErrorException ("El email que se intentó crear ya existe. Intente guardar nuevamente");
       }      
-      throw new NotFoundException('Error al crear el nuevo usuario: ',error.message);  
+      throw new InternalServerErrorException('Error al crear el nuevo usuario: ',error.message);  
     }       
   }
 

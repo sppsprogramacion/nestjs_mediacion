@@ -23,7 +23,7 @@ export class CiudadanosController {
     @Req()
     req: Request
   ) {    
-
+    
     return this.ciudadanosService.findXDni(+dni);
   }
   //FIN BUSCAR CIUDADANO X DNI...........................................
