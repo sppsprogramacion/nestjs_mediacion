@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, NotFoundException, Put, Query, ParseIntPipe } from '@nestjs/common';
 import { Request } from 'express';
 import { TramitesService } from './tramites.service';
 import { CreateTramiteDto } from './dto/create-tramite.dto';
@@ -51,24 +51,45 @@ export class TramitesController {
   //BUSCAR TRAMITES NUEVOS
   @Get('nuevos')
   async findNuevos(
+    @Query('id_ciudadano', ParseIntPipe) id_ciudadano: string,
+    @Req()
+    req: Request
   ) {
-    return this.tramitesService.findxestado(1);
+
+    let id_ciudadanox: number = +id_ciudadano;
+
+    if (id_ciudadanox === 0) return this.tramitesService.findxestado(1);
+
+    return this.tramitesService.findXCiudadanoXEstado(1, id_ciudadanox);
+    
   }
   //BUSCAR TRAMITES NUEVOS.....................................................
 
   //BUSCAR TRAMITES ASIGNADOS A MEDIADOR
   @Get('asignados-mediador')
-  async findAsignadosMediador(    
-  ) {    
-    return this.tramitesService.findxestado(2);
+  async findAsignadosMediador( 
+    @Query('id_ciudadano', ParseIntPipe) id_ciudadano: string,   
+  ) {  
+
+    let id_ciudadanox: number = +id_ciudadano;
+
+    if (id_ciudadanox === 0) return this.tramitesService.findxestado(2);
+
+    return this.tramitesService.findXCiudadanoXEstado(2, id_ciudadanox);
   } 
   //FIN BUSCAR TRAMITES ASIGNADOS A MEDIADORS.......................................
 
   //BUSCAR TRAMITES FINALIZADOS
   @Get('finalizados')
-  async findFinalizados(    
+  async findFinalizados(  
+    @Query('id_ciudadano', ParseIntPipe) id_ciudadano: string,  
   ) {    
-    return this.tramitesService.findxestado(3);
+
+    let id_ciudadanox: number = +id_ciudadano;
+
+    if (id_ciudadanox === 0) return this.tramitesService.findxestado(3);
+    
+    return this.tramitesService.findXCiudadanoXEstado(3, id_ciudadanox);
   }
   //FIN BUSCAR TRAMITES FINALIZADOS.....................................................
 

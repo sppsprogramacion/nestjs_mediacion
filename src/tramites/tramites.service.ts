@@ -77,10 +77,27 @@ export class TramitesService {
         },
         order:{
           numero_tramite: "DESC"
-      }
+        }
       }
     );   
-    console.log(tramites);
+
+    return tramites;
+  }
+  //FIN BUSCAR TRAMITES NUEVOS..........................................
+
+  //BUSCAR TRAMITES X CIUDADANO X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
+  async findXCiudadanoXEstado(id_estado: number, id_ciudadano: number) {
+    const tramites = await this.tramiteRepository.findAndCount(
+      {        
+        where: {
+          estado_tramite_id: id_estado,
+          ciudadano_id: id_ciudadano
+        },
+        order:{
+          numero_tramite: "DESC"
+        }
+      }
+    );   
 
     return tramites;
   }
