@@ -25,8 +25,8 @@ export class TramitesService {
     let anio:number= new Date().getFullYear(); 
 
     //Control de existencia del ciudadano
-    const ciudadano_existe = await this.ciudadanoRepository.findOneBy({dni: data.ciudadano_id});
-    if(!ciudadano_existe) throw new BadRequestException ("El número de dni ingresado no existe para un ciudadano.")
+    const ciudadano_existe = await this.ciudadanoRepository.findOneBy({ id_ciudadano: data.ciudadano_id});
+    if(!ciudadano_existe) throw new BadRequestException ("El ciudadano que intenta crear el tramite no existe.")
     //FIN Control de existencia del ciudadano
 
     //obtener numero de tramite maximo

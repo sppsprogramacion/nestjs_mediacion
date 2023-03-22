@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUsuariosTramiteDto } from './dto/create-usuarios-tramite.dto';
 import { UpdateUsuariosTramiteDto } from './dto/update-usuarios-tramite.dto';
 import { Usuario } from '../usuario/entities/usuario.entity';
@@ -14,16 +14,18 @@ export class UsuariosTramiteService {
   ){}
 
   async create(data: CreateUsuariosTramiteDto): Promise<UsuariosTramite> {
-    // const existe = await this.usuariosCentroRepository.findOne(
-    //   {
-    //     where:{
-    //       usuario_dni: data.usuario_dni,
-    //       centro_mediacion_id: data.centro_mediacion_id,
-    //       activo: true
-    //     }
-    //   }
-    // );
-    // if(existe) throw new BadRequestException ("La asignación de usuario a un centro de mediación que intenta crear ya existe.");
+    const existe = await this.usuariosTramiteRepository.findOne(
+      {
+        where:{
+          usuario_id: data.usuario_id,
+          tramite_numero: data.tramite_numero,
+          funcion_tramite_id: data.funcion_tramite_id,
+          activo: true
+        }
+      }
+    );
+    if(existe) throw new BadRequestException ("Este usuario ya se encuentra asignado a este tramite con esta funcion.");
+    
     const nuevo = await this.usuariosTramiteRepository.create(data);
     try {
       return await this.usuariosTramiteRepository.save(nuevo);

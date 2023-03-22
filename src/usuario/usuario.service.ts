@@ -75,7 +75,6 @@ export class UsuarioService {
 
   //BUSCAR  XDni
   async findXDni(dnix: number) {
-    console.log("dni en servciio usuario", dnix);
     const respuesta = await this.usuariosRepository.findOneBy({dni: dnix});
     if (!respuesta) throw new NotFoundException("No se encontró el registro de usuario solicitado.");
     return respuesta;
