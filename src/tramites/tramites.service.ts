@@ -128,7 +128,6 @@ export class TramitesService {
         }
       }
     );   
-    console.log(tramites);
 
     return tramites;
   }
@@ -177,7 +176,6 @@ export class TramitesService {
     try{
       let data: UpdateTramiteDto = new UpdateTramiteDto;
       data.estado_tramite_id=id_estado_tramite;
-      console.log("data",data);
       const respuesta = await this.tramiteRepository.update({numero_tramite: num_tramitex}, data);
       if((respuesta).affected == 0) throw new NotFoundException("No se modificó el tramite.");
       return respuesta;

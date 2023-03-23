@@ -42,8 +42,8 @@ export class UsuariosTramiteService {
     //const respuesta = await this.usuariosCentroRepository.findOneBy({id_usuario_centro: id});
     const respuesta = await this.usuariosTramiteRepository.findAndCount(
       {
-        //relations: ['usuario','centro_mediacion'],
-        where: {
+        //relations: ['tramite'],
+        where: {          
           usuario_id: id_usuario,
           activo: true
         }      
@@ -55,6 +55,24 @@ export class UsuariosTramiteService {
     return respuesta;
   }
   //FIN BUSCAR  XID..................................................................
+
+  //BUSCAR TRAMITES X CIUDADANO
+  async findTramitesXCiudadano(id_ciudadano){
+
+    const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
+    .leftJoinAndSelect('usuario_tramite.tramite', 'tramite')    
+    .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+    .leftJoinAndSelect('tramite.objeto', 'objeto')  
+    .leftJoinAndSelect('usuario_tramite.usuario', 'usuario')
+    .leftJoinAndSelect('usuario_tramite.funcion_tramite', 'funcion_tramite')
+    .where('tramite.ciudadano_id = :id', { id: id_ciudadano })
+    .getManyAndCount();
+
+    return tramites;
+  }
+
+  //FIN BUSCAR TRAMITES X CIUDADANO
+
 
   //BUSCAR  TRAMITES ASIGNADOS ACTIVOS
   async findTramitesActivos() {    
