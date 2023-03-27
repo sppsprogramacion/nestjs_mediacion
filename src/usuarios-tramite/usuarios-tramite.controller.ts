@@ -1,12 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, Req, Query, ParseIntPipe } from '@nestjs/common';
 import { Request } from 'express';
 import { UsuariosTramiteService } from './usuarios-tramite.service';
 import { CreateUsuariosTramiteDto } from './dto/create-usuarios-tramite.dto';
 import { UpdateUsuariosTramiteDto } from './dto/update-usuarios-tramite.dto';
-import { UsuariosTramite } from './entities/usuarios-tramite.entity';
 import { TramitesService } from '../tramites/tramites.service';
-import { UpdateTramiteDto } from '../tramites/dto/update-tramite.dto';
-import { Tramite } from 'src/tramites/entities/tramite.entity';
+
 
 @Controller('usuarios-tramite')
 export class UsuariosTramiteController {
@@ -31,20 +29,33 @@ export class UsuariosTramiteController {
     return usuarioTramite;
   }
 
-  //BUSCAR TRAMITES ASIGNADOS POR DNI DE USUARIO
-  @Get('buscar-xdni-usuario')  
+  //BUSCAR TRAMITES ASIGNADOS POR ID-USUARIO
+  @Get('buscar-xusuario')  
   async findTramiteXNumero(
-    @Req()
-    req: Request
+    @Query('id_usuario', ParseIntPipe) id_usuario: string, 
+  ) {
+
+    let id_usuariox: number = +id_usuario;
+
+    if (id_usuariox === 0) return this.usuariosTramiteService.findTramitesActivos();
+
+    return this.usuariosTramiteService.findTramitesXUsuario(id_usuariox);
+  }
+  //FIN BUSCAR TRAMITES ASIGNADOS POR ID-USUARIO....................................................
+
+  //BUSCAR TRAMITES ASIGNADOS POR ID-USUARIO
+  @Get('buscar-xciudadano')  
+  async findTramiteXCiudadano(
+    @Query('id_ciudadano', ParseIntPipe) id_ciudadano: string, 
   ) {
     
-    if(!req.query.dni_usuario) throw new NotFoundException("El numero de dni no fue ingresado.")
-    if(isNaN(Number(req.query.dni_usuario.toString()))) throw new NotFoundException("El numero de dni debe ser un número.")
-    let dni_usuariox: number = parseFloat(req.query.dni_usuario.toString());
-    if(!Number.isInteger(dni_usuariox)) throw new NotFoundException("El numero de tramite debe ser un número entero.")
-    return this.usuariosTramiteService.findTramitesXUsuario(dni_usuariox);
+    let id_ciudadanox: number = +id_ciudadano;
+
+    if (id_ciudadanox === 0) return this.usuariosTramiteService.findTramitesActivos();
+
+    return this.usuariosTramiteService.findTramitesXCiudadano(id_ciudadanox);
   }
-  //FIN BUSCAR TRAMITES ASIGNADOS POR DNI DE USUARIO....................................................
+  //FIN BUSCAR TRAMITES ASIGNADOS POR ID-USUARIO....................................................
 
   //BUSCAR TRAMITES ASIGNADOS   ACTIVOS
   @Get('buscar-activos')  

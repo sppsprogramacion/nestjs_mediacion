@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProvinciaDto } from './dto/create-provincia.dto';
 import { UpdateProvinciaDto } from './dto/update-provincia.dto';
 import { Repository } from 'typeorm';
@@ -13,10 +13,19 @@ export class ProvinciasService {
   ){}
 
   async create(data: CreateProvinciaDto): Promise<Provincia> {
-    const existe = await this.provinciasRepository.findOneBy({provincia: data.provincia});
-    if(existe) throw new BadRequestException ("La provincia que intenta crear ya existe.");
+
     const nuevo = await this.provinciasRepository.create(data);
-    return await this.provinciasRepository.save(nuevo);
+    try {
+
+      return await this.provinciasRepository.save(nuevo);
+    }catch (error) {
+      if(error.code == 'ER_DUP_ENTRY'){
+        let existe = await this.provinciasRepository.findOneBy({provincia: data.provincia});
+        if(existe) throw new InternalServerErrorException ("La provincia que intenta crear ya existe.");      
+      } 
+
+      throw new InternalServerErrorException('Error al crear la provinvia: ',error.message);  
+    }
   }
 
   async findAll() {
@@ -39,9 +48,21 @@ export class ProvinciasService {
   //FIN BUSCAR  XID..................................................................
 
   async update(id: number, data: UpdateProvinciaDto) {
-    const respuesta = await this.provinciasRepository.update(id, data);
-    if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de provincia.");
-    return respuesta;
+
+    try{
+      const respuesta = await this.provinciasRepository.update(id, data);
+      if((await respuesta).affected == 0){
+        await this.findOne(id);
+        throw new InternalServerErrorException("No se modificó el registro.");
+      } 
+      return respuesta;
+    }
+    catch(error){
+      if(error.code=='ER_DUP_ENTRY'){
+        throw new InternalServerErrorException('La provincia ingresada ya existe.');
+      }      
+      throw new InternalServerErrorException('Error al modificar la provinvia: ',error.message);
+    }    
   }
 
   async remove(id: number) {

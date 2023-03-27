@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Req, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, NotFoundException, Query, ParseIntPipe } from '@nestjs/common';
 import { Request } from 'express';
 import { ConvocadosService } from './convocados.service';
 import { CreateConvocadoDto } from './dto/create-convocado.dto';
@@ -15,15 +15,12 @@ export class ConvocadosController {
 
   @Get('buscar-xdni')  
   async findCiudadanoXDni(
+    @Query('dni', ParseIntPipe) dni: string,
     @Req()
     req: Request
   ) {
-    
-    if(!req.query.dni) throw new NotFoundException("El dni no fue ingresado.")
-    if(isNaN(Number(req.query.dni.toString()))) throw new NotFoundException("El dni debe ser un número.")
-    let dnix: number = parseFloat(req.query.dni.toString());
-    if(!Number.isInteger(dnix)) throw new NotFoundException("El dni debe ser un número entero.")
-    return this.convocadosService.findXDni(dnix);
+        
+    return this.convocadosService.findXDni(+dni);
   }
 
   @Get()
@@ -32,29 +29,30 @@ export class ConvocadosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    if(isNaN(Number(id))) throw new NotFoundException("El id del convocado debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id del convocado debe ser un número entero.")
-    return this.convocadosService.findOne(idx);
+    return this.convocadosService.findOne(+id);
   }
 
+  //PARA RUTA NO DEFINIDA
+  @Get('*')
+  rutasNoDefinidas() {
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
+  }
+  //FIN PARA RUTA NO DEFINIDA...........
 
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() dataDto: UpdateConvocadoDto) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id debe ser un número entero.")
-    return this.convocadosService.update(idx, dataDto);
+  @Patch(':id')
+  update(
+    @Param('id', ParseIntPipe) id: string, 
+    @Body() dataDto: UpdateConvocadoDto
+  ) {
+    
+    return this.convocadosService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id debe ser un número entero.")
-    return this.convocadosService.remove(idx);
+  remove(@Param('id', ParseIntPipe) id: string) {
+    
+    return this.convocadosService.remove(+id);
   }
 }

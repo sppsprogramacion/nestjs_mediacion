@@ -25,8 +25,8 @@ export class TramitesService {
     let anio:number= new Date().getFullYear(); 
 
     //Control de existencia del ciudadano
-    const ciudadano_existe = await this.ciudadanoRepository.findOneBy({dni: data.dni_ciudadano});
-    if(!ciudadano_existe) throw new BadRequestException ("El número de dni ingresado no existe para un ciudadano.")
+    const ciudadano_existe = await this.ciudadanoRepository.findOneBy({ id_ciudadano: data.ciudadano_id});
+    if(!ciudadano_existe) throw new BadRequestException ("El ciudadano que intenta crear el tramite no existe.")
     //FIN Control de existencia del ciudadano
 
     //obtener numero de tramite maximo
@@ -54,17 +54,19 @@ export class TramitesService {
       throw new NotFoundException('Error al crear el nuevo tramite: ',error.message);  
     }    
   }
-  //FIN NUEVO TRAMITE
+  //FIN NUEVO TRAMITE..................................................................
 
+  //TODOS LOS TRAMITES
   async findAll() {
     return await this.tramiteRepository.findAndCount(
       {
           order:{
-              numero_tramite: "ASC"
+              numero_tramite: "DESC"
           }
       }
     );
   }
+  //FIN TODOS LOS TRAMITES..............................
 
   //BUSCAR TRAMITES X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
   async findxestado(id_estado: number) {
@@ -72,10 +74,30 @@ export class TramitesService {
       {        
         where: {
           estado_tramite_id: id_estado
+        },
+        order:{
+          numero_tramite: "DESC"
         }
       }
     );   
-    console.log(tramites);
+
+    return tramites;
+  }
+  //FIN BUSCAR TRAMITES NUEVOS..........................................
+
+  //BUSCAR TRAMITES X CIUDADANO X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
+  async findXCiudadanoXEstado(id_estado: number, id_ciudadano: number) {
+    const tramites = await this.tramiteRepository.findAndCount(
+      {        
+        where: {
+          estado_tramite_id: id_estado,
+          ciudadano_id: id_ciudadano
+        },
+        order:{
+          numero_tramite: "DESC"
+        }
+      }
+    );   
 
     return tramites;
   }
@@ -106,7 +128,6 @@ export class TramitesService {
         }
       }
     );   
-    console.log(tramites);
 
     return tramites;
   }
@@ -155,7 +176,6 @@ export class TramitesService {
     try{
       let data: UpdateTramiteDto = new UpdateTramiteDto;
       data.estado_tramite_id=id_estado_tramite;
-      console.log("data",data);
       const respuesta = await this.tramiteRepository.update({numero_tramite: num_tramitex}, data);
       if((respuesta).affected == 0) throw new NotFoundException("No se modificó el tramite.");
       return respuesta;

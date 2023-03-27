@@ -2,9 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Req, BadRequestExcep
 import { AuthService } from './auth.service';
 import { Request } from 'express';
 
-interface IUser{
-  "user": string;
-  "password": string;
+
+interface IUsuario{
+  user: string;
+  password: string;
 }
 
 
@@ -17,7 +18,7 @@ export class AuthController {
   @Post('login')
   async login(
     @Body()
-    data: IUser
+    data: IUsuario
     ) {
       try {
         // return {
@@ -32,4 +33,28 @@ return this.authService.loginService(data.user, data.password);
         throw new BadRequestException(error.message)
       }
   }
+
+
+  @Post('login2')
+  async login2(
+    @Body()
+    data: IUsuario
+    // @Req()
+    // req: Request
+    ) {
+      try {
+        // return {
+        //  "usuario" : req.query.user,
+        //  "clave": req.query.password
+
+        // }
+        return this.authService.loginService(data.user.toString(), data.password.toString());
+        
+      } 
+      catch (error) {
+        throw new BadRequestException(error.message)
+      }
+  }
+
+
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
 import { CategoriasService } from './categorias.service';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
 import { UpdateCategoriaDto } from './dto/update-categoria.dto';
@@ -10,8 +10,7 @@ export class CategoriasController {
   @Post()
   create(@Body() data: CreateCategoriaDto) {
     return this.categoriasService.create(data);
-  }
-  
+  }  
 
   @Get()
   findAll() {
@@ -19,29 +18,30 @@ export class CategoriasController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: string) {    
     
-    if(isNaN(Number(id))) throw new NotFoundException("El id de la categoría debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de la categoría debe ser un número entero.")
-    return this.categoriasService.findOne(idx);
+    return this.categoriasService.findOne(+id);
   }
 
+  //PARA RUTA NO DEFINIDA
+  @Get('*')
+  rutasNoDefinidas() {
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
+  }
+  //FIN PARA RUTA NO DEFINIDA...........
 
+  @Patch(':id')
+  update(
+    @Param('id', ParseIntPipe) id: string, 
+    @Body() dataDto: UpdateCategoriaDto
+  ) {
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() dataDto: UpdateCategoriaDto) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id debe ser un número entero.")
-    return this.categoriasService.update(idx, dataDto);
+    return this.categoriasService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id debe ser un número entero.")
-    return this.categoriasService.remove(idx);
+  remove(@Param('id', ParseIntPipe) id: string) {
+    
+    return this.categoriasService.remove(+id);
   }
 }

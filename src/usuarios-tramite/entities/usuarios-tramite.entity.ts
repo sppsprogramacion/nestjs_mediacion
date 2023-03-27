@@ -28,12 +28,12 @@ export class UsuariosTramite {
         type: 'int',
         nullable: false
     })
-    dni_usuario: number
+    usuario_id: number
 
     @ManyToOne(type => Usuario, {eager:true})
     @JoinColumn({
-        name: 'dni_usuario',
-        referencedColumnName: 'dni'
+        name: 'usuario_id',
+        referencedColumnName: 'id_usuario'
     })
     usuario: Usuario;
     //FIN USUARIO

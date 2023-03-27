@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
 import { MunicipiosService } from './municipios.service';
 import { CreateMunicipioDto } from './dto/create-municipio.dto';
 import { UpdateMunicipioDto } from './dto/update-municipio.dto';
@@ -18,27 +18,30 @@ export class MunicipiosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    if(isNaN(Number(id))) throw new NotFoundException("El id del municipio debe ser un número.")
-    let id_municipio: number = parseFloat(id);
-    if(!Number.isInteger(id_municipio)) throw new NotFoundException("El id del municipio debe ser un número entero.")
-    return this.municipiosService.findOne(id_municipio);
+    return this.municipiosService.findOne(+id);
   }
 
+  //PARA RUTA NO DEFINIDA
+  @Get('*')
+  rutasNoDefinidas() {
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
+  }
+  //FIN PARA RUTA NO DEFINIDA...........
+
   @Put(':id')
-  update(@Param('id') id: string, @Body() dataDto: UpdateMunicipioDto) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id del municipio debe ser un número.")
-    let id_municipio: number = parseFloat(id);
-    if(!Number.isInteger(id_municipio)) throw new NotFoundException("El id del municipio debe ser un número entero.")
-    return this.municipiosService.update(id_municipio, dataDto);
+  update(
+    @Param('id', ParseIntPipe) id: string, 
+    @Body() dataDto: UpdateMunicipioDto
+  ) {
+    
+    return this.municipiosService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id del municipio debe ser un número.")
-    let id_municipio: number = parseFloat(id);
-    if(!Number.isInteger(id_municipio)) throw new NotFoundException("El id del municipio debe ser un número entero.")
-    return this.municipiosService.remove(id_municipio);
+  remove(@Param('id', ParseIntPipe) id: string) {
+    
+    return this.municipiosService.remove(+id);
   }
 }

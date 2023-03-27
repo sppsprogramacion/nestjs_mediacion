@@ -6,7 +6,6 @@ export class CreateDepartamentoDto {
     @IsNotEmpty({message: "Debe ingresar el departamento."})    
     departamento: string;
 
-    @IsInt()
-    @IsNotEmpty()
+    @IsInt({message: "El id-provincia debe ser un número entero."})
     provincia_id: number;
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put, ParseIntPipe } from '@nestjs/common';
 import { Request } from 'express'
 import { ObjetosService } from './objetos.service';
 import { CreateObjetoDto } from './dto/create-objeto.dto';
@@ -19,27 +19,30 @@ export class ObjetosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    if(isNaN(Number(id))) throw new NotFoundException("El id de objeto debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de objeto debe ser un número entero.")
-    return this.objetosService.findOne(idx);
+    return this.objetosService.findOne(+id);
   }
 
+  //PARA RUTA NO DEFINIDA
+  @Get('*')
+  rutasNoDefinidas() {
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
+  }
+  //FIN PARA RUTA NO DEFINIDA...........
+
   @Put(':id')
-  update(@Param('id') id: string, @Body() dataDto: UpdateObjetoDto) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id de objeto debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de objeto debe ser un número entero.")
-    return this.objetosService.update(idx, dataDto);
+  update(
+    @Param('id', ParseIntPipe) id: string, 
+    @Body() dataDto: UpdateObjetoDto
+  ) {
+    
+    return this.objetosService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id de objeto debe ser un número.")
-    let idx: number = parseFloat(id);
-    if(!Number.isInteger(idx)) throw new NotFoundException("El id de objeto debe ser un número entero.")
-    return this.objetosService.remove(idx);
+  remove(@Param('id', ParseIntPipe) id: string) {
+
+    return this.objetosService.remove(+id);
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { DepartamentosService } from './departamentos.service';
 import { CreateDepartamentoDto } from './dto/create-departamento.dto';
 import { UpdateDepartamentoDto } from './dto/update-departamento.dto';
@@ -18,27 +18,31 @@ export class DepartamentosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    if(isNaN(Number(id))) throw new NotFoundException("El id del departamento debe ser un número.")
-    let id_departamento: number = parseFloat(id);
-    if(!Number.isInteger(id_departamento)) throw new NotFoundException("El id del departamento debe ser un número entero.")
-    return this.departamentosService.findOne(id_departamento);
+  return this.departamentosService.findOne(+id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() dataDto: UpdateDepartamentoDto) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id del departamento debe ser un número.")
-    let id_departamento: number = parseFloat(id);
-    if(!Number.isInteger(id_departamento)) throw new NotFoundException("El id del departamento debe ser un número entero.")
-    return this.departamentosService.update(id_departamento, dataDto);
+  //PARA RUTA NO DEFINIDA
+  @Get('*')
+  rutasNoDefinidas() {
+    
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
+  }
+  //FIN PARA RUTA NO DEFINIDA...........
+
+  @Patch(':id')
+  update(
+    @Param('id', ParseIntPipe) id: string, 
+    @Body() dataDto: UpdateDepartamentoDto
+  ) {
+    
+    return this.departamentosService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id del departamento debe ser un número.")
-    let id_departamento: number = parseFloat(id);
-    if(!Number.isInteger(id_departamento)) throw new NotFoundException("El id del departamento debe ser un número entero.")
-    return this.departamentosService.remove(id_departamento);
+  remove(@Param('id', ParseIntPipe) id: string) {
+   
+    return this.departamentosService.remove(+id);
   }
 }

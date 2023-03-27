@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCategoriaDto } from './dto/create-categoria.dto';
@@ -13,10 +13,19 @@ export class CategoriasService {
   ){}
 
   async create(data: CreateCategoriaDto): Promise<Categoria> {
-    const existe = await this.categoriaRepository.findOneBy({categoria: data.categoria});
-    if(existe) throw new BadRequestException ("La categoría que intenta crear ya existe.");
+    
     const nuevo = await this.categoriaRepository.create(data);
-    return await this.categoriaRepository.save(nuevo);
+    try {
+
+      return await this.categoriaRepository.save(nuevo);
+    }catch (error) {
+      if(error.code == 'ER_DUP_ENTRY'){
+        let existe = await this.categoriaRepository.findOneBy({categoria: data.categoria});
+        if(existe) throw new InternalServerErrorException ("La categoría que intenta crear ya existe.");      
+      } 
+
+      throw new InternalServerErrorException('Error al crear la categoria: ',error.message);  
+    }      
   }
 
   async findAll() {
@@ -33,15 +42,26 @@ export class CategoriasService {
   async findOne(id: number) {
 
     const respuesta = await this.categoriaRepository.findOneBy({id_categoria: id});
-    if (!respuesta) throw new NotFoundException("No se encontró el registro de categoría solicitado.");
+    if (!respuesta) throw new NotFoundException("El registro solicitado no existe.");
     return respuesta;
   }
   //FIN BUSCAR  XID..................................................................
 
   async update(id: number, data: UpdateCategoriaDto) {
-    const respuesta = await this.categoriaRepository.update(id, data);
-    if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de categoría.");
-    return respuesta;
+    try{
+      const respuesta = await this.categoriaRepository.update(id, data);
+      if((await respuesta).affected == 0){
+        await this.findOne(id);
+        throw new InternalServerErrorException("No se modificó el registro.");
+      } 
+      return respuesta;
+    }
+    catch(error){
+      if(error.code=='ER_DUP_ENTRY'){
+        throw new InternalServerErrorException('La categoría ingresada ya existe.');
+      }      
+      throw new InternalServerErrorException('Error al modificar la categoría: ',error.message);
+    }    
   }
 
   async remove(id: number) {

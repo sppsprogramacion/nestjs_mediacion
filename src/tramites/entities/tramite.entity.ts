@@ -10,7 +10,15 @@ import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 @Entity('tramites')
 export class Tramite {
-    @PrimaryColumn()
+
+    @PrimaryGeneratedColumn()
+    id_tramite: number;
+
+    @Column({
+        type:'int',
+        nullable: false,
+        unique: true,
+    })
     numero_tramite: number;
 
     //CIUDADANO
@@ -19,12 +27,12 @@ export class Tramite {
         nullable:false,
         default: 1
     })
-    dni_ciudadano: number;
+    ciudadano_id: number;
 
     @ManyToOne(type => Ciudadano,{eager : true})
     @JoinColumn({
-        name : 'dni_ciudadano',
-        referencedColumnName : 'dni'
+        name : 'ciudadano_id',
+        referencedColumnName : 'id_ciudadano'
     })
     ciudadano : Ciudadano;
     //FIN CIUDADANO..................................

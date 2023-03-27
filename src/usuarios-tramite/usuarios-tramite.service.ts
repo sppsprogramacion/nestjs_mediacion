@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUsuariosTramiteDto } from './dto/create-usuarios-tramite.dto';
 import { UpdateUsuariosTramiteDto } from './dto/update-usuarios-tramite.dto';
 import { Usuario } from '../usuario/entities/usuario.entity';
@@ -14,16 +14,18 @@ export class UsuariosTramiteService {
   ){}
 
   async create(data: CreateUsuariosTramiteDto): Promise<UsuariosTramite> {
-    // const existe = await this.usuariosCentroRepository.findOne(
-    //   {
-    //     where:{
-    //       usuario_dni: data.usuario_dni,
-    //       centro_mediacion_id: data.centro_mediacion_id,
-    //       activo: true
-    //     }
-    //   }
-    // );
-    // if(existe) throw new BadRequestException ("La asignación de usuario a un centro de mediación que intenta crear ya existe.");
+    const existe = await this.usuariosTramiteRepository.findOne(
+      {
+        where:{
+          usuario_id: data.usuario_id,
+          tramite_numero: data.tramite_numero,
+          funcion_tramite_id: data.funcion_tramite_id,
+          activo: true
+        }
+      }
+    );
+    if(existe) throw new BadRequestException ("Este usuario ya se encuentra asignado a este tramite con esta funcion.");
+    
     const nuevo = await this.usuariosTramiteRepository.create(data);
     try {
       return await this.usuariosTramiteRepository.save(nuevo);
@@ -36,22 +38,41 @@ export class UsuariosTramiteService {
   
 
   //BUSCAR  XID
-  async findTramitesXUsuario(num_dni: number) {    
+  async findTramitesXUsuario(id_usuario: number) {    
     //const respuesta = await this.usuariosCentroRepository.findOneBy({id_usuario_centro: id});
     const respuesta = await this.usuariosTramiteRepository.findAndCount(
       {
-        //relations: ['usuario','centro_mediacion'],
-        where: {
-          dni_usuario: num_dni,
+        //relations: ['tramite'],
+        where: {          
+          usuario_id: id_usuario,
           activo: true
         }      
           
       }
     );
+    
     if (!respuesta) throw new NotFoundException("No se encontró el tramites para este usuario.");
     return respuesta;
   }
   //FIN BUSCAR  XID..................................................................
+
+  //BUSCAR TRAMITES X CIUDADANO
+  async findTramitesXCiudadano(id_ciudadano){
+
+    const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
+    .leftJoinAndSelect('usuario_tramite.tramite', 'tramite')    
+    .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+    .leftJoinAndSelect('tramite.objeto', 'objeto')  
+    .leftJoinAndSelect('usuario_tramite.usuario', 'usuario')
+    .leftJoinAndSelect('usuario_tramite.funcion_tramite', 'funcion_tramite')
+    .where('tramite.ciudadano_id = :id', { id: id_ciudadano })
+    .getManyAndCount();
+
+    return tramites;
+  }
+
+  //FIN BUSCAR TRAMITES X CIUDADANO
+
 
   //BUSCAR  TRAMITES ASIGNADOS ACTIVOS
   async findTramitesActivos() {    

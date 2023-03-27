@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { SexoService } from './sexo.service';
 import { CreateSexoDto } from './dto/create-sexo.dto';
 import { UpdateSexoDto } from './dto/update-sexo.dto';
@@ -18,27 +18,30 @@ export class SexoController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     
-    if(isNaN(Number(id))) throw new NotFoundException("El id de sexo debe ser un número.")
-    let id_sexo: number = parseFloat(id);
-    if(!Number.isInteger(id_sexo)) throw new NotFoundException("El id de sexo debe ser un número entero.")
-    return this.sexoService.findOne(id_sexo);
+    return this.sexoService.findOne(+id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() dataDto: UpdateSexoDto) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id de sexo debe ser un número.")
-    let id_sexo: number = parseFloat(id);
-    if(!Number.isInteger(id_sexo)) throw new NotFoundException("El id de sexo debe ser un número entero.")
-    return this.sexoService.update(id_sexo, dataDto);
+  //PARA RUTA NO DEFINIDA
+  @Get('*')
+  rutasNoDefinidas() {
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
+  }
+  //FIN PARA RUTA NO DEFINIDA...........
+
+  @Patch(':id')
+  update(
+    @Param('id', ParseIntPipe) id: string, 
+    @Body() dataDto: UpdateSexoDto
+  ) {
+    
+    return this.sexoService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    if(isNaN(Number(id))) throw new NotFoundException("El id de sexo debe ser un número.")
-    let id_sexo: number = parseFloat(id);
-    if(!Number.isInteger(id_sexo)) throw new NotFoundException("El id de sexo debe ser un número entero.")
-    return this.sexoService.remove(id_sexo);
+  remove(@Param('id', ParseIntPipe) id: string) {
+   
+    return this.sexoService.remove(+id);
   }
 }
