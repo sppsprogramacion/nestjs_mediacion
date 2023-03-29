@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateCiudadanoDto } from './dto/create-ciudadano.dto';
 import { UpdateCiudadanoDto } from './dto/update-ciudadano.dto';
 import { Ciudadano } from './entities/ciudadano.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class CiudadanosService {
@@ -15,21 +16,17 @@ export class CiudadanosService {
   //CREAR CIUDADANO
   async create(data: CreateCiudadanoDto): Promise<Ciudadano> {      
 
-    let existe = await this.ciudadanoRepository.findOneBy({dni: data.dni});
-    if(existe) throw new InternalServerErrorException ("El dni del ciudadano que intenta crear ya existe.");
-    
-    const nuevo: Ciudadano = await this.ciudadanoRepository.create(data);
     try {
-      
+      const {clave, ...ciudadanoData} = data;
+      const nuevo: Ciudadano = await this.ciudadanoRepository.create({
+        ...ciudadanoData,
+        clave: bcrypt.hashSync(clave,10)
+      });
       return await this.ciudadanoRepository.save(nuevo);
-    } catch (error) {
-      if(error.code=='ER_DUP_ENTRY'){        
-        existe = null;
-        existe = await this.ciudadanoRepository.findOneBy({email: data.email});
-        if(existe) throw new InternalServerErrorException ("El email del ciudadano que se intentó crear ya existe.");
-      } 
 
-      throw new InternalServerErrorException('Error al crear el ciudadano: ',error.message);  
+    } catch (error) {      
+      this.handleDBErrors(error);
+
     }
   }
   //FIN CREAR CIUDADANO......................................................
@@ -66,26 +63,20 @@ export class CiudadanosService {
   //FIN BUSCAR  XID..................................................................
 
   //MODIFICAR CIUDADANO
-  async update(dnix: number, data: UpdateCiudadanoDto) {
-
+  async update(idx: number, data: UpdateCiudadanoDto) {
+    console.log("dni", idx);
     try{
-      const respuesta = await this.ciudadanoRepository.update({dni: dnix}, data);
-      if(( await respuesta).affected == 0){
-        await this.findXDni(dnix);
-        throw new InternalServerErrorException("No se modificó el registro.");
-      } 
+      const respuesta = await this.ciudadanoRepository.update(idx, data);
+      // if(( await respuesta).affected == 0){
+      //   await this.findXDni(dnix);
+      //   throw new InternalServerErrorException("No se modificó el registro.");
+      // } 
       return respuesta;
+
     }
     catch(error){
-      if(error.code=='ER_DUP_ENTRY'){
-        let existe = await this.ciudadanoRepository.findOneBy({dni: data.dni});
-        if(existe) throw new InternalServerErrorException ("El dni del ciudadano ya existe.");
-      
-        existe = null;
-        existe = await this.ciudadanoRepository.findOneBy({email: data.email});
-        if(existe) throw new InternalServerErrorException ("El email del ciudadano ya existe.");
-      } 
-      throw new InternalServerErrorException('Error al modificar el ciudadano: ',error.message);
+      this.handleDBErrors(error);
+
     }
   }
   //FIN MODIFICAR CIUDADANO.......................................
@@ -98,4 +89,14 @@ export class CiudadanosService {
     return await this.ciudadanoRepository.remove(respuesta);
   }
   //FIN ELIMINAR CIUDADANO..........................................
+
+  //MANEJO DE ERRORES
+  private handleDBErrors(error: any): never {
+    if(error.code === "ER_DUP_ENTRY"){
+      throw new BadRequestException (error.sqlMessage);
+    }
+    console.log("error: ", error);
+    throw new InternalServerErrorException (error.message);
+  }
+  //FIN MANEJO DE ERRORES........................................
 }

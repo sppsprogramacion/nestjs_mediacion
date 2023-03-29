@@ -128,13 +128,13 @@ export class Ciudadano {
         type: 'varchar',
         length: 200,
         unique: true,
-        nullable: false
+        nullable: true
     })
     email:string;
 
     @Column({
         type: 'varchar',
-        length: 16,
+        length: 200,
         nullable: false
     })
     clave: string;

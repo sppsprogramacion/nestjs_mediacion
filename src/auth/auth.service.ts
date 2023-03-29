@@ -3,6 +3,7 @@ import { UsuarioService } from 'src/usuario/usuario.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { CiudadanosService } from '../ciudadanos/ciudadanos.service';
+import { LoginCiudadanoDto } from './dto/login-ciudadano.dto';
 
 @Injectable()
 export class AuthService {
@@ -12,10 +13,10 @@ export class AuthService {
     private readonly ciudadanoService: CiudadanosService,
   ){}
 
-  async validateUser(user: string, pass: string){
-      let valueDni: number = parseInt(user);
-      console.log("dniuser", valueDni);
-      const res = await this.ciudadanoService.findXDni(valueDni);
+  async validateUser(ciudadano_dni: number, pass: string){
+      //let valueDni: number = parseInt(user);
+      console.log("dniuser", ciudadano_dni);
+      const res = await this.ciudadanoService.findXDni(ciudadano_dni);
       console.log(res);
       if(res && (res.clave == pass)){
         return res;
@@ -23,14 +24,14 @@ export class AuthService {
       return null;
   }
 
-  async loginService(user: string, pass: string){
-    console.log("user", user);
-    console.log("clave", pass);
+  async loginService(loginCiudadano: LoginCiudadanoDto){
+    console.log("user", loginCiudadano.dni);
+    console.log("clave", loginCiudadano.clave);
     let res = null;
     try{
-      res = await this.validateUser(user, pass);
+      res = await this.validateUser(loginCiudadano.dni, loginCiudadano.clave);
       if(!res){
-        throw new UnauthorizedException("El usuario o la contraseña no coinciden");        
+        throw new UnauthorizedException("El dni o la contraseña no coinciden");        
       }else{
         return res;
       }

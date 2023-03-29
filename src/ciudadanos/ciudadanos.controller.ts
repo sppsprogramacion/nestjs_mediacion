@@ -49,13 +49,13 @@ export class CiudadanosController {
   }
   //FIN PARA RUTA NO DEFINIDA...........
 
-  @Patch(':dni')
+  @Patch(':id')
   update(
-    @Param('dni') dni: string, 
+    @Param('id', ParseIntPipe) id: string, 
     @Body() dataDto: UpdateCiudadanoDto
   ) {
     
-    return this.ciudadanosService.update(+dni, dataDto);
+    return this.ciudadanosService.update(+id, dataDto);
   }
 
   @Delete(':dni')
