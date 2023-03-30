@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Req, BadRequestExcep
 import { AuthService } from './auth.service';
 import { Request } from 'express';
 import { LoginCiudadanoDto } from './dto/login-ciudadano.dto';
+import { LoginUsuarioDto } from './dto/login-usuario.dto';
 
 
 
@@ -9,36 +10,23 @@ import { LoginCiudadanoDto } from './dto/login-ciudadano.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}  
 
-  @Post('login')
-  async login(
-    @Body()
-    loginCiudadanoDto: LoginCiudadanoDto
+  @Post('login-ciudadano')
+  async loginCiudadano(
+    @Body() loginCiudadanoDto: LoginCiudadanoDto    
+
+  ) {         
+    return this.authService.loginCiudadano(loginCiudadanoDto);
     
-    ) {
-      try {
-        
-        return this.authService.loginService(loginCiudadanoDto);
-      } 
-      catch (error) {
-        throw new BadRequestException(error.message)
-      }
   }
 
-
-  @Post('login2')
-  async login2(
+  @Post('login-usuario')
+  async loginUsuario(
     @Body()
-    loginCiudadanoDto: LoginCiudadanoDto
+    loginUsuarioDto: LoginUsuarioDto
 
-    ) {
-      try {
-        return this.authService.loginService(loginCiudadanoDto);
-        
-      } 
-      catch (error) {
-        throw new BadRequestException(error.message)
-      }
+  ) {
+    return this.authService.loginUsuario(loginUsuarioDto);
+    
   }
-
-
+  
 }

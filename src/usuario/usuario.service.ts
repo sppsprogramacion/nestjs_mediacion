@@ -1,9 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
+
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UsuarioService {
@@ -11,23 +13,20 @@ export class UsuarioService {
     @InjectRepository(Usuario)
     private readonly usuariosRepository: Repository<Usuario>
   ){}
-  async create(data: CreateUsuarioDto): Promise<Usuario> {
-    
-    let existe = await this.usuariosRepository.findOneBy({dni: data.dni});
-    if(existe) throw new BadRequestException ("El dni del usuario que intenta crear ya existe.");
+  async create(data: CreateUsuarioDto): Promise<Usuario> {      
 
-    const nuevo = await this.usuariosRepository.create(data);
     try {
-
+      const {clave, ...usuarioData} = data;
+      const nuevo: Usuario = await this.usuariosRepository.create({
+        ...usuarioData,
+        clave: bcrypt.hashSync(clave,10)
+      });
       return await this.usuariosRepository.save(nuevo);
-    } catch (error) {
-      if(error.code=='ER_DUP_ENTRY'){
-        existe = null;
-        existe = await this.usuariosRepository.findOneBy({email: data.email});
-        if(existe) throw new InternalServerErrorException ("El email que se intentó crear ya existe. Intente guardar nuevamente");
-      }      
-      throw new InternalServerErrorException('Error al crear el nuevo usuario: ',error.message);  
-    }       
+
+    } catch (error) {      
+      this.handleDBErrors(error);
+
+    }
   }
 
   async findAll() {
@@ -106,5 +105,15 @@ export class UsuarioService {
     if(!respuesta) throw new NotFoundException("No existe el registro de usuario que intenta eliminar");
     return await this.usuariosRepository.remove(respuesta);
   }
+
+  //MANEJO DE ERRORES
+  private handleDBErrors(error: any): never {
+    if(error.code === "ER_DUP_ENTRY"){
+      throw new BadRequestException (error.sqlMessage);
+    }
+    console.log("error: ", error);
+    throw new InternalServerErrorException (error.message);
+  }
+  //FIN MANEJO DE ERRORES........................................
 
 }

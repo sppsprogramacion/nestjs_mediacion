@@ -1,44 +1,65 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsuarioService } from 'src/usuario/usuario.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
-import { CiudadanosService } from '../ciudadanos/ciudadanos.service';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
+
 import { LoginCiudadanoDto } from './dto/login-ciudadano.dto';
+import { Ciudadano } from 'src/ciudadanos/entities/ciudadano.entity';
+import { LoginUsuarioDto } from './dto/login-usuario.dto';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
+
 
 @Injectable()
 export class AuthService {
   
   constructor(
-    private readonly userService: UsuarioService,
-    private readonly ciudadanoService: CiudadanosService,
+    @InjectRepository(Ciudadano)
+    private readonly ciudadanoRepository: Repository<Ciudadano>,
+
+    @InjectRepository(Usuario)
+    private readonly usuarioRepository: Repository<Usuario>
+    
   ){}
 
-  async validateUser(ciudadano_dni: number, pass: string){
-      //let valueDni: number = parseInt(user);
-      console.log("dniuser", ciudadano_dni);
-      const res = await this.ciudadanoService.findXDni(ciudadano_dni);
-      console.log(res);
-      if(res && (res.clave == pass)){
-        return res;
-      }
-      return null;
+ 
+  async loginCiudadano(loginCiudadanoDto: LoginCiudadanoDto){
+    console.log("user", loginCiudadanoDto.dni);
+    console.log("clave", loginCiudadanoDto.clave);
+    const { dni, clave } = loginCiudadanoDto;    
+
+    const ciudadano = await this.ciudadanoRepository.createQueryBuilder('ciudadano')
+    .where('ciudadano.dni = :dni', { dni: dni })
+    .select(['ciudadano.dni', 'ciudadano.clave'])
+    .getOne();
+
+    if(!ciudadano)
+      throw new UnauthorizedException ("Los datos de login no son válidos (dni)");
+
+    if( !bcrypt.compareSync(clave, ciudadano.clave) )
+      throw new UnauthorizedException ("Los datos de login no son válidos (clave)");
+
+    return ciudadano;
+    //TODO: RETORNAR jWT
   }
 
-  async loginService(loginCiudadano: LoginCiudadanoDto){
-    console.log("user", loginCiudadano.dni);
-    console.log("clave", loginCiudadano.clave);
-    let res = null;
-    try{
-      res = await this.validateUser(loginCiudadano.dni, loginCiudadano.clave);
-      if(!res){
-        throw new UnauthorizedException("El dni o la contraseña no coinciden");        
-      }else{
-        return res;
-      }
-    }catch(e){
-      throw new BadRequestException(e);
-      
-    }
+  async loginUsuario(loginUsuarioDto: LoginUsuarioDto){
+    console.log("user", loginUsuarioDto.dni);
+    console.log("clave", loginUsuarioDto.clave);
+    const { dni, clave } = loginUsuarioDto;    
+
+    const usuario = await this.usuarioRepository.createQueryBuilder('usuario')
+    .where('usuario.dni = :dni', { dni: dni })
+    .select(['usuario.dni', 'usuario.clave'])
+    .getOne();
+
+    if(!usuario)
+      throw new UnauthorizedException ("Los datos de login no son válidos (dni)");
+
+    if( !bcrypt.compareSync(clave, usuario.clave) )
+      throw new UnauthorizedException ("Los datos de login no son válidos (clave)");
+
+    return usuario;
+    //TODO: RETORNAR jWT
   }
 
 }
