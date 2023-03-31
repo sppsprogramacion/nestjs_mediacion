@@ -140,6 +140,4 @@ export class Ciudadano {
     })
     clave: string;
 
-
-
 }

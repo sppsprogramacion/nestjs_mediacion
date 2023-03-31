@@ -5,6 +5,7 @@ import { CreateCiudadanoDto } from './dto/create-ciudadano.dto';
 import { UpdateCiudadanoDto } from './dto/update-ciudadano.dto';
 import { Ciudadano } from './entities/ciudadano.entity';
 import * as bcrypt from 'bcrypt';
+import { UpdateCiudadanoPassDto } from './dto/update-ciudadano-pass.dto';
 
 @Injectable()
 export class CiudadanosService {
@@ -64,13 +65,14 @@ export class CiudadanosService {
 
   //MODIFICAR CIUDADANO
   async update(idx: number, data: UpdateCiudadanoDto) {
-    console.log("dni", idx);
+
     try{
       const respuesta = await this.ciudadanoRepository.update(idx, data);
       // if(( await respuesta).affected == 0){
       //   await this.findXDni(dnix);
       //   throw new InternalServerErrorException("No se modificó el registro.");
       // } 
+      
       return respuesta;
 
     }
@@ -80,6 +82,27 @@ export class CiudadanosService {
     }
   }
   //FIN MODIFICAR CIUDADANO.......................................
+
+  //MODIFICAR PASSWORD
+  async updatePassword(idx: number, data: UpdateCiudadanoPassDto) {
+    const clavex: string = bcrypt.hashSync(data.clave, 10);
+    data.clave = clavex;
+    try{
+      const respuesta = await this.ciudadanoRepository.update(idx, data);
+      // if(( await respuesta).affected == 0){
+      //   await this.findXDni(dnix);
+      //   throw new InternalServerErrorException("No se modificó el registro.");
+      // } 
+      
+      return respuesta;
+
+    }
+    catch(error){
+      this.handleDBErrors(error);
+
+    }
+  }
+  //FIN MODIFICAR PASSWORD.......................................
 
   //ELIMINAR CIUDADANO
   async remove(dnix: number) {

@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
+import { UpdateUsuarioPassDto } from './dto/update-usuario-pass.dto';
 
 @Injectable()
 export class UsuarioService {
@@ -89,16 +90,47 @@ export class UsuarioService {
   // }
   //FIN BUSCAR  XID..................................................................
 
-  async update(dnix: number, data: UpdateUsuarioDto) {
+  
+  //MODIFICAR CIUDADANO
+  async update(idx: number, data: UpdateUsuarioDto) {
+
     try{
-      const respuesta = await this.usuariosRepository.update({dni: dnix}, data);
-      if((respuesta).affected == 0) throw new NotFoundException("No se modificó el registro de usuario.");
+      const respuesta = await this.usuariosRepository.update(idx, data);
+      // if(( await respuesta).affected == 0){
+      //   await this.findXDni(dnix);
+      //   throw new InternalServerErrorException("No se modificó el registro.");
+      // } 
+      
       return respuesta;
+
     }
     catch(error){
-      throw new NotFoundException('Error al modificar el usuario: ',error.message);
+      this.handleDBErrors(error);
+
     }
   }
+  //FIN MODIFICAR CIUDADANO.......................................
+
+  //MODIFICAR PASSWORD
+  async updatePassword(idx: number, data: UpdateUsuarioPassDto) {
+    const clavex: string = bcrypt.hashSync(data.clave, 10);
+    data.clave = clavex;
+    try{
+      const respuesta = await this.usuariosRepository.update(idx, data);
+      // if(( await respuesta).affected == 0){
+      //   await this.findXDni(dnix);
+      //   throw new InternalServerErrorException("No se modificó el registro.");
+      // } 
+      
+      return respuesta;
+
+    }
+    catch(error){
+      this.handleDBErrors(error);
+
+    }
+  }
+  //FIN MODIFICAR PASSWORD.......................................
 
   async remove(dnix: number) {
     const respuesta = await this.usuariosRepository.findOneBy({dni: dnix});
