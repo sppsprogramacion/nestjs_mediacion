@@ -57,7 +57,6 @@ export class CiudadanosController {
   ) {
     
     return this.ciudadanosService.updatePassword(+id, dataPasswordDto);
-
   }
 
   @Patch(':id')

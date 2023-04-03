@@ -12,25 +12,7 @@ export class CreateCiudadanoDto {
     nombre: string;
 
     @IsInt({message: "El id-sexo debe ser un número entero"})
-    sexo_id: number;
-
-    @IsInt({message: "El id-provincia debe ser un número entero"})
-    provincia_id: number;
-
-    @IsInt({message: "El id-departamento debe ser un número entero."})
-    departamento_id: number;
-
-    @IsInt({message: "El id-municipio debe ser un número entero."})
-    municipio_id: number
-
-    @Length(1,100,{message: "La localidad o barrio debe tener entre $constraint1 y $constraint2 caracteres."})
-    localidad_barrio: string;
-
-    @Length(1,100,{message: "La calle/direccion debe tener entre $constraint1 y $constraint2 caracteres."})
-    calle_direccion: string;
-    
-    @IsInt({message: "El numero de domicilio debe ser un número entero."})
-    numero_dom: number;
+    sexo_id: number;    
     
     @Length(1,100,{message: "El teléfono debe tener entre $constraint1 y $constraint2 caracteres."})
     telefono: string;
