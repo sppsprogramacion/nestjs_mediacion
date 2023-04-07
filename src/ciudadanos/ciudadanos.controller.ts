@@ -12,7 +12,11 @@ export class CiudadanosController {
   //CREAR CIUDADANO
   @Post()
   create(@Body() data: CreateCiudadanoDto) {
-    
+    let edad: number;
+    //se crea una instanica de Date porque data.fecha_nac biene como cadena y la funcione no lo reconoce como date
+    edad= this.calcularEdad(new Date(data.fecha_nac));
+    console.log("edad", edad);
+    if ( edad < 18 ) throw new NotFoundException("La edad minima para registrarse es 18 años. Revise la fecha de nacimiento");
     return this.ciudadanosService.create(data);
   }
   //FIN CREAR CIUDADANO..............................
@@ -72,6 +76,13 @@ export class CiudadanosController {
   remove(@Param('dni') dni: string) {
     
     return this.ciudadanosService.remove(+dni);
+  }
+
+  private calcularEdad(fechaNacimiento: Date): number {
+    const diferenciaMilisegundos = Date.now() - fechaNacimiento.getTime();
+    const milisegundosEnAno = 1000 * 60 * 60 * 24 * 365.25; // aproximadamente 365.25 días en un año
+    const edad = Math.floor(diferenciaMilisegundos / milisegundosEnAno);
+    return edad;
   }
   
 }
