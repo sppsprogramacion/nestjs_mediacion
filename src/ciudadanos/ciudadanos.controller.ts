@@ -25,8 +25,6 @@ export class CiudadanosController {
   @Get('buscar-xdni')  
   async findCiudadanoXDni(
     @Query('dni', ParseIntPipe) dni: string, 
-    @Req()
-    req: Request
   ) {    
     
     return this.ciudadanosService.findXDni(+dni);
