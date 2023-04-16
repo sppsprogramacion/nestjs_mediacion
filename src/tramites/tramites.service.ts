@@ -6,6 +6,8 @@ import { Repository } from 'typeorm';
 import { CreateTramiteDto } from './dto/create-tramite.dto';
 import { UpdateTramiteDto } from './dto/update-tramite.dto';
 import { Tramite } from './entities/tramite.entity';
+import { UsuarioCentro } from '../usuarios-centros/entities/usuario-centro.entity';
+import { UsuariosCentrosService } from '../usuarios-centros/usuarios-centros.service';
 
 @Injectable()
 export class TramitesService {
@@ -14,7 +16,10 @@ export class TramitesService {
     @InjectRepository(Tramite)
     private readonly tramiteRepository: Repository<Tramite>,
     @InjectRepository(Ciudadano)
-    private readonly ciudadanoRepository: Repository<Ciudadano>,
+    private readonly ciudadanoRepository: Repository<Ciudadano>,    
+
+    private readonly usuarioCentroService: UsuariosCentrosService
+
   ){}
 
   //NUEVO TRAMITE
@@ -104,7 +109,7 @@ export class TramitesService {
   //FIN BUSCAR TRAMITES NUEVOS..........................................
 
   //BUSCAR TRAMITES X CIUDADANO X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
-  async findXCiudadanoXEstado(id_estado: number, id_ciudadano: number) {
+  async findByCiudadanoByEstado(id_estado: number, id_ciudadano: number) {
     const tramites = await this.tramiteRepository.findAndCount(
       {        
         where: {
@@ -118,6 +123,25 @@ export class TramitesService {
     );   
 
     return tramites;
+  }
+  //FIN BUSCAR TRAMITES NUEVOS..........................................
+
+  //BUSCAR TRAMITES X usuario X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
+  async findByUsuarioByEstado(id_estado: number, id_usuario: number) {
+    let centros: [UsuarioCentro[], number] = await this.usuarioCentroService.findByUsuarioByActivo(id_usuario, true);
+    
+    // const tramites = await this.tramiteRepository.findAndCount(
+    //   {        
+    //     where: {
+    //       estado_tramite_id: id_estado
+    //     },
+    //     order:{
+    //       numero_tramite: "DESC"
+    //     }
+    //   }
+    // );   
+
+    return centros;
   }
   //FIN BUSCAR TRAMITES NUEVOS..........................................
 

@@ -47,7 +47,7 @@ export class UsuariosCentrosController {
     return this.usuariosCentrosService.findOne(+id);
   }
 
-  //SALIDA MOVIMIENTO DEL TRAMITE
+  //DESHABILITAR USUARIO
   @Put('deshabilitar-usuario')
   async deshabilitarUsuario(    
     @Query('id_usuario_centro', ParseIntPipe) id_usuario_centro: string,
@@ -60,7 +60,7 @@ export class UsuariosCentrosController {
     return this.usuariosCentrosService.update(+id_usuario_centro,dataDto);
     
   }
-  //FIN SALIDA MOVIMIENTO DEL TRAMITE........................................................
+  //FIN //DESHABILITAR USUARIO........................................................
 
   @Put(':id')
   update(

@@ -1,15 +1,17 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, NotFoundException, Put, Query, ParseIntPipe } from '@nestjs/common';
 import { Request } from 'express';
+
 import { TramitesService } from './tramites.service';
 import { CreateTramiteDto } from './dto/create-tramite.dto';
 import { UpdateTramiteDto } from './dto/update-tramite.dto';
-import { CreateCategoriaDto } from 'src/categorias/dto/create-categoria.dto';
-import { CreateEstadoTramiteDto } from 'src/estados-tramite/dto/create-estado-tramite.dto';
+import { Usuario } from '../usuario/entities/usuario.entity';
+import { UsuarioService } from '../usuario/usuario.service';
 
 @Controller('tramites')
 export class TramitesController {
   constructor(
     private readonly tramitesService: TramitesService,
+    private readonly usuarioService: UsuarioService
   ) {}
 
   @Post()
@@ -60,22 +62,36 @@ export class TramitesController {
   } 
   //FIN BUSCAR TRAMITES POR CIUDADANO.......................................
   
-  //BUSCAR TRAMITES NUEVOS
-  @Get('nuevos')
+  //BUSCAR TRAMITES NUEVOS X CIUDADANO
+  @Get('nuevos-xciudadano')
   async findNuevos(
     @Query('id_ciudadano', ParseIntPipe) id_ciudadano: string,
-    @Req()
-    req: Request
   ) {
 
     let id_ciudadanox: number = +id_ciudadano;
 
     if (id_ciudadanox === 0) return this.tramitesService.findxestado(1);
 
-    return this.tramitesService.findXCiudadanoXEstado(1, id_ciudadanox);
+    return this.tramitesService.findByCiudadanoByEstado(1, id_ciudadanox);
     
   }
-  //BUSCAR TRAMITES NUEVOS.....................................................
+  //BUSCAR TRAMITES NUEVOS X CIUDADANO.....................................................
+
+  //BUSCAR TRAMITES NUEVOS PARA CENTRO MEDIACION DEL USUARIO
+  @Get('nuevos-xusuario')
+  async findNuevosByUsuario(
+    @Query('id_usuario', ParseIntPipe) id_usuario: string,
+  ) {    
+    
+    let usuario: Usuario = await this.usuarioService.findOne(+id_usuario);
+    
+    
+    if (usuario.rol_id === 1) return this.tramitesService.findxestado(1);
+
+    return this.tramitesService.findByUsuarioByEstado(1, +id_usuario);
+    
+  }
+  //FIN BUSCAR TRAMITES NUEVOS PARA CENTRO MEDIACION DEL USUARIO.....................................................
 
   //BUSCAR TRAMITES ASIGNADOS A MEDIADOR
   @Get('asignados-mediador')
@@ -87,7 +103,7 @@ export class TramitesController {
 
     if (id_ciudadanox === 0) return this.tramitesService.findxestado(2);
 
-    return this.tramitesService.findXCiudadanoXEstado(2, id_ciudadanox);
+    return this.tramitesService.findByCiudadanoByEstado(2, id_ciudadanox);
   } 
   //FIN BUSCAR TRAMITES ASIGNADOS A MEDIADORS.......................................
 
@@ -101,7 +117,7 @@ export class TramitesController {
 
     if (id_ciudadanox === 0) return this.tramitesService.findxestado(3);
     
-    return this.tramitesService.findXCiudadanoXEstado(3, id_ciudadanox);
+    return this.tramitesService.findByCiudadanoByEstado(3, id_ciudadanox);
   }
   //FIN BUSCAR TRAMITES FINALIZADOS.....................................................
 

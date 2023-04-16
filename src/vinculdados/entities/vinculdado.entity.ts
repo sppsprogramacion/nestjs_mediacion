@@ -39,7 +39,6 @@ export class Vinculdado {
         nullable: false
     })
     nombre: string;
-
      
     @Column({
         type: 'int',

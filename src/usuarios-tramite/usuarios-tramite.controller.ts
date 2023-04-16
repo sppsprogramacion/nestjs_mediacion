@@ -19,7 +19,6 @@ export class UsuariosTramiteController {
     let fecha_actual: any = new Date().toISOString().split('T')[0];
     data.fecha_asignacion= fecha_actual;
     data.fecha_sece = null;
-    data.activo=true;
 
     const usuarioTramite = this.usuariosTramiteService.create(data);
     //ESTABLECER con mediador
@@ -89,6 +88,17 @@ export class UsuariosTramiteController {
     
     return this.usuariosTramiteService.findOne(+id);
   }
+
+  //DESHABILITAR USUARIO
+  @Patch('deshabilitar-usuario')
+  async deshabilitarUsuario(    
+    @Query('id_usuario_tramite', ParseIntPipe) id_usuario_tramite: string,
+    @Body() dataDtox: UpdateUsuariosTramiteDto
+  ) {
+    
+    return this.usuariosTramiteService.deshabilitarUsuario(+id_usuario_tramite);    
+  }
+  //FIN //DESHABILITAR USUARIO........................................................
 
   @Patch(':id')
   update(

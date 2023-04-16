@@ -24,8 +24,8 @@ export class CreateUsuariosTramiteDto {
     
     @IsInt({message: "El tramite-funcion-id debe ser un número entero."})
     @IsNotEmpty({message: "Debe ingresar el tramite-funcion-id."})
-    funcion_tramite_id
+    funcion_tramite_id: number;
 
-    @IsEmpty({message: "No debe enviar el campo activo."})
-    activo: boolean;
+    // @IsEmpty({message: "No debe enviar el campo activo."})
+    // activo: boolean;
 }

@@ -101,6 +101,23 @@ export class UsuariosCentrosService {
   }
   //FIN BUSCAR  XID CENTRO DE MEDIACION..................................................................
 
+  //BUSCAR  XID CENTRO DE MEDIACION
+  async findByUsuarioByActivo(id_usuario: number, activox: boolean) {    
+    //const respuesta = await this.usuariosCentroRepository.findOneBy({id_usuario_centro: id});
+    const respuesta = await this.usuariosCentroRepository.findAndCount(
+      {
+        //relations: ['usuario','centro_mediacion'],
+        where: {
+          usuario_id: id_usuario,
+          activo: activox
+        }      
+          
+      }
+    );
+    return respuesta;
+  }
+  //FIN BUSCAR  XID CENTRO DE MEDIACION..................................................................
+
   //MODIFICAR UNO
   async update(id: number, data: UpdateUsuarioCentroDto) {
     try{
