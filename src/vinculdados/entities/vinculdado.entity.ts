@@ -61,105 +61,14 @@ export class Vinculdado {
     })
     sexo: Sexo;
     //FIN SEXO
-
-    //PROVINCIA
-    @Column({
-        type: 'int',
-        nullable: false,
-        default: 1
-    })
-    provincia_id: number;
-
-    @ManyToOne(type => Provincia, {eager: true} )
-    @JoinColumn({
-        name: 'provincia_id',
-        referencedColumnName: 'id_provincia'
-    })
-    provincia: Provincia;
-    //FIN PROVINCIA
-
-    //DEPARTAMENTO
-    @Column({
-        type: 'int',
-        nullable: false,
-        default: 1
-    })
-    departamento_id: number;
-
-    @ManyToOne(type => Departamento, {eager: true})
-    @JoinColumn({
-        name: 'departamento_id',
-        referencedColumnName: 'id_departamento'
-    })
-    departamento: Departamento;
-    //FIN DEPARATMENTO
-
-    //MUNICIPIO
-    @Column({
-        type: 'int',
-        nullable: false,
-        default: 1
-    })
-    municipio_id: number
-
-    @ManyToOne(type => Municipio, {eager:true})
-    @JoinColumn({
-        name: 'municipio_id',
-        referencedColumnName: 'id_municipio'
-    })
-    municipio: Municipio;
-    //FIN MUNICIPIO
-
-    @Column({
-        type: 'int',
-        nullable: false,
-        default: 0
-    })
-    codigo_postal: number;
-
-    @Column({
-        type: 'varchar',
-        length: 100,
-        nullable: true
-    })
-    localidad_barrio: string;
-
-    @Column({
-        type: 'varchar',
-        length: 100,
-        nullable: true
-    })
-    calle_direccion: string;
-
-    @Column({
-        type: 'int',
-        nullable: false,
-        default: 0
-    })
-    numero_dom: number;
-
-    @Column({
-        type: 'varchar',
-        length: 100,
-        nullable: true
-    })
-    punto_referencia: string;    
-
+    
     @Column({
         type: 'varchar',
         length: 100,
         nullable: true
     })
     telefono: string;    
-
-    @Column({
-        type: 'varchar',
-        length: 200,
-        nullable: true,
-        unique: true
-    })
-    email:string;
-
+   
     //CATEGORIA
     @Column({
         type: 'int',
@@ -175,9 +84,4 @@ export class Vinculdado {
     categoria: Categoria;
     //FIN CATEGORIA
 
-    @Column({
-        type: "boolean",
-        default: true
-    })
-    activo: boolean;
 }

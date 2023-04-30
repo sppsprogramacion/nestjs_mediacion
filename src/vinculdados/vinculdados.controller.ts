@@ -3,8 +3,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe 
 import { VinculdadosService } from './vinculdados.service';
 import { CreateVinculdadoDto } from './dto/create-vinculdado.dto';
 import { UpdateVinculdadoDto } from './dto/update-vinculdado.dto';
-import { CreateConvocadoSaltaDto } from './dto/create-convocado-salta.dto';
-import { CreateConvocadoNoSaltaDto } from './dto/create-convocado-nosalta.dto';
 import { Vinculdado } from './entities/vinculdado.entity';
 
 @Controller('vinculados')
@@ -22,23 +20,7 @@ export class VinculdadosController {
     return this.vinculdadosService.create(vinculado);
   }
 
-  @Post('nuevo-convocado-salta')
-  createConvocadoSalta(@Body() data: CreateConvocadoSaltaDto) {
-    let vinculado: Partial<Vinculdado> = data;
-    vinculado.provincia_id = 18;
-    vinculado.categoria_id = 2;
-
-    return this.vinculdadosService.create(vinculado);
-  }
-
-  @Post('nuevo-convocado-nosalta')
-  createConvocadoNoSalta(@Body() data: CreateConvocadoNoSaltaDto) {
-    let vinculado: Partial<Vinculdado> = data;
-    vinculado.categoria_id = 2;
-
-    return this.vinculdadosService.create(data);
-  }
-
+  
   @Get('buscar-xdni')  
   async findVinculadoXDni(
     @Query('dni', ParseIntPipe) dni: string

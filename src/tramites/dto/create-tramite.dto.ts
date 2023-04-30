@@ -9,8 +9,8 @@ export class CreateTramiteDto {
     @IsNotEmpty({message: "Debe ingresar el id-ciudadano."})
     ciudadano_id:number;
 
-    @IsInt({message: "El id-provincia debe ser un número entero"})
-    provincia_id: number;
+    // @IsInt({message: "El id-provincia debe ser un número entero"})
+    // provincia_id: number;
 
     @IsInt({message: "El id-departamento debe ser un número entero."})
     departamento_id: number;
@@ -42,7 +42,6 @@ export class CreateTramiteDto {
     fecha_expediente: Date;
 
     @IsInt({message: "El id-objeto de la mediacón debe ser un número entero."})
-    @IsNotEmpty({message: "Debe ingresar el id-objeto de la mdiación."})
     objeto_id: number;
 
     @IsBoolean({message: "El campo violencia-genero debe ser verdadero o falso"})
@@ -69,13 +68,13 @@ export class CreateTramiteDto {
     @IsBoolean({message: "El campo pdf-negativa debe ser verdadero o falso"})
     pdf_negativa: boolean;
 
-    @IsInt({message: "El id-modalidad debe ser un número entero."})
-    @IsNotEmpty({message: "Debe ingresar el id-modalidad."})
-    modalidad_id: number;
+    // @IsInt({message: "El id-modalidad debe ser un número entero."})
+    // @IsNotEmpty({message: "Debe ingresar el id-modalidad."})
+    // modalidad_id: number;
 
-    @IsInt({message: "El id-variante debe ser un número entero."})
-    @IsNotEmpty({message: "Debe ingresar el id de la variante."})
-    variante_id: number;
+    // @IsInt({message: "El id-variante debe ser un número entero."})
+    // @IsNotEmpty({message: "Debe ingresar el id de la variante."})
+    // variante_id: number;
 
     estado_tramite_id: number;       
 

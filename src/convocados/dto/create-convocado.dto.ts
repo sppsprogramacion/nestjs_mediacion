@@ -19,7 +19,10 @@ export class CreateConvocadoSaltaDto {
     dni: number;
 
     @IsInt({message: "El id-sexo debe ser un número entero"})
-    sexo_id: number;    
+    sexo_id: number;   
+    
+    @IsInt({message: "El id-provincia debe ser un número entero"})
+    provincia_id: number;
 
     @IsInt({message: "El id-departamento debe ser un número entero."})
     departamento_id: number;

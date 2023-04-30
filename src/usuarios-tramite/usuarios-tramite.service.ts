@@ -59,7 +59,6 @@ export class UsuariosTramiteService {
     if( usuarioTramite.funcion_tramite_id == 2 ){
         throw new BadRequestException("No puede deshabilitar un usuario con función de mediador")
     }
-
     try{
       const respuesta = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
       .update('usuario_tramite')

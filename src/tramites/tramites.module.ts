@@ -10,18 +10,21 @@ import { UsuariosCentrosModule } from '../usuarios-centros/usuarios-centros.modu
 import { UsuarioCentro } from '../usuarios-centros/entities/usuario-centro.entity';
 import { UsuariosCentrosService } from '../usuarios-centros/usuarios-centros.service';
 import { UsuarioService } from '../usuario/usuario.service';
+import { ConvocadosService } from '../convocados/convocados.service';
+import { Convocado } from '../convocados/entities/convocado.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Tramite,
       Ciudadano,
+      Convocado,
       Usuario,
       UsuarioCentro
     ]),
   ],
   exports: [TramitesService],
   controllers: [TramitesController],
-  providers: [TramitesService, UsuarioService, UsuariosCentrosService]
+  providers: [TramitesService, ConvocadosService, UsuariosCentrosService, UsuarioService, ]
 })
 export class TramitesModule {}

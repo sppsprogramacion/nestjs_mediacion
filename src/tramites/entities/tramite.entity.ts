@@ -44,7 +44,8 @@ export class Tramite {
     //PROVINCIA
     @Column({
         type: 'int',
-        nullable: false
+        nullable: false,
+        default: 18
     })
     provincia_id: number;
 
@@ -130,6 +131,7 @@ export class Tramite {
 
     @Column({
         type: "boolean",
+        nullable: false,
         default: false
     })
     es_expediente: boolean;
@@ -220,7 +222,8 @@ export class Tramite {
     //MODALIDAD
     @Column({
         type: "int",
-        nullable:false
+        nullable:false,
+        default: 1
     })
     modalidad_id: number;
 
@@ -235,7 +238,8 @@ export class Tramite {
     //VARIANTE
     @Column({
         type: "int",
-        nullable:false
+        nullable:false,
+        default: 1
     })
     variante_id: number;
 

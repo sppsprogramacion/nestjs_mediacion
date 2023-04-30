@@ -6,47 +6,40 @@ import { CreateTramiteDto } from './dto/create-tramite.dto';
 import { UpdateTramiteDto } from './dto/update-tramite.dto';
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { UsuarioService } from '../usuario/usuario.service';
+import { ConvocadosService } from '../convocados/convocados.service';
+import { CreateConvocadoSaltaDto } from '../convocados/dto/create-convocado.dto';
+import { CreateConvocadoNoSaltaDto } from '../convocados/dto/create-convocado-nosalta.dto';
 
 @Controller('tramites')
 export class TramitesController {
   constructor(
     private readonly tramitesService: TramitesService,
-    private readonly usuarioService: UsuarioService
+    private readonly usuarioService: UsuarioService,
+    private readonly convocadosService: ConvocadosService
   ) {}
-
-  @Post()
-  create(@Body() data: CreateTramiteDto) {
-    
-    return this.tramitesService.create(data);
-  }
-
-  @Post('prueba-crear')
+ 
+  @Post('nuevo-tramite')
   prueba(
     @Body('dataTramite') dataTramite: CreateTramiteDto,
-    @Body('dni_ciudadano') data2: string,
-    
+    @Body('dataConvocadoSalta') dataConvocadoSalta: CreateConvocadoSaltaDto,   
+    @Body('dataConvocadoNoSalta') dataConvocadoNoSalta: CreateConvocadoNoSaltaDto, 
   ) {
     //cargar datos por defecto
-    let fecha_actual: any = new Date().toISOString().split('T')[0];
-    
-    dataTramite.fecha_tramite = fecha_actual;    
-    dataTramite.es_expediente= false;
-    dataTramite.fecha_expediente= null;
-    dataTramite.expediente = null;
-    dataTramite.estado_tramite_id= 1;
-    return this.tramitesService.create(dataTramite);
+    let fecha_actual: any = new Date().toISOString().split('T')[0];    
+    dataTramite.fecha_tramite = fecha_actual;        
+    console.log("Salta", dataConvocadoSalta);
+    console.log("NoSalta", dataConvocadoNoSalta);
+    //return this.tramitesService.create(dataTramite);
+    return "Hola";
   }
 
   @Get('buscar-xnumtramite')  
   async findTramiteXNumero(
-    @Req()
-    req: Request
+    @Query('numero_tramite', ParseIntPipe) numero_tramite: string
   ) {
     
-    if(!req.query.numero_tramite) throw new NotFoundException("El numero de tramite no fue ingresado.")
-    if(isNaN(Number(req.query.numero_tramite.toString()))) throw new NotFoundException("El numero de tramite debe ser un número.")
-    let numero_tramitex: number = parseFloat(req.query.numero_tramite.toString());
-    if(!Number.isInteger(numero_tramitex)) throw new NotFoundException("El numero de tramite debe ser un número entero.")
+    let numero_tramitex: number = parseInt(numero_tramite);
+
     return this.tramitesService.findXNumeroTramite(numero_tramitex);
   }
 
@@ -72,8 +65,7 @@ export class TramitesController {
 
     if (id_ciudadanox === 0) return this.tramitesService.findxestado(1);
 
-    return this.tramitesService.findByCiudadanoByEstado(1, id_ciudadanox);
-    
+    return this.tramitesService.findByCiudadanoByEstado(1, id_ciudadanox);    
   }
   //BUSCAR TRAMITES NUEVOS X CIUDADANO.....................................................
 
@@ -83,13 +75,11 @@ export class TramitesController {
     @Query('id_usuario', ParseIntPipe) id_usuario: string,
   ) {    
     
-    let usuario: Usuario = await this.usuarioService.findOne(+id_usuario);
-    
+    let usuario: Usuario = await this.usuarioService.findOne(+id_usuario);    
     
     if (usuario.rol_id === 1) return this.tramitesService.findxestado(1);
 
-    return this.tramitesService.findByUsuarioByEstado(1, +id_usuario);
-    
+    return this.tramitesService.findByUsuarioByEstado(1, +id_usuario);    
   }
   //FIN BUSCAR TRAMITES NUEVOS PARA CENTRO MEDIACION DEL USUARIO.....................................................
 
