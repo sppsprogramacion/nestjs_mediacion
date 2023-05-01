@@ -1,9 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Sexo } from '../../sexo/entities/sexo.entity';
-import { Provincia } from '../../provincias/entities/provincia.entity';
-import { Departamento } from '../../departamentos/entities/departamento.entity';
-import { Municipio } from '../../municipios/entities/municipio.entity';
+
 import { Categoria } from '../../categorias/entities/categoria.entity';
+import { Sexo } from '../../sexo/entities/sexo.entity';
 import { Tramite } from "src/tramites/entities/tramite.entity";
 
 @Entity('vinculados')

@@ -4,6 +4,8 @@ import { Tramite } from 'src/tramites/entities/tramite.entity';
 import { Repository } from 'typeorm';
 import { UpdateConvocadoDto } from './dto/update-convocado.dto';
 import { Convocado } from './entities/convocado.entity';
+import { CreateConvocadoSaltaDto } from './dto/create-convocado-salta.dto';
+import { CreateConvocadoNoSaltaDto } from './dto/create-convocado-nosalta.dto';
 
 @Injectable()
 export class ConvocadosService {
@@ -15,30 +17,56 @@ export class ConvocadosService {
     private readonly tramitesRepository: Repository<Tramite>
   ){}
   
-  //NUEVO CONVOCADO
-  async create(data: Partial<Convocado>): Promise<Convocado> {
+   //NUEVO CONVOCADO SALTA
+   async createConvocado(data: Convocado[]): Promise<Convocado[]> {
+    try {
+      const nuevo = this.convocadosRepository.create(data);
+      
+      return await this.convocadosRepository.save(nuevo);
+    }catch (error) {
+      
+      this.handleDBErrors(error); 
+    }      
+  }
+  //FIN NUEVO CONVOCADO SALTA
+
+  //NUEVO CONVOCADO SALTA
+  async createSalta(data: CreateConvocadoSaltaDto[]): Promise<CreateConvocadoSaltaDto[]> {
+    try {
+      const nuevo = this.convocadosRepository.create(data);
+      
+      return await this.convocadosRepository.save(nuevo);
+    }catch (error) {
+      
+      this.handleDBErrors(error); 
+    }      
+  }
+  //FIN NUEVO CONVOCADO SALTA
+
+  //NUEVO CONVOCADO NO SALTA
+  async createNoSalta(data: CreateConvocadoNoSaltaDto[]): Promise<CreateConvocadoNoSaltaDto[]> {
     try {
       const nuevo = this.convocadosRepository.create(data);
       return await this.convocadosRepository.save(nuevo);
     }catch (error) {
       if(error.code === "ER_NO_REFERENCED_ROW_2"){
         //Control de existencia del tramite
-        const tramite_existe = await this.tramitesRepository.findOneBy({ numero_tramite: data.tramite_numero});
-        if(!tramite_existe) throw new BadRequestException ("El numero de tramite ingresado no existe.")
+        // const tramite_existe = await this.tramitesRepository.findOneBy({ numero_tramite: data.tramite_numero});
+        // if(!tramite_existe) throw new BadRequestException ("El numero de tramite ingresado no existe.")
         //FIN Control de existencia del tramite        
       }
 
       this.handleDBErrors(error); 
     }      
   }
-  //FIN NUEVO CONVOCADO
+  //FIN NUEVO CONVOCADO NO SALTA
 
   async findAll() {
     return await this.convocadosRepository.findAndCount(
       {
-          order:{
-              apellido: "ASC"
-          }
+        order:{
+            apellido: "ASC"
+        }
       }
     );
   }

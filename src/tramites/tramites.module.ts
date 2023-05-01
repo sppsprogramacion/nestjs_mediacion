@@ -18,13 +18,12 @@ import { Convocado } from '../convocados/entities/convocado.entity';
     TypeOrmModule.forFeature([
       Tramite,
       Ciudadano,
-      Convocado,
       Usuario,
       UsuarioCentro
     ]),
   ],
   exports: [TramitesService],
   controllers: [TramitesController],
-  providers: [TramitesService, ConvocadosService, UsuariosCentrosService, UsuarioService, ]
+  providers: [TramitesService, UsuariosCentrosService, UsuarioService, ]
 })
 export class TramitesModule {}

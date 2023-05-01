@@ -25,16 +25,6 @@ export class CreateConvocadoNoSaltaDto {
    
     @IsInt({message: "El codigo-postal debe ser un número entero"})
     codigo_postal: number;
-
-    // @Length(1,100,{message: "La localidad o barrio debe tener entre $constraint1 y $constraint2 caracteres."})
-    // @IsNotEmpty({message: "Debe ingresar la localidad o barrio."})
-    // localidad_barrio: string;
-
-    // @MaxLength(100,{message: "La calle debe tener hasta $constraint1 caracteres."})
-    // calle_direccion: string;
-
-    // @IsInt({message: "El numero de domicilio debe ser un número entero."})
-    // numero_dom: number;
     
     @Length(1,100,{message: "El teléfono debe tener entre $constraint1 y $constraint2 caracteres."})
     @IsOptional()
@@ -44,8 +34,5 @@ export class CreateConvocadoNoSaltaDto {
     @Length(1,200,{message: "El correo debe tener entre $constraint1 y $constraint2 caracteres."})
     @IsOptional()
     email:string;
-
-    // @IsInt({message: "El id-categoria debe ser un número entero."})
-    // categoria_id: number
 
 }

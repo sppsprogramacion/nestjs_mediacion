@@ -54,7 +54,4 @@ export class CreateConvocadoSaltaDto {
     @IsOptional()
     email:string;
 
-    // @IsInt({message: "El id-categoria debe ser un número entero."})
-    // categoria_id: number
-
 }

@@ -1,5 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, NotFoundException, Put, Query, ParseIntPipe } from '@nestjs/common';
-import { Request } from 'express';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query, ParseIntPipe } from '@nestjs/common';
 
 import { TramitesService } from './tramites.service';
 import { CreateTramiteDto } from './dto/create-tramite.dto';
@@ -15,22 +14,17 @@ export class TramitesController {
   constructor(
     private readonly tramitesService: TramitesService,
     private readonly usuarioService: UsuarioService,
-    private readonly convocadosService: ConvocadosService
   ) {}
  
   @Post('nuevo-tramite')
   prueba(
-    @Body('dataTramite') dataTramite: CreateTramiteDto,
-    @Body('dataConvocadoSalta') dataConvocadoSalta: CreateConvocadoSaltaDto,   
-    @Body('dataConvocadoNoSalta') dataConvocadoNoSalta: CreateConvocadoNoSaltaDto, 
+    @Body('dataTramite') dataTramite: CreateTramiteDto
   ) {
     //cargar datos por defecto
     let fecha_actual: any = new Date().toISOString().split('T')[0];    
     dataTramite.fecha_tramite = fecha_actual;        
-    console.log("Salta", dataConvocadoSalta);
-    console.log("NoSalta", dataConvocadoNoSalta);
-    //return this.tramitesService.create(dataTramite);
-    return "Hola";
+    
+    return this.tramitesService.create(dataTramite);
   }
 
   @Get('buscar-xnumtramite')  
@@ -135,7 +129,7 @@ export class TramitesController {
     return this.tramitesService.findAll();
   }
 
-  @Put(':id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() dataDto: UpdateTramiteDto) {
     if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")
     let idx: number = parseFloat(id);

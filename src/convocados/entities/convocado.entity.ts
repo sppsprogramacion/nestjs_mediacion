@@ -3,7 +3,6 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "t
 
 import { Tramite } from "src/tramites/entities/tramite.entity";
 import { Sexo } from "src/sexo/entities/sexo.entity";
-import { Categoria } from "src/categorias/entities/categoria.entity";
 import { Provincia } from "src/provincias/entities/provincia.entity";
 import { Departamento } from "src/departamentos/entities/departamento.entity";
 import { Municipio } from "src/municipios/entities/municipio.entity";
@@ -157,8 +156,7 @@ export class Convocado {
     @Column({
         type: 'varchar',
         length: 200,
-        nullable: true,
-        unique: true
+        nullable: true
     })
     email:string;
 
