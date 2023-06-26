@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query, ParseIntPipe, ParseArrayPipe, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 
 import { TramitesService } from './tramites.service';
 import { CreateTramiteDto } from './dto/create-tramite.dto';
@@ -6,32 +6,111 @@ import { UpdateTramiteDto } from './dto/update-tramite.dto';
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { UsuarioService } from '../usuario/usuario.service';
 import { ConvocadosService } from '../convocados/convocados.service';
-import { CreateConvocadoSaltaDto } from '../convocados/dto/create-convocado.dto';
-import { CreateConvocadoNoSaltaDto } from '../convocados/dto/create-convocado-nosalta.dto';
+import { Tramite } from './entities/tramite.entity';
+import { CreateConvocadoSaltaDto } from './dto/create-convocado-salta-tramite.dto';
+import { CreateConvocadoNoSaltaDto } from './dto/create-convocado-nosalta-tramite.dto';
+import { Convocado } from 'src/convocados/entities/convocado.entity';
+import { CreateVinculadoTramiteDto } from './dto/create-vinculado-tramite.dto';
+import { VinculadosService } from 'src/vinculados/vinculados.service';
+import { Vinculado } from 'src/vinculados/entities/vinculado.entity';
 
 @Controller('tramites')
 export class TramitesController {
   constructor(
     private readonly tramitesService: TramitesService,
     private readonly usuarioService: UsuarioService,
+    private readonly convocadosService: ConvocadosService,
+    private readonly vinculadosService: VinculadosService
   ) {}
  
   @Post('nuevo-tramite')
-  prueba(
-    @Body('dataTramite') dataTramite: CreateTramiteDto
+  async prueba(
+    @Body('dataTramite') dataTramite: CreateTramiteDto,
+    @Body('createConvocadoSaltaDto', new ParseArrayPipe({ items: CreateConvocadoSaltaDto })) 
+    createConvocadoSaltaDto?: CreateConvocadoSaltaDto[],
+    @Body('createConvocadoNoSaltaDto', new ParseArrayPipe({ items: CreateConvocadoNoSaltaDto })) 
+    createConvocadoNoSaltaDto?: CreateConvocadoNoSaltaDto[],
+    @Body('createVinculadoTramiteDto', new ParseArrayPipe({ items: CreateVinculadoTramiteDto })) 
+    createVinculadoTramiteDto?: CreateVinculadoTramiteDto[]
   ) {
+    //controlar que envie por lo menos un convocado
+    if(createConvocadoSaltaDto.length == 0 && createConvocadoNoSaltaDto.length == 0) throw new BadRequestException ("Debe enviar un convocado");
+
     //cargar datos por defecto
     let fecha_actual: any = new Date().toISOString().split('T')[0];    
-    dataTramite.fecha_tramite = fecha_actual;        
+    dataTramite.fecha_tramite = fecha_actual;  
     
-    return this.tramitesService.create(dataTramite);
+    //crear tramite          
+    let tramiteCreado: Tramite = await this.tramitesService.create(dataTramite);
+    
+    let convocados: Partial<Convocado[]> = [];
+    let convocadosCreados: Convocado[];
+    let vinculados: Partial<Vinculado[]> = [];
+    let vinculadosCreados: Vinculado[];
+    if(tramiteCreado){      
+      //guardar convocados
+      if(createConvocadoSaltaDto.length > 0) {
+        let salta: any[]= createConvocadoSaltaDto;
+        convocados.push(...salta);
+      }
+  
+      if(createConvocadoNoSaltaDto.length > 0) {
+        let noSalta: any[]= createConvocadoNoSaltaDto;
+        convocados.push(...noSalta);
+      }
+
+      //cargar el numero de tramite para todos los convocados
+      for (let convocado of convocados){
+        convocado.tramite_numero = tramiteCreado.numero_tramite;
+      }
+
+      //crear convocados
+      convocadosCreados =  await this.convocadosService.createConvocados(convocados);
+
+      if(convocadosCreados.length < (createConvocadoSaltaDto.length + createConvocadoNoSaltaDto.length)){
+        await this.convocadosService.removeByTramite(tramiteCreado.numero_tramite);
+        const verConvocados = await this.convocadosService.findXTramite(tramiteCreado.numero_tramite);
+        convocadosCreados = verConvocados[0];
+      } 
+      console.log("convocados: ", convocadosCreados);
+      //fin guardar convocados........
+
+      //guardar vinculados
+      if(createVinculadoTramiteDto.length > 0){
+        let vinculadosAux: any[]= createVinculadoTramiteDto;
+        vinculados.push(...vinculadosAux);
+        for (let vinculado of vinculados){
+          vinculado.tramite_numero = tramiteCreado.numero_tramite;
+        }
+      }
+
+      //crear Vinculados
+      vinculadosCreados = await this.vinculadosService.createVinculados(vinculados);
+
+      if(vinculadosCreados.length < (createVinculadoTramiteDto.length)){
+        await this.vinculadosService.removeByTramite(tramiteCreado.numero_tramite);
+        const verVinculados = await this.vinculadosService.findXTramite(tramiteCreado.numero_tramite);
+        vinculadosCreados = verVinculados[0];
+      } 
+      console.log("vinculados: ", vinculadosCreados);
+
+      //fin guardar vinculados........
+      
+    }
+    console.log("tramite: ", tramiteCreado);
+    
+    return {
+      tramiteCreado,
+      convocadosCreados,
+      vinculadosCreados
+    };
+    //return this.tramitesService.create(dataTramite);
   }
 
   @Get('buscar-xnumtramite')  
   async findTramiteXNumero(
     @Query('numero_tramite', ParseIntPipe) numero_tramite: string
   ) {
-    
     let numero_tramitex: number = parseInt(numero_tramite);
 
     return this.tramitesService.findXNumeroTramite(numero_tramitex);
@@ -42,7 +121,6 @@ export class TramitesController {
   async findByCiudadano( 
     @Query('id_ciudadano', ParseIntPipe) id_ciudadano: string,   
   ) {  
-
     let id_ciudadanox: number = +id_ciudadano;
 
     return this.tramitesService.findXCiudadano(id_ciudadanox);
@@ -54,7 +132,6 @@ export class TramitesController {
   async findNuevos(
     @Query('id_ciudadano', ParseIntPipe) id_ciudadano: string,
   ) {
-
     let id_ciudadanox: number = +id_ciudadano;
 
     if (id_ciudadanox === 0) return this.tramitesService.findxestado(1);
@@ -67,8 +144,7 @@ export class TramitesController {
   @Get('nuevos-xusuario')
   async findNuevosByUsuario(
     @Query('id_usuario', ParseIntPipe) id_usuario: string,
-  ) {    
-    
+  ) {        
     let usuario: Usuario = await this.usuarioService.findOne(+id_usuario);    
     
     if (usuario.rol_id === 1) return this.tramitesService.findxestado(1);

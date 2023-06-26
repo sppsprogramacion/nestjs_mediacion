@@ -1,11 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-import { Categoria } from '../../categorias/entities/categoria.entity';
-import { Sexo } from '../../sexo/entities/sexo.entity';
 import { Tramite } from "src/tramites/entities/tramite.entity";
+import { Sexo } from "src/sexo/entities/sexo.entity";
+import { Categoria } from "src/categorias/entities/categoria.entity";
 
 @Entity('vinculados')
-export class Vinculdado {
+export class Vinculado {
     @PrimaryGeneratedColumn()
     id_vinculado: number;
 
@@ -81,5 +81,4 @@ export class Vinculdado {
     })
     categoria: Categoria;
     //FIN CATEGORIA
-
 }

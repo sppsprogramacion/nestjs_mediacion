@@ -1,14 +1,9 @@
 import { IsEmpty, IsInt, IsNotEmpty, IsOptional, Length, Matches, MaxLength, Min } from "class-validator";
 
 export class CreateConvocadoNoSaltaDto {
-
+    
     @IsEmpty({message: "El id_convocado no debe ser enviado."})
     id_convocado: number;
-    
-    @Min(1,{message: "El tramite_numero no debe ser menor que $constraint1"})
-    @IsInt({message: "El tramite_numero debe ser un número entero"})
-    @IsOptional()
-    tramite_numero: number;
 
     @Length(1,100,{message: "El apellido debe tener entre $constraint1 y $constraint2 caracteres."})
     @IsNotEmpty({message: "Debe ingresar el apellido."})

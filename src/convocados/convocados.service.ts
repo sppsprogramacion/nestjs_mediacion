@@ -18,10 +18,9 @@ export class ConvocadosService {
   ){}
   
    //NUEVO CONVOCADO SALTA
-   async createConvocado(data: Convocado[]): Promise<Convocado[]> {
+   async createConvocados(data: Convocado[]): Promise<Convocado[]> {
     try {
-      const nuevo = this.convocadosRepository.create(data);
-      
+      const nuevo = this.convocadosRepository.create(data);      
       return await this.convocadosRepository.save(nuevo);
     }catch (error) {
       
@@ -120,6 +119,11 @@ export class ConvocadosService {
     const respuesta = await this.convocadosRepository.findOneBy({id_convocado: id});
     if(!respuesta) throw new NotFoundException("No existe el registro del convocado que intenta eliminar");
     return await this.convocadosRepository.remove(respuesta);
+  }
+
+  async removeByTramite(numTramite: number) {
+    
+    return await this.convocadosRepository.delete({tramite_numero: numTramite})
   }
 
 

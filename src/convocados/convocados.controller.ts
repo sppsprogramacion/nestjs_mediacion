@@ -21,25 +21,23 @@ export class ConvocadosController {
     createConvocadoNoSaltaDto?: CreateConvocadoNoSaltaDto[]
   ){
     
-    if(createConvocadoSaltaDto.length == 0 && createConvocadoNoSaltaDto.length == 0) throw new BadRequestException ("Debe enviar un convocado")    
+    if(createConvocadoSaltaDto.length == 0 && createConvocadoNoSaltaDto.length == 0) throw new BadRequestException ("Debe enviar un convocado");    
       
     let convocados: Partial<Convocado[]> = [];
     
     if(createConvocadoSaltaDto.length > 0) {
       let salta: any[]= createConvocadoSaltaDto;
-      console.log("salta", salta);
       convocados.push(...salta);
     }
 
     if(createConvocadoNoSaltaDto.length > 0) {
       let noSalta: any[]= createConvocadoNoSaltaDto;
-      console.log("no salta", noSalta);
       convocados.push(...noSalta);
     }
     
     console.log("dataDto", convocados);
     
-    return this.convocadosService.createConvocado(convocados);
+    return this.convocadosService.createConvocados(convocados);
   }
 
   @Post('nuevo-convocado-salta')

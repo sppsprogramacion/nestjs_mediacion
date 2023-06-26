@@ -1,10 +1,10 @@
-import { IsInt, IsNotEmpty, Length, Matches, MaxLength } from "class-validator";
+import { IsEmpty, IsInt, IsNotEmpty, Length, Min } from "class-validator";
 
-export class CreateVinculdadoDto {
-
-    @IsInt({message: "El numero-tramite debe ser un número entero"})
-    tramite_numero: number;
-
+export class CreateVinculadoTramiteDto {
+    
+    @IsEmpty({message: "El id_vinculado no debe ser enviado."})
+    id_vinculado: number;
+    
     @Length(1,100,{message: "El apellido debe tener entre $constraint1 y $constraint2 caracteres."})
     @IsNotEmpty({message: "Debe ingresar el apellido."})
     apellido: string;
@@ -25,5 +25,4 @@ export class CreateVinculdadoDto {
 
     @IsInt({message: "El id-categoria debe ser un número entero."})
     categoria_id: number    
-
 }

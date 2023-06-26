@@ -1,9 +1,13 @@
-import { IsEmpty, IsInt, IsNotEmpty, IsOptional, Length, Matches, MaxLength } from "class-validator";
+import { IsEmpty, IsInt, IsNotEmpty, IsNumber, IsOptional, Length, Matches, MaxLength, Min } from "class-validator";
 
 export class CreateConvocadoSaltaDto {
 
-    @IsInt({message: "El numero-tramite debe ser un número entero"})
-    @IsNotEmpty({message: "Debe ingresar el numero-tramite."})
+    @IsEmpty({message: "El id_convocado no debe ser enviado."})
+    id_convocado: number;
+
+    @Min(1,{message: "El tramite_numero no debe ser menor que $constraint1"})
+    @IsInt({message: "El tramite_numero debe ser un número entero"})
+    @IsOptional()
     tramite_numero: number;
 
     @Length(1,100,{message: "El apellido debe tener entre $constraint1 y $constraint2 caracteres."})
@@ -18,31 +22,31 @@ export class CreateConvocadoSaltaDto {
     @IsOptional()
     dni: number;
 
-    @IsInt({message: "El id-sexo debe ser un número entero"})
+    @IsInt({message: "El sexo_id debe ser un número entero"})
     sexo_id: number;    
 
-    @IsInt({message: "El id-departamento debe ser un número entero."})
+    @IsInt({message: "El departamento_id debe ser un número entero."})
     departamento_id: number;
 
-    @IsInt({message: "El id-municipio debe ser un número entero."})
+    @IsInt({message: "El municipio_id debe ser un número entero."})
     municipio_id: number
 
-    @IsInt({message: "El codigo-postal debe ser un número entero"})
+    @IsInt({message: "El codigo_postal debe ser un número entero"})
     codigo_postal: number;
 
-    @Length(1,100,{message: "La localidad o barrio debe tener entre $constraint1 y $constraint2 caracteres."})
-    @IsNotEmpty({message: "Debe ingresar la localidad o barrio."})
+    @Length(1,100,{message: "La localidad_barrio debe tener entre $constraint1 y $constraint2 caracteres."})
+    @IsNotEmpty({message: "Debe ingresar la localidad_barrio."})
     localidad_barrio: string;
 
-    @MaxLength(100,{message: "La calle debe tener hasta $constraint1 caracteres."})
-    @IsNotEmpty({message: "Debe ingresar la calle/direccion."})
+    @MaxLength(100,{message: "La calle_direccion debe tener hasta $constraint1 caracteres."})
+    @IsNotEmpty({message: "Debe ingresar la calle_direccion."})
     calle_direccion: string;
 
-    @IsInt({message: "El numero de domicilio debe ser un número entero."})
+    @IsInt({message: "El numero_dom de domicilio debe ser un número entero."})
     numero_dom: number;
 
-    @MaxLength(100,{message: "El punto de referencia debe tener hasta  $constraint1 caracteres."})
-    @IsNotEmpty({message: "Debe ingresar el punto de referencia."})
+    @MaxLength(100,{message: "El punto_referencia debe tener hasta  $constraint1 caracteres."})
+    @IsNotEmpty({message: "Debe ingresar el punto_referencia."})
     punto_referencia: string;
     
     @Length(1,100,{message: "El teléfono debe tener entre $constraint1 y $constraint2 caracteres."})
@@ -50,7 +54,7 @@ export class CreateConvocadoSaltaDto {
     telefono: string;
 
     @Matches(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/,{message:'El formato del email no es válido.'})
-    @Length(1,200,{message: "El correo debe tener entre $constraint1 y $constraint2 caracteres."})
+    @Length(1,200,{message: "El email debe tener entre $constraint1 y $constraint2 caracteres."})
     @IsOptional()
     email:string;
 
