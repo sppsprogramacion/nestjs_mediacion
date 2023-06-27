@@ -83,6 +83,7 @@ export class TramitesController {
           vinculado.tramite_numero = tramiteCreado.numero_tramite;
         }
       }
+      console.log("vinculados previos: ", vinculados);
 
       //crear Vinculados
       vinculadosCreados = await this.vinculadosService.createVinculados(vinculados);
