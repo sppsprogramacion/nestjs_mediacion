@@ -5,7 +5,7 @@ import { IsDateString, IsEmpty, IsInt, IsNotEmpty, Length } from "class-validato
 export class CreateUsuariosTramiteDto {
 
     @IsInt({message: "El tramite_numero debe ser un número entero."})
-    @IsNotEmpty({message: "Debe ingresar el tramite_numero."})
+    @IsNotEmpty({message: "Debe ingresar el tramite_numeroxxx."})
     tramite_numero: number;
 
     @IsInt({message: "El usuario_id debe ser un número entero."})
