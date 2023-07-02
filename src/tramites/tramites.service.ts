@@ -78,6 +78,7 @@ export class TramitesService {
   async findXCiudadano(id_ciudadano: number) {
     const tramites = await this.tramiteRepository.findAndCount(
       {        
+        relations: ['asignaciones','convocados','vinculados'],
         where: {
           ciudadano_id: id_ciudadano
         },
@@ -181,7 +182,7 @@ export class TramitesService {
 
     const respuesta = await this.tramiteRepository.find(
       {
-        relations: ['asignaciones'],
+        relations: ['asignaciones','convocados','vinculados'],
         where: {
           numero_tramite: numero_tramitex
         }

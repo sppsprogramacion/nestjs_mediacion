@@ -10,6 +10,8 @@ import { Provincia } from "src/provincias/entities/provincia.entity";
 import { Departamento } from "src/departamentos/entities/departamento.entity";
 import { Municipio } from "src/municipios/entities/municipio.entity";
 import { CentroMediacion } from '../../centros-mediacion/entities/centro-mediacion.entity';
+import { Convocado } from "src/convocados/entities/convocado.entity";
+import { Vinculado } from "src/vinculados/entities/vinculado.entity";
 
 
 @Entity('tramites')
@@ -278,6 +280,14 @@ export class Tramite {
     asignaciones : UsuariosTramite[];
     //FIN TRAMITES ASIGNADOS
 
-    
+    //CONVOCADOS
+    @OneToMany(() => Convocado, (convocado) => convocado.tramite)
+    convocados : Convocado[];
+    //FIN CONVOCADOS
+
+    //CONVOCADOS
+    @OneToMany(() => Vinculado, (vinculado) => vinculado.tramite)
+    vinculados : Vinculado[];
+    //FIN CONVOCADOS
 
 }
