@@ -23,6 +23,7 @@ export class TramitesController {
     private readonly vinculadosService: VinculadosService
   ) {}
  
+  //NUEVO TRAMITE
   @Post('nuevo-tramite')
   async prueba(
     @Body('dataTramite') dataTramite: CreateTramiteDto,
@@ -107,7 +108,9 @@ export class TramitesController {
     };
     //return this.tramitesService.create(dataTramite);
   }
+  //FIN NUEVO TRAMITE................................................................
 
+  //BUSCAR X NUMERO DE TRAMITE
   @Get('buscar-xnumtramite')  
   async findTramiteXNumero(
     @Query('numero_tramite', ParseIntPipe) numero_tramite: string
@@ -116,6 +119,7 @@ export class TramitesController {
 
     return this.tramitesService.findXNumeroTramite(numero_tramitex);
   }
+  //FIN BUSCAR X NUMERO DE TRAMITE.....................................................
 
   //BUSCAR TRAMITES POR CIUDADANO
   @Get('buscar-xciudadano')

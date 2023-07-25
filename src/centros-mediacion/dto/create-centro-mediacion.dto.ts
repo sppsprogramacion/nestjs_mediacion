@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, Length, Matches, MaxLength } from "class-validator";
+import { IsBoolean, IsInt, IsNotEmpty, Length, Matches, MaxLength } from "class-validator";
 
 export class CreateCentroMediacionDto {
     @Length(1,100,{message: "centro_mediacion debe tener entre $constraint1 y $constraint2 caracteres."})
@@ -29,5 +29,8 @@ export class CreateCentroMediacionDto {
     @Length(1,200,{message: "email debe tener entre $constraint1 y $constraint2 caracteres."})
     @IsNotEmpty({message: "Debe ingresar el email."})
     email:string;
+
+    @IsBoolean({message: "admin_es_responsable debe ser verdadero o falso"})
+    admin_es_responsable: boolean;
 
 }
