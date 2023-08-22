@@ -156,7 +156,7 @@ export class TramitesController {
 
     return this.tramitesService.findByUsuarioByEstado(1, +id_usuario);    
   }
-  //FIN BUSCAR TRAMITES NUEVOS PARA CENTRO MEDIACION DEL USUARIO.....................................................
+  //FIN BUSCAR TRAMITES NUEVOS PARA CENTRO MEDIACION DEL USUARIO......................................
 
   //BUSCAR TRAMITES ASIGNADOS A MEDIADOR
   @Get('asignados-mediador')

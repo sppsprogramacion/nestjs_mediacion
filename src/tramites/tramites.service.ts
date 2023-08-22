@@ -122,27 +122,45 @@ export class TramitesService {
         }
       }
     );   
-
+        
     return tramites;
   }
   //FIN BUSCAR TRAMITES NUEVOS..........................................
 
   //BUSCAR TRAMITES X usuario X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
   async findByUsuarioByEstado(id_estado: number, id_usuario: number) {
-    let centros: [UsuarioCentro[], number] = await this.usuarioCentroService.findByUsuarioByActivo(id_usuario, true);
-    
-    // const tramites = await this.tramiteRepository.findAndCount(
-    //   {        
-    //     where: {
-    //       estado_tramite_id: id_estado
-    //     },
-    //     order:{
-    //       numero_tramite: "DESC"
-    //     }
-    //   }
-    // );   
+    let usuariosCentros: [UsuarioCentro[], number] = await this.usuarioCentroService.findByUsuarioByActivo(id_usuario, true);
+    let tramites_aux: any[];
+    let tramites_encontrados: Tramite[]=[];
+    let total_registros: number = 0;
+    console.log("centros", usuariosCentros[0][0]);
 
-    return centros;
+    //cargar tramites
+    let tramites: any= {};
+    for (let usuarioCentro of usuariosCentros[0]){
+      if(usuarioCentro.centro_mediacion.admin_es_responsable){
+        tramites = await this.tramiteRepository.findAndCount(
+          {        
+            where: {
+              estado_tramite_id: id_estado,
+              centro_mediacion_id: usuarioCentro.centro_mediacion_id
+            },
+            order:{
+              numero_tramite: "DESC"
+            }
+          }
+        ); 
+        tramites_aux = tramites[0];
+        tramites_encontrados.push(...tramites_aux);
+        total_registros = total_registros + tramites[1];
+        console.log("tramites_encontrados", [tramites_encontrados, total_registros]);
+      }
+      
+    }
+
+      
+
+    return [tramites_encontrados, total_registros];
   }
   //FIN BUSCAR TRAMITES NUEVOS..........................................
 
