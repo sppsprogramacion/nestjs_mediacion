@@ -138,7 +138,7 @@ export class TramitesService {
     //cargar tramites
     let tramites: any= {};
     for (let usuarioCentro of usuariosCentros[0]){
-      if(usuarioCentro.centro_mediacion.admin_es_responsable){
+      if(!usuarioCentro.centro_mediacion.admin_es_responsable){
         tramites = await this.tramiteRepository.findAndCount(
           {        
             where: {
