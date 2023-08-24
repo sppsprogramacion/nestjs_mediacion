@@ -8,6 +8,8 @@ import { UpdateTramiteDto } from './dto/update-tramite.dto';
 import { Tramite } from './entities/tramite.entity';
 import { UsuarioCentro } from '../usuarios-centros/entities/usuario-centro.entity';
 import { UsuariosCentrosService } from '../usuarios-centros/usuarios-centros.service';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
+import { UsuarioService } from '../usuario/usuario.service';
 
 @Injectable()
 export class TramitesService {
@@ -18,7 +20,8 @@ export class TramitesService {
     @InjectRepository(Ciudadano)
     private readonly ciudadanoRepository: Repository<Ciudadano>,    
 
-    private readonly usuarioCentroService: UsuariosCentrosService
+    private readonly usuarioCentroService: UsuariosCentrosService,
+    private readonly usuarioService: UsuarioService
 
   ){}
 
@@ -125,38 +128,75 @@ export class TramitesService {
         
     return tramites;
   }
-  //FIN BUSCAR TRAMITES NUEVOS..........................................
+  //FIN BUSCAR TTRAMITES X CIUDADANO X ESTADO..........................................
 
   //BUSCAR TRAMITES X usuario X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
-  async findByUsuarioByEstado(id_estado: number, id_usuario: number) {
-    let usuariosCentros: [UsuarioCentro[], number] = await this.usuarioCentroService.findByUsuarioByActivo(id_usuario, true);
-    let tramites_aux: any[];
-    let tramites_encontrados: Tramite[]=[];
-    let total_registros: number = 0;
-    console.log("centros", usuariosCentros[0][0]);
-
-    //cargar tramites
+  async findByUsuarioByEstado(id_estado: number, id_usuario: number) { 
+    let tramites_encontrados: Tramite[]=[];   
+    let total_registros: number = 0;    
     let tramites: any= {};
-    for (let usuarioCentro of usuariosCentros[0]){
-      if(!usuarioCentro.centro_mediacion.admin_es_responsable){
-        tramites = await this.tramiteRepository.findAndCount(
-          {        
-            where: {
-              estado_tramite_id: id_estado,
-              centro_mediacion_id: usuarioCentro.centro_mediacion_id
-            },
-            order:{
-              numero_tramite: "DESC"
-            }
-          }
-        ); 
-        tramites_aux = tramites[0];
-        tramites_encontrados.push(...tramites_aux);
-        total_registros = total_registros + tramites[1];
-        console.log("tramites_encontrados", [tramites_encontrados, total_registros]);
-      }
+    let usuario: Usuario = await this.usuarioService.findOne(id_usuario);
+
+    //cargar tramites nuevos    
+    if(id_estado === 1 && usuario.rol_id != 1){
+      let usuariosCentros: [UsuarioCentro[], number] = await this.usuarioCentroService.findByUsuarioByActivo(id_usuario, true);
+      console.log("centros", usuariosCentros[0][0]);
+      let tramites_aux: any[];
       
+      for (let usuarioCentro of usuariosCentros[0]){
+
+        if(!usuarioCentro.centro_mediacion.admin_es_responsable ){
+          tramites = await this.tramiteRepository.findAndCount(
+            {        
+              where: {
+                estado_tramite_id: id_estado,
+                centro_mediacion_id: usuarioCentro.centro_mediacion_id
+              },
+              order:{
+                numero_tramite: "DESC"
+              }
+            }
+          ); 
+          tramites_aux = tramites[0];
+          tramites_encontrados.push(...tramites_aux);
+          total_registros = total_registros + tramites[1];
+          console.log("tramites_encontrados", [tramites_encontrados, total_registros]);
+        }
+      }
     }
+
+    if(id_estado === 1 && usuario.rol_id === 1){  
+      console.log("Administrador");        
+      let tramites_aux: any[];
+      let tramites_encontrados: Tramite[]=[];
+      // tramites = await this.tramiteRepository.findAndCount(
+      //   {        
+      //     where: {
+      //       estado_tramite_id: id_estado,
+      //       centro_mediacion_id: usuarioCentro.centro_mediacion_id
+      //     },
+      //     order:{
+      //       numero_tramite: "DESC"
+      //     }
+      //   }
+      // ); 
+
+      
+      tramites = await this.tramiteRepository.createQueryBuilder('tramites') 
+        .leftJoinAndSelect('tramite.centro_mediacion', 'centro_mediacion')
+        .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('tramite.objeto', 'objeto')   
+        .where('centro_mediacion.admin_es_responsable = :valor', { valor: true })
+        .getManyAndCount();
+    
+        
+    
+      tramites_aux = tramites[0];
+      tramites_encontrados.push(...tramites_aux);
+      total_registros = total_registros + tramites[1];
+      console.log("tramites_encontrados", [tramites_encontrados, total_registros]);
+    }
+    //fin cargar tramites nuevo
 
       
 
