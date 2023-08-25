@@ -168,7 +168,6 @@ export class TramitesService {
     if(id_estado === 1 && usuario.rol_id === 1){  
       console.log("Administrador");        
       let tramites_aux: any[];
-      let tramites_encontrados: Tramite[]=[];
       // tramites = await this.tramiteRepository.findAndCount(
       //   {        
       //     where: {
@@ -183,10 +182,11 @@ export class TramitesService {
 
       
       tramites = await this.tramiteRepository.createQueryBuilder('tramites') 
-        .leftJoinAndSelect('tramite.centro_mediacion', 'centro_mediacion')
-        .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
-        .leftJoinAndSelect('tramite.objeto', 'objeto')   
+        .leftJoinAndSelect('tramites.centro_mediacion', 'centro_mediacion')
+        .leftJoinAndSelect('tramites.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('tramites.objeto', 'objeto')   
         .where('centro_mediacion.admin_es_responsable = :valor', { valor: true })
+        .andWhere('tramites.estado_tramite_id = :id_estado', {id_estado: 1})
         .getManyAndCount();
     
         
@@ -194,6 +194,8 @@ export class TramitesService {
       tramites_aux = tramites[0];
       tramites_encontrados.push(...tramites_aux);
       total_registros = total_registros + tramites[1];
+      console.log("cantidad", total_registros);
+
       console.log("tramites_encontrados", [tramites_encontrados, total_registros]);
     }
     //fin cargar tramites nuevo
@@ -240,7 +242,7 @@ export class TramitesService {
 
     const respuesta = await this.tramiteRepository.find(
       {
-        relations: ['asignaciones','convocados','vinculados'],
+        //relations: ['asignaciones','convocados','vinculados'],
         where: {
           numero_tramite: numero_tramitex
         }

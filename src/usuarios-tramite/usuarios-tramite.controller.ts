@@ -42,7 +42,7 @@ export class UsuariosTramiteController {
   }
   //FIN BUSCAR TRAMITES ASIGNADOS POR ID-USUARIO....................................................
 
-  //BUSCAR TRAMITES ASIGNADOS POR ID-USUARIO
+  //BUSCAR TRAMITES x numero de tramite
   @Get('buscar-xnumtramite-activo')  
   async findTramiteXNumero(
     @Query('numero_tramite', ParseIntPipe) numero_tramite: string, 
@@ -52,7 +52,7 @@ export class UsuariosTramiteController {
 
     return this.usuariosTramiteService.findByNumTramiteActivo(numero_tramitex);
   }
-  //FIN BUSCAR TRAMITES ASIGNADOS POR ID-USUARIO....................................................
+  //FIN BUSCAR TRAMITES x numero de tramite....................................................
 
   //BUSCAR TRAMITES ASIGNADOS POR CIUDADANO
   @Get('buscar-xciudadano')  

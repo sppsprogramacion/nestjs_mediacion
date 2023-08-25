@@ -150,9 +150,9 @@ export class TramitesController {
   async findNuevosByUsuario(
     @Query('id_usuario', ParseIntPipe) id_usuario: string,
   ) {        
-    let usuario: Usuario = await this.usuarioService.findOne(+id_usuario);    
+    //let usuario: Usuario = await this.usuarioService.findOne(+id_usuario);    
     
-    if (usuario.rol_id === 1) return this.tramitesService.findxestado(1);
+    //if (usuario.rol_id === 1) return this.tramitesService.findxestado(1);
 
     return this.tramitesService.findByUsuarioByEstado(1, +id_usuario);    
   }
