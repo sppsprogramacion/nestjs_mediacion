@@ -54,6 +54,18 @@ export class UsuariosTramiteController {
   }
   //FIN BUSCAR TRAMITES x numero de tramite....................................................
 
+  //BUSCAR mediador del tramite x numero de tramite
+  @Get('buscar-mediador-xnumtramite-activo')  
+  async findMediadorTramiteXNumeroTram(
+    @Query('numero_tramite', ParseIntPipe) numero_tramite: string, 
+  ) {
+
+    let numero_tramitex: number = +numero_tramite;
+
+    return this.usuariosTramiteService.findMediadorByNumTramiteActivo(numero_tramitex);
+  }
+  //FIN BUSCAR TRAMITES x numero de tramite....................................................
+
   //BUSCAR TRAMITES ASIGNADOS POR CIUDADANO
   @Get('buscar-xciudadano')  
   async findTramiteXCiudadano(

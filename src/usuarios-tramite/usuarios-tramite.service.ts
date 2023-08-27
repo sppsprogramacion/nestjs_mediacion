@@ -128,7 +128,7 @@ export class UsuariosTramiteService {
   }
   //FIN BUSCAR  TRAMITES ASIGNADOS ACTIVOS..................................................................
 
-  //BUSCAR  XID
+  //BUSCAR  XNUMTRAMITE
   async findByNumTramiteActivo(num_tramite: number) {    
     //const respuesta = await this.usuariosCentroRepository.findOneBy({id_usuario_centro: id});
     const respuesta = await this.usuariosTramiteRepository.findAndCount(
@@ -145,7 +145,26 @@ export class UsuariosTramiteService {
     if (!respuesta) throw new NotFoundException("No se encontró el registro con este numero de tramite.");
     return respuesta;
   }
-  //FIN BUSCAR  XID..................................................................
+  //FIN BUSCAR  XNUMTRAMITE..................................................................
+
+  //BUSCAR MEDIADOR  XNUMTRAMITE
+  async findMediadorByNumTramiteActivo(num_tramite: number) {    
+    const respuesta = await this.usuariosTramiteRepository.findOne(
+      {
+        //relations: ['tramite'],
+        where: {          
+          tramite_numero: num_tramite,
+          funcion_tramite_id: 2,
+          activo: true
+        }      
+          
+      }
+    );
+    
+    if (!respuesta) throw new NotFoundException("No se encontró el registro con este numero de tramite.");
+    return respuesta;
+  }
+  //FIN BUSCAR MEDIADOR XNUMTRAMITE..................................................................
   
   async findAll() {
     return await this.usuariosTramiteRepository.findAndCount(

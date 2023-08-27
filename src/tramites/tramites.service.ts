@@ -140,7 +140,6 @@ export class TramitesService {
     //cargar tramites nuevos    
     if(id_estado === 1 && usuario.rol_id != 1){
       let usuariosCentros: [UsuarioCentro[], number] = await this.usuarioCentroService.findByUsuarioByActivo(id_usuario, true);
-      console.log("centros", usuariosCentros[0][0]);
       let tramites_aux: any[];
       
       for (let usuarioCentro of usuariosCentros[0]){
@@ -160,13 +159,11 @@ export class TramitesService {
           tramites_aux = tramites[0];
           tramites_encontrados.push(...tramites_aux);
           total_registros = total_registros + tramites[1];
-          console.log("tramites_encontrados", [tramites_encontrados, total_registros]);
         }
       }
     }
 
     if(id_estado === 1 && usuario.rol_id === 1){  
-      console.log("Administrador");        
       let tramites_aux: any[];
       // tramites = await this.tramiteRepository.findAndCount(
       //   {        
@@ -189,18 +186,11 @@ export class TramitesService {
         .andWhere('tramites.estado_tramite_id = :id_estado', {id_estado: 1})
         .getManyAndCount();
     
-        
-    
       tramites_aux = tramites[0];
       tramites_encontrados.push(...tramites_aux);
-      total_registros = total_registros + tramites[1];
-      console.log("cantidad", total_registros);
-
-      console.log("tramites_encontrados", [tramites_encontrados, total_registros]);
+      total_registros = total_registros + tramites[1];      
     }
     //fin cargar tramites nuevo
-
-      
 
     return [tramites_encontrados, total_registros];
   }
