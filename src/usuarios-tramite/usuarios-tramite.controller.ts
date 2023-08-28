@@ -33,7 +33,6 @@ export class UsuariosTramiteController {
   async findTramiteXUsuario(
     @Query('id_usuario', ParseIntPipe) id_usuario: string, 
   ) {
-
     let id_usuariox: number = +id_usuario;
 
     if (id_usuariox === 0) return this.usuariosTramiteService.findTramitesActivos();
@@ -47,7 +46,6 @@ export class UsuariosTramiteController {
   async findTramiteXNumero(
     @Query('numero_tramite', ParseIntPipe) numero_tramite: string, 
   ) {
-
     let numero_tramitex: number = +numero_tramite;
 
     return this.usuariosTramiteService.findByNumTramiteActivo(numero_tramitex);
@@ -59,7 +57,6 @@ export class UsuariosTramiteController {
   async findMediadorTramiteXNumeroTram(
     @Query('numero_tramite', ParseIntPipe) numero_tramite: string, 
   ) {
-
     let numero_tramitex: number = +numero_tramite;
 
     return this.usuariosTramiteService.findMediadorByNumTramiteActivo(numero_tramitex);
@@ -70,8 +67,7 @@ export class UsuariosTramiteController {
   @Get('buscar-xciudadano')  
   async findTramiteXCiudadano(
     @Query('id_ciudadano', ParseIntPipe) id_ciudadano: string, 
-  ) {
-    
+  ) {    
     let id_ciudadanox: number = +id_ciudadano;
 
     if (id_ciudadanox === 0) return this.usuariosTramiteService.findTramitesActivos();

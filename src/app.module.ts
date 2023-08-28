@@ -25,6 +25,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsuariosTramiteModule } from './usuarios-tramite/usuarios-tramite.module';
 import { ConvocadosModule } from './convocados/convocados.module';
 import { VinculadosModule } from './vinculados/vinculados.module';
+import { AudienciasModule } from './audiencias/audiencias.module';
 
 @Module({
   imports: [
@@ -74,6 +75,7 @@ import { VinculadosModule } from './vinculados/vinculados.module';
     UsuariosTramiteModule,
     ConvocadosModule,
     VinculadosModule,
+    AudienciasModule,
     
     
          
