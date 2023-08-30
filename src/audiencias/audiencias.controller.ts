@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException } from '@nestjs/common';
 import { AudienciasService } from './audiencias.service';
 import { CreateAudienciaDto } from './dto/create-audiencia.dto';
 import { UpdateAudienciaDto } from './dto/update-audiencia.dto';
@@ -8,8 +8,8 @@ export class AudienciasController {
   constructor(private readonly audienciasService: AudienciasService) {}
 
   @Post()
-  create(@Body() createAudienciaDto: CreateAudienciaDto) {
-    return this.audienciasService.create(createAudienciaDto);
+  create(@Body() data: CreateAudienciaDto) {
+    return this.audienciasService.create(data);
   }
 
   @Get()
@@ -18,17 +18,31 @@ export class AudienciasController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
+    
     return this.audienciasService.findOne(+id);
   }
 
+  //PARA RUTA NO DEFINIDA
+  @Get('*')
+  rutasNoDefinidas() {
+    throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
+  }
+  //FIN PARA RUTA NO DEFINIDA...........
+
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAudienciaDto: UpdateAudienciaDto) {
-    return this.audienciasService.update(+id, updateAudienciaDto);
+  update(
+    @Param('id', ParseIntPipe) id: string, 
+    @Body() dataDto: UpdateAudienciaDto
+  ) {
+    
+    return this.audienciasService.update(+id, dataDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: string) {
+    
     return this.audienciasService.remove(+id);
   }
+
 }
