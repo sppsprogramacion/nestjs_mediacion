@@ -15,7 +15,6 @@ export class Audiencia {
     @Column({
         type:'int',
         nullable: false,
-        unique: true,
     })
     num_audiencia: number;
     

@@ -2,6 +2,8 @@ import { IsDateString, IsInt, IsString, Length } from "class-validator";
 
 export class CreateAudienciaDto {
 
+    num_audiencia: number;
+
     @IsInt({message: "El tramite_numero debe ser un número entero."})
     tramite_numero: number;
 
@@ -28,6 +30,8 @@ export class CreateAudienciaDto {
    
     @IsInt({message: "El usuario_id debe ser un número entero."})
     usuario_id: number
+
+    fecha_creacion: Date;
 
 }
   
