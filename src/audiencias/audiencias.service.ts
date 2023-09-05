@@ -64,9 +64,9 @@ export class AudienciasService {
     );
   }
 
-  //BUSCAR TRAMITES X CIUDADANO X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
-  async findXUsuario(id_usuario: number) {
-    const tramites = await this.audienciaRepository.findAndCount(
+  //BUSCAR X USUARIO
+  async findByUsuario(id_usuario: number) {
+    const audiencias = await this.audienciaRepository.findAndCount(
       {        
         //relations: ['asignaciones','convocados','vinculados'],
         where: {
@@ -78,9 +78,27 @@ export class AudienciasService {
       }
     );   
 
-    return tramites;
+    return audiencias;
   }
-  //FIN BUSCAR TRAMITES NUEVOS..........................................
+  //FIN BUSCAR  X USUARIO..........................................
+
+  //BUSCAR X TRAMITE
+  async findByTramite(id_tramite: number) {
+    const audiencias = await this.audienciaRepository.findAndCount(
+      {        
+        //relations: ['asignaciones','convocados','vinculados'],
+        where: {
+          tramite_numero: id_tramite
+        },
+        order:{
+          num_audiencia: "DESC",
+        }
+      }
+    );   
+
+    return audiencias;
+  }
+  //FIN BUSCAR  X TRAMITE..........................................
 
   //BUSCAR  XID
   async findOne(id: number) {

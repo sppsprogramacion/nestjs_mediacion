@@ -24,9 +24,21 @@ export class AudienciasController {
   ) {  
     let id_usuariox: number = +id_usuario;
 
-    return this.audienciasService.findXUsuario(id_usuariox);
+    return this.audienciasService.findByUsuario(id_usuariox);
   } 
   //FIN BUSCAR TRAMITES POR CIUDADANO.......................................
+
+  //BUSCAR AUDIENCIAS POR TRAMITE
+  @Get('buscar-xtramite')
+  async findByTramite( 
+    @Query('id_tramite', ParseIntPipe) id_tramite: string,   
+  ) {  
+    let id_tramitex: number = +id_tramite;
+
+    return this.audienciasService.findByTramite(id_tramitex);
+  } 
+  //FIN BUSCAR TRAMITES POR CIUDADANO.......................................
+
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: string) {
