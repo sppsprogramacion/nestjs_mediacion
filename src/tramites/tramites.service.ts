@@ -232,7 +232,7 @@ export class TramitesService {
 
     const respuesta = await this.tramiteRepository.find(
       {
-        //relations: ['asignaciones','convocados','vinculados'],
+        relations: ['asignaciones','convocados','vinculados'],
         where: {
           numero_tramite: numero_tramitex
         }
@@ -243,7 +243,7 @@ export class TramitesService {
     
     
   }
-  //FIN BUSCAR  XDni..................................................................
+  //FIN BUSCAR  Xnumero tramite..................................................................
 
   //BUSCAR  XID
   // async findOne(id: number) {
