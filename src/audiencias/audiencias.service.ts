@@ -101,7 +101,8 @@ export class AudienciasService {
       {        
         //relations: ['asignaciones','convocados','vinculados'],
         where: {
-          usuario_id: id_usuario
+          usuario_id: id_usuario,
+          esta_cerrada: false
         },
         order:{
           fecha_inicio: "DESC",

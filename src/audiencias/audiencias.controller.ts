@@ -18,7 +18,7 @@ export class AudienciasController {
   }
 
   //BUSCAR AUDIENCIAS POR USUARIO
-  @Get('buscar-xusuario')
+  @Get('buscar-abiertas-xusuario')
   async findByCiudadano( 
     @Query('id_usuario', ParseIntPipe) id_usuario: string,   
   ) {  
@@ -26,7 +26,7 @@ export class AudienciasController {
 
     return this.audienciasService.findByUsuario(id_usuariox);
   } 
-  //FIN BUSCAR TRAMITES POR CIUDADANO.......................................
+  //FIN BUSCAR AUDIENCIAS POR USUARIO.......................................
 
   //BUSCAR AUDIENCIAS POR TRAMITE
   @Get('buscar-xtramite')
@@ -37,7 +37,7 @@ export class AudienciasController {
 
     return this.audienciasService.findByTramite(id_tramitex);
   } 
-  //FIN BUSCAR TRAMITES POR CIUDADANO.......................................
+  //FIN BUSCAR TAUDIENCIAS POR TRAMITE.......................................
 
 
   @Get(':id')
