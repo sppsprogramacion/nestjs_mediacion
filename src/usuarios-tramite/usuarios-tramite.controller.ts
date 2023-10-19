@@ -61,7 +61,7 @@ export class UsuariosTramiteController {
 
     return this.usuariosTramiteService.findMediadorByNumTramiteActivo(numero_tramitex);
   }
-  //FIN BUSCAR TRAMITES x numero de tramite....................................................
+  //FIN BUSCAR mediador del tramite x numero de tramite....................................................
 
   //BUSCAR TRAMITES ASIGNADOS POR CIUDADANO
   @Get('buscar-xciudadano')  
