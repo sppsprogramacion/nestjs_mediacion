@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFou
 import { AudienciasService } from './audiencias.service';
 import { CreateAudienciaDto } from './dto/create-audiencia.dto';
 import { UpdateAudienciaDto } from './dto/update-audiencia.dto';
+import { UpdateAudienciaResultadoDto } from './dto/update-audiencia-resultado.dto';
 
 @Controller('audiencias')
 export class AudienciasController {
@@ -52,6 +53,15 @@ export class AudienciasController {
     throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
   }
   //FIN PARA RUTA NO DEFINIDA...........
+
+  @Patch(':id')
+  resultadoAudiencia(
+    @Param('id', ParseIntPipe) id: string, 
+    @Body() dataDto: UpdateAudienciaResultadoDto
+  ) {
+    
+    return this.audienciasService.resultadoAudiencia(+id, dataDto);
+  }
 
   @Patch(':id')
   update(

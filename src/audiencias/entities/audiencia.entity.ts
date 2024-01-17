@@ -1,5 +1,6 @@
 import { CentroMediacion } from "src/centros-mediacion/entities/centro-mediacion.entity";
 import { Modalidad } from "src/modalidad/entities/modalidad.entity";
+import { ResultadoAudiencia } from "src/resultados-audiencia/entities/resultados-audiencia.entity";
 import { TipoAudiencia } from "src/tipos-audiencia/entities/tipos-audiencia.entity";
 import { Tramite } from "src/tramites/entities/tramite.entity";
 import { Usuario } from "src/usuario/entities/usuario.entity";
@@ -130,5 +131,30 @@ export class Audiencia {
     })
     usuario: Usuario;
     //FIN USUARIO
+
+    //RESULTADO AUDIENCIA
+    @Column({
+        type: 'int',
+        nullable: false,
+        default: 1
+    })
+    resultado_audiencia_id: number
+
+    @ManyToOne(type => ResultadoAudiencia, {eager:true})
+    @JoinColumn({
+        name: 'resultado_audiencia_id',
+        referencedColumnName: 'id_resultado_audiencia'
+    })
+    resultado_audiencia: Usuario;
+    //FIN RESULTADO AUDIENCIA
+
+    @Column({
+        type: 'varchar',
+        length: 500,
+        nullable: true
+    })
+    observacion_resultado: string;
+
+
 
 }
