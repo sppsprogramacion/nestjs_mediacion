@@ -54,7 +54,7 @@ export class AudienciasController {
   }
   //FIN PARA RUTA NO DEFINIDA...........
 
-  @Patch('cambiar-resultado/:id')
+  @Patch('resultado/:id')
   resultadoAudiencia(
     @Param('id', ParseIntPipe) id: string, 
     @Body() dataDto: UpdateAudienciaResultadoDto
