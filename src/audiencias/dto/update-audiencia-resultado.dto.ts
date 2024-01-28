@@ -11,5 +11,7 @@ export class UpdateAudienciaResultadoDto {
     observacion_resultado: string;
 
     esta_cerrada: boolean;
+
+    usuario_id: number;
     
 }
