@@ -150,7 +150,7 @@ export class Audiencia {
 
     @Column({
         type: 'varchar',
-        length: 500,
+        length: 1000,
         nullable: true
     })
     observacion_resultado: string;

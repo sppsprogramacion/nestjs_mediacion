@@ -7,11 +7,12 @@ export class UpdateAudienciaResultadoDto {
     resultado_audiencia_id: number;
 
 
-    @Length(1,500,{message: "La observacion del resultado debe tener entre $constraint1 y $constraint2 caracteres."})
+    @Length(1,1000,{message: "La observacion del resultado debe tener entre $constraint1 y $constraint2 caracteres."})
     observacion_resultado: string;
 
     esta_cerrada: boolean;
 
-    usuario_id: number;
+    @IsInt({message: "El usuario_id debe ser un número entero."})
+    usuario_id: number
     
 }
