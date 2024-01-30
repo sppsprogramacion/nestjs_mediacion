@@ -10,6 +10,8 @@ import { UsuarioCentro } from '../usuarios-centros/entities/usuario-centro.entit
 import { UsuariosCentrosService } from '../usuarios-centros/usuarios-centros.service';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { UsuarioService } from '../usuario/usuario.service';
+import { UpdateTramiteFinalizacionDto } from './dto/update-tramite-finalizacion.dto';
+import { Audiencia } from 'src/audiencias/entities/audiencia.entity';
 
 @Injectable()
 export class TramitesService {
@@ -18,7 +20,9 @@ export class TramitesService {
     @InjectRepository(Tramite)
     private readonly tramiteRepository: Repository<Tramite>,
     @InjectRepository(Ciudadano)
-    private readonly ciudadanoRepository: Repository<Ciudadano>,    
+    private readonly ciudadanoRepository: Repository<Ciudadano>,
+    @InjectRepository(Audiencia)
+    private readonly audienciaRepository: Repository<Audiencia>,
 
     private readonly usuarioCentroService: UsuariosCentrosService,
     private readonly usuarioService: UsuarioService
@@ -275,6 +279,29 @@ export class TramitesService {
     }
     catch(error){
       throw new NotFoundException('Error al modificar el tramite: ',error.message);
+    }
+  }
+
+  async finalizarTramite(num_tramitex: number, dataTramite: UpdateTramiteFinalizacionDto) {
+     //obtener cantidad de audiencias abiertas sin concluir
+     const cant_audiencias_activas = await this.audienciaRepository.createQueryBuilder('audiencias')
+     .select('count(audiencias.num_audiencia)','cantidad')
+     .where('audiencias.tramite_numero = :tramite_num', { tramite_num: num_tramitex })
+     .andWhere('audiencias.esta_cerrada= :activa', {activa: false})
+     .getRawOne();
+   
+   if(cant_audiencias_activas.cantidad >0) throw new BadRequestException ("La ultima audiencia aun no fue cerrada.")
+   //FIN obtener cantidad de audiencias abiertas sin concluir
+
+
+    try{      
+      dataTramite.estado_tramite_id = 3;
+      const respuesta = await this.tramiteRepository.update({numero_tramite: num_tramitex}, dataTramite);
+      if((respuesta).affected == 0) throw new NotFoundException("No se finalizó el tramite.");
+      return respuesta;
+    }
+    catch(error){
+      throw new NotFoundException('Error al finalizar el tramite: ',error.message);
     }
   }
 

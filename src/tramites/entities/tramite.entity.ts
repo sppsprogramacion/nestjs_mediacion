@@ -275,6 +275,13 @@ export class Tramite {
     })
     fecha_finalizacion: Date;
 
+    @Column({
+        type: 'varchar',
+        length: 1000,
+        nullable: true
+    })
+    observacion_finalizacion: string;
+
     //TRAMITES ASIGNADOS
     @OneToMany(() => UsuariosTramite, (asignacion) => asignacion.tramite)
     asignaciones : UsuariosTramite[];
@@ -285,9 +292,9 @@ export class Tramite {
     convocados : Convocado[];
     //FIN CONVOCADOS
 
-    //CONVOCADOS
+    //VINCULADOS
     @OneToMany(() => Vinculado, (vinculado) => vinculado.tramite)
     vinculados : Vinculado[];
-    //FIN CONVOCADOS
+    //FIN VINCULADOS
 
 }
