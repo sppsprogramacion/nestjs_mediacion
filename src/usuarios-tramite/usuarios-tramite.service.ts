@@ -78,7 +78,7 @@ export class UsuariosTramiteService {
   }
   //FIN DESHABILITAR USUARIO................
 
-  //BUSCAR  XID
+  //BUSCAR  TRAMITES X USUARIO
   async findTramitesXUsuario(id_usuario: number) {    
     //const respuesta = await this.usuariosCentroRepository.findOneBy({id_usuario_centro: id});
     const respuesta = await this.usuariosTramiteRepository.findAndCount(
@@ -93,7 +93,25 @@ export class UsuariosTramiteService {
     if (!respuesta) throw new NotFoundException("No se encontró el tramites para este usuario.");
     return respuesta;
   }
-  //FIN BUSCAR  XID..................................................................
+  //FIN BUSCAR  TRAMITES X USUARIO..................................................................
+
+  //BUSCAR TRAMITES X USUARIO XESTADO_TRAMITE --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
+  async findTramitesXUsuarioXEstadoTramite(id_usuario:number, id_estado:number){
+    const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
+    .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
+    .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+    .leftJoinAndSelect('tramite.objeto', 'objeto')  
+    .leftJoinAndSelect('usuario_tramite.usuario', 'usuario')
+    .leftJoinAndSelect('usuario_tramite.funcion_tramite', 'funcion_tramite')
+    .where('usuario_tramite.usuario_id = :id', { id: id_usuario })
+    .andWhere('usuario_tramite.activo = :activox', {activox: true})
+    .andWhere('tramite.estado_tramite_id = :estado_tramite_id', {estado_tramite_id: id_estado})
+    .getManyAndCount();
+
+    return tramites;
+  }
+
+  //FIN BUSCAR TRAMITES X USUARIO XESTADO_TRAMITE
 
   //BUSCAR TRAMITES X CIUDADANO
   async findTramitesXCiudadano(id_ciudadano:number){
