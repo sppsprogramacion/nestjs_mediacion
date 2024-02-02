@@ -5,12 +5,14 @@ import { Usuario } from '../usuario/entities/usuario.entity';
 import { UsuariosTramite } from './entities/usuarios-tramite.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UsuarioService } from 'src/usuario/usuario.service';
 
 @Injectable()
 export class UsuariosTramiteService {
   constructor(
     @InjectRepository(UsuariosTramite)
-    private readonly usuariosTramiteRepository: Repository<UsuariosTramite>
+    private readonly usuariosTramiteRepository: Repository<UsuariosTramite>,
+    private readonly usuarioService: UsuarioService
   ){}
 
   //NUEVO
@@ -97,7 +99,12 @@ export class UsuariosTramiteService {
 
   //BUSCAR TRAMITES X USUARIO XESTADO_TRAMITE --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
   async findTramitesXUsuarioXEstadoTramite(id_usuario:number, id_estado:number){
-    const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
+    
+    let usuario: Usuario = await this.usuarioService.findOne(id_usuario);
+
+
+    if(usuario.rol_id != 1){
+      const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
     .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
     .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
     .leftJoinAndSelect('tramite.objeto', 'objeto')  
@@ -109,8 +116,22 @@ export class UsuariosTramiteService {
     .getManyAndCount();
 
     return tramites;
-  }
+    }
 
+    if(usuario.rol_id === 1) {
+      const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
+        .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
+        .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('tramite.objeto', 'objeto')  
+        .leftJoinAndSelect('usuario_tramite.usuario', 'usuario')
+        .leftJoinAndSelect('usuario_tramite.funcion_tramite', 'funcion_tramite')
+        .where('tramite.estado_tramite_id = :estado_tramite_id', {estado_tramite_id: id_estado})
+        .getManyAndCount();
+  
+      return tramites;
+    }
+    
+  }
   //FIN BUSCAR TRAMITES X USUARIO XESTADO_TRAMITE
 
   //BUSCAR TRAMITES X CIUDADANO

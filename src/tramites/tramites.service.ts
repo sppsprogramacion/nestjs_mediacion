@@ -139,9 +139,10 @@ export class TramitesService {
     let tramites_encontrados: Tramite[]=[];   
     let total_registros: number = 0;    
     let tramites: any= {};
+    
     let usuario: Usuario = await this.usuarioService.findOne(id_usuario);
 
-    //cargar tramites nuevos    
+    //cargar tramites nuevos usuarios del interior - no son administradores
     if(id_estado === 1 && usuario.rol_id != 1){
       let usuariosCentros: [UsuarioCentro[], number] = await this.usuarioCentroService.findByUsuarioByActivo(id_usuario, true);
       let tramites_aux: any[];
@@ -166,7 +167,9 @@ export class TramitesService {
         }
       }
     }
+    //FIN cargar tramites nuevos usuarios del interior - no son administradores
 
+    // cargar tramites nuevos administrador - de capital y cercanos
     if(id_estado === 1 && usuario.rol_id === 1){  
       let tramites_aux: any[];
       // tramites = await this.tramiteRepository.findAndCount(
@@ -194,7 +197,7 @@ export class TramitesService {
       tramites_encontrados.push(...tramites_aux);
       total_registros = total_registros + tramites[1];      
     }
-    //fin cargar tramites nuevo
+    //fin cargar tramites nuevos administrador  - de capital y cercanos....
 
     return [tramites_encontrados, total_registros];
   }
