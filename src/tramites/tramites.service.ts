@@ -286,17 +286,31 @@ export class TramitesService {
   }
 
   async finalizarTramite(num_tramitex: number, dataTramite: UpdateTramiteFinalizacionDto) {
-     //obtener cantidad de audiencias abiertas sin concluir
-     const cant_audiencias_activas = await this.audienciaRepository.createQueryBuilder('audiencias')
-     .select('count(audiencias.num_audiencia)','cantidad')
-     .where('audiencias.tramite_numero = :tramite_num', { tramite_num: num_tramitex })
-     .andWhere('audiencias.esta_cerrada= :activa', {activa: false})
-     .getRawOne();
-   
-   if(cant_audiencias_activas.cantidad >0) throw new BadRequestException ("La ultima audiencia aun no fue cerrada.")
-   //FIN obtener cantidad de audiencias abiertas sin concluir
+    //obtener cantidad de audiencias abiertas sin concluir
+    const cant_audiencias_activas = await this.audienciaRepository.createQueryBuilder('audiencias')
+    .select('count(audiencias.num_audiencia)','cantidad')
+    .where('audiencias.tramite_numero = :tramite_num', { tramite_num: num_tramitex })
+    .andWhere('audiencias.esta_cerrada= :activa', {activa: false})
+    .getRawOne();
+  
+    if(cant_audiencias_activas.cantidad >0) throw new NotFoundException ("La ultima audiencia aun no fue cerrada.")
 
+    //FIN obtener cantidad de audiencias abiertas sin concluir......................
 
+    //controlar si el tramite ya esta finalizado
+    const tramiteAux = await this.tramiteRepository.findOne(
+      {        
+        where: {
+          numero_tramite: num_tramitex,
+          estado_tramite_id: 3
+        }
+      }
+    );
+
+    if (tramiteAux) throw new NotFoundException("Este tramite ya está finalizado.");   
+    
+    //FIN controlar si el tramite ya esta finalizado.............................
+    
     try{      
       dataTramite.estado_tramite_id = 3;
       const respuesta = await this.tramiteRepository.update({numero_tramite: num_tramitex}, dataTramite);
