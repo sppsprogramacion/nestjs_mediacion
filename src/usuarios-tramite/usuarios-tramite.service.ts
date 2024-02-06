@@ -105,15 +105,16 @@ export class UsuariosTramiteService {
 
     if(usuario.rol_id != 1){
       const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
-    .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
-    .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
-    .leftJoinAndSelect('tramite.objeto', 'objeto')  
-    .leftJoinAndSelect('usuario_tramite.usuario', 'usuario')
-    .leftJoinAndSelect('usuario_tramite.funcion_tramite', 'funcion_tramite')
-    .where('usuario_tramite.usuario_id = :id', { id: id_usuario })
-    .andWhere('usuario_tramite.activo = :activox', {activox: true})
-    .andWhere('tramite.estado_tramite_id = :estado_tramite_id', {estado_tramite_id: id_estado})
-    .getManyAndCount();
+        .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
+        .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('tramite.objeto', 'objeto')  
+        .leftJoinAndSelect('usuario_tramite.usuario', 'usuario')
+        .leftJoinAndSelect('usuario_tramite.funcion_tramite', 'funcion_tramite')
+        .where('usuario_tramite.usuario_id = :id', { id: id_usuario })
+        .andWhere('usuario_tramite.activo = :activox', {activox: true})
+        .andWhere('tramite.estado_tramite_id = :estado_tramite_id', {estado_tramite_id: id_estado})
+        .orderBy('tramite.numero_tramite', 'DESC')
+        .getManyAndCount();
 
     return tramites;
     }
@@ -126,6 +127,9 @@ export class UsuariosTramiteService {
         .leftJoinAndSelect('usuario_tramite.usuario', 'usuario')
         .leftJoinAndSelect('usuario_tramite.funcion_tramite', 'funcion_tramite')
         .where('tramite.estado_tramite_id = :estado_tramite_id', {estado_tramite_id: id_estado})
+        .andWhere('usuario_tramite.activo = :activox', {activox: true})
+        .andWhere('usuario_tramite.funcion_tramite_id = :funcion_tramite_id', {funcion_tramite_id: 2})
+        .orderBy('tramite.numero_tramite', 'DESC')
         .getManyAndCount();
   
       return tramites;
