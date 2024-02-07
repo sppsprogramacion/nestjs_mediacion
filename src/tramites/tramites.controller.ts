@@ -217,6 +217,10 @@ export class TramitesController {
     @Query('numero_tramite', ParseIntPipe) numero_tramite: string, 
     @Body() dataDto: UpdateTramiteFinalizacionDto
   ) {
+
+    //cargar datos por defecto
+    let fecha_actual: any = new Date().toISOString().split('T')[0];    
+    dataDto.fecha_finalizacion = fecha_actual;
      
     return this.tramitesService.finalizarTramite(+numero_tramite, dataDto);
   }
