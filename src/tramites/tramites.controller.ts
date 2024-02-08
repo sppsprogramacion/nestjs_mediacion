@@ -225,7 +225,7 @@ export class TramitesController {
     return this.tramitesService.finalizarTramite(+numero_tramite, dataDto);
   }
   //FIN FINALIZAR TRAMITE
-
+  
   @Patch(':id')
   update(@Param('id') id: string, @Body() dataDto: UpdateTramiteDto) {
     if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")

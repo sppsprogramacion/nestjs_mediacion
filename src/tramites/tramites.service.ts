@@ -157,7 +157,7 @@ export class TramitesService {
                 centro_mediacion_id: usuarioCentro.centro_mediacion_id
               },
               order:{
-                numero_tramite: "DESC"
+                numero_tramite: "ASC"
               }
             }
           ); 
@@ -191,6 +191,7 @@ export class TramitesService {
         .leftJoinAndSelect('tramites.objeto', 'objeto')   
         .where('centro_mediacion.admin_es_responsable = :valor', { valor: true })
         .andWhere('tramites.estado_tramite_id = :id_estado', {id_estado: 1})
+        .orderBy('tramites.numero_tramite', 'ASC')
         .getManyAndCount();
     
       tramites_aux = tramites[0];

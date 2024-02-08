@@ -147,6 +147,18 @@ export class Tramite {
     expediente: string;
 
     @Column({
+        type:'int',
+        nullable: true,
+    })
+    expediente_numero: number;
+
+    @Column({
+        type:'int',
+        nullable: true,
+    })
+    expediente_anio: number;
+
+    @Column({
         type: 'date',
         nullable: true
     })
