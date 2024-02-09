@@ -12,6 +12,7 @@ import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { UsuarioService } from '../usuario/usuario.service';
 import { UpdateTramiteFinalizacionDto } from './dto/update-tramite-finalizacion.dto';
 import { Audiencia } from 'src/audiencias/entities/audiencia.entity';
+import { UpdateTramiteExpedienteDto } from './dto/update-tramite-expediente-numero.dto';
 
 @Injectable()
 export class TramitesService {
@@ -274,14 +275,49 @@ export class TramitesService {
   }
 
   async cambiarEstadoTramite(num_tramitex: number, id_estado_tramite:number) {
+    let data: UpdateTramiteExpedienteDto = new UpdateTramiteExpedienteDto;
+
     try{
-      let data: UpdateTramiteDto = new UpdateTramiteDto;
+
+      //generar numero de expediente
+      if ( id_estado_tramite === 2 ){
+        let fecha_actual: any = new Date().toISOString().split('T')[0];
+        data.fecha_expediente= fecha_actual;
+        data.expediente_anio = data.fecha_expediente.getFullYear();
+        data.es_expediente = true;     
+
+        let num_expediente_nuevo:number = 0;
+        
+        //obtener numero de expediente maximo
+        const num_expediente_max = await this.tramiteRepository.createQueryBuilder('tramites')
+          .select('MAX(tramites.expediente_numero)','num_max')
+          .where('tramites.expediente_anio = :anio_actual', { anio_actual: data.expediente_anio })
+          .getRawOne();
+        
+        if(!num_expediente_max) {
+          num_expediente_max.num_max = 0;
+        }      
+        num_expediente_nuevo = num_expediente_max.num_max + 1;
+    
+        //cargar datos por defecto
+        data.expediente_numero = num_expediente_nuevo;
+        data.expediente = data.expediente_numero + "/" + data.expediente_anio        
+        
+      } 
+      //fin generar numero de expediente
+
       data.estado_tramite_id=id_estado_tramite;
       const respuesta = await this.tramiteRepository.update({numero_tramite: num_tramitex}, data);
       if((respuesta).affected == 0) throw new NotFoundException("No se modificó el tramite.");
       return respuesta;
     }
     catch(error){
+      if(error.code=='ER_DUP_ENTRY'){
+        
+        const existe = await this.tramiteRepository.findOneBy({expediente: data.expediente});
+        if(existe) throw new BadRequestException ("Error al generar el número de expediente. Intente guardar nuevamente");
+      }
+
       throw new NotFoundException('Error al modificar el tramite: ',error.message);
     }
   }

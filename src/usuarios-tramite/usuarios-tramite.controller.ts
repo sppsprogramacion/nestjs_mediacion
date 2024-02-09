@@ -22,10 +22,10 @@ export class UsuariosTramiteController {
 
     const usuarioTramite = this.usuariosTramiteService.create(data);
     //ESTABLECER con mediador
-    if(usuarioTramite){      
-      this.tramiteService.cambiarEstadoTramite(data.tramite_numero,2)
-    }
-    return usuarioTramite;
+    // if(usuarioTramite){      
+    //   this.tramiteService.cambiarEstadoTramite(data.tramite_numero,2)
+    // }
+    // return usuarioTramite;
   }
 
   //BUSCAR TRAMITES POR ID-USUARIO

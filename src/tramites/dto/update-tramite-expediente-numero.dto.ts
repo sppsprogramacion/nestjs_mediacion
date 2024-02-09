@@ -1,15 +1,19 @@
-import { IsInt, Length } from "class-validator";
+import { IsBoolean, IsInt, Length } from "class-validator";
 
 
-export class UpdateTramiteExpedienteNumeroDto {
+export class UpdateTramiteExpedienteDto {
+        
+    es_expediente: boolean;
+    
+    fecha_expediente: Date;
     
     expediente_anio: number;
-
+    
     expediente_numero: number;
-        
-    fecha_expediente: Date;
 
+    expediente: string;
 
-
-        
+    estado_tramite_id: number;
+    
+            
 }

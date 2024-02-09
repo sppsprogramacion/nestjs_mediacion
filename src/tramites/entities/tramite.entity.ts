@@ -142,7 +142,7 @@ export class Tramite {
         type: 'varchar',
         length: 50,
         nullable: true,
-        unique: false
+        unique: true
     })
     expediente: string;
 

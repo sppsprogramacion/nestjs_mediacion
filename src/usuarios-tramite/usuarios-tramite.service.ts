@@ -6,13 +6,15 @@ import { UsuariosTramite } from './entities/usuarios-tramite.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsuarioService } from 'src/usuario/usuario.service';
+import { TramitesService } from 'src/tramites/tramites.service';
 
 @Injectable()
 export class UsuariosTramiteService {
   constructor(
     @InjectRepository(UsuariosTramite)
     private readonly usuariosTramiteRepository: Repository<UsuariosTramite>,
-    private readonly usuarioService: UsuarioService
+    private readonly usuarioService: UsuarioService,
+    private readonly tramiteService: TramitesService  
   ){}
 
   //NUEVO
@@ -28,6 +30,10 @@ export class UsuariosTramiteService {
       }
     );
     if(existe) throw new BadRequestException ("Este usuario ya está asignado a este tramite.");
+
+    //ESTABLECER con mediador         
+    //this.tramiteService.cambiarEstadoTramite(data.tramite_numero,2)
+    
     
     //actualizar a activo=falso a los registros con funcion mediador  cuando se asigna un mediador (solo puede haber 1)
     if( data.funcion_tramite_id === 2 ){
