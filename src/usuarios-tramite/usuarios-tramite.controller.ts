@@ -25,7 +25,7 @@ export class UsuariosTramiteController {
     // if(usuarioTramite){      
     //   this.tramiteService.cambiarEstadoTramite(data.tramite_numero,2)
     // }
-    // return usuarioTramite;
+    return usuarioTramite;
   }
 
   //BUSCAR TRAMITES POR ID-USUARIO

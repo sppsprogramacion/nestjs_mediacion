@@ -29,10 +29,11 @@ export class UsuariosTramiteService {
         }
       }
     );
+    
     if(existe) throw new BadRequestException ("Este usuario ya está asignado a este tramite.");
-
-    //ESTABLECER con mediador         
-    //this.tramiteService.cambiarEstadoTramite(data.tramite_numero,2)
+    
+    //ESTABLECER con mediador ESTADO_TRAMITE = 2 ES CON MEDIADOR   
+    await this.tramiteService.cambiarEstadoTramite(data.tramite_numero,2)
     
     
     //actualizar a activo=falso a los registros con funcion mediador  cuando se asigna un mediador (solo puede haber 1)
