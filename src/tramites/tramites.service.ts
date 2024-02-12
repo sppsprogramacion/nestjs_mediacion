@@ -274,21 +274,20 @@ export class TramitesService {
     }
   }
 
-  //CAMBIAR EL ESTADO DEL TRAMITE 
   async cambiarEstadoTramite(num_tramitex: number, id_estado_tramite:number) {
     let data: UpdateTramiteExpedienteDto = new UpdateTramiteExpedienteDto;
-    
+
     const tramiteAux = await this.findXNumeroTramite(num_tramitex);
 
     try{
-
+      
       //generar numero de expediente
-      if ( id_estado_tramite === 2){
-
+      if ( id_estado_tramite === 2 && !tramiteAux.es_expediente){
+        
         let fecha_actual: any = new Date().toISOString().split('T')[0];
-        data.fecha_expediente= fecha_actual;
         let fecha_actual_aux: Date = new Date(fecha_actual);
-
+        data.fecha_expediente= fecha_actual;
+        
         data.expediente_anio = fecha_actual_aux.getFullYear();
         data.es_expediente = true;     
 
@@ -321,15 +320,13 @@ export class TramitesService {
       if(error.code=='ER_DUP_ENTRY'){
         
         const existe = await this.tramiteRepository.findOneBy({expediente: data.expediente});
-        if(existe) throw new BadRequestException ("Error al generar el número de expediente(duplicado). Intente guardar nuevamente");
+        if(existe) throw new BadRequestException ("Error al generar el número de expediente. Intente guardar nuevamente");
       }
 
-      throw new NotFoundException('Error al modificar el tramite: ',error.message);
+      throw new NotFoundException(error.message, 'Error al modificar el estado del tramite');
     }
   }
-  //FIN CAMBIAR EL ESTADO DEL TRAMITE..............................................
 
-  //FINALIZAR TRAMITE
   async finalizarTramite(num_tramitex: number, dataTramite: UpdateTramiteFinalizacionDto) {
     //obtener cantidad de audiencias abiertas sin concluir
     const cant_audiencias_activas = await this.audienciaRepository.createQueryBuilder('audiencias')
@@ -366,8 +363,6 @@ export class TramitesService {
       throw new NotFoundException('Error al finalizar el tramite: ',error.message);
     }
   }
-  //FIN FINALIZAR TRAMITE...........................
-
 
   async remove(num_tramitex: number) {
     const respuesta = await this.tramiteRepository.findOneBy({numero_tramite: num_tramitex});
