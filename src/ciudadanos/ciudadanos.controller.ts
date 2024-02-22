@@ -36,14 +36,11 @@ export class CiudadanosController {
     return this.ciudadanosService.findAll();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-    
-  //   if(isNaN(Number(id))) throw new NotFoundException("El id del ciudadano debe ser un número.")
-  //   let id_ciudadano: number = parseFloat(id);
-  //   if(!Number.isInteger(id_ciudadano)) throw new NotFoundException("El id del ciudadano debe ser un número entero.")
-  //   return this.ciudadanosService.findOne(id_ciudadano);
-  // }
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id_ciudadano: string) {    
+   
+    return this.ciudadanosService.findOne(+id_ciudadano);
+  }
 
   //PARA RUTA NO DEFINIDA
   @Get('*')
