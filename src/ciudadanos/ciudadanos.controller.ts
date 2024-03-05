@@ -13,9 +13,9 @@ export class CiudadanosController {
   @Post()
   create(@Body() data: CreateCiudadanoDto) {
     let edad: number;
-    //se crea una instanica de Date porque data.fecha_nac biene como cadena y la funcione no lo reconoce como date
+    //se crea una instanica de Date porque data.fecha_nac biene como cadena y la funcione no lo reconoce como date    
     edad= this.calcularEdad(new Date(data.fecha_nac));
-    console.log("edad", edad);
+
     if ( edad < 18 ) throw new NotFoundException("La edad minima para registrarse es 18 años. Revise la fecha de nacimiento");
     return this.ciudadanosService.create(data);
   }
@@ -64,6 +64,12 @@ export class CiudadanosController {
     @Body() dataDto: UpdateCiudadanoDto
   ) {
     
+    let edad: number;
+    //se crea una instanica de Date porque data.fecha_nac biene como cadena y la funcione no lo reconoce como date    
+    edad= this.calcularEdad(new Date(dataDto.fecha_nac));
+    
+    if ( edad < 18 ) throw new NotFoundException("La edad minima es 18 años. Revise la fecha de nacimiento");
+
     return this.ciudadanosService.update(+id, dataDto);
   }  
 
