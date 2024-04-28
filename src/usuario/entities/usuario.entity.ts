@@ -3,6 +3,7 @@ import {hash} from 'bcryptjs';
 import { Sexo } from "src/sexo/entities/sexo.entity";
 import { UsuarioCentro } from '../../usuarios-centros/entities/usuario-centro.entity';
 import { CentroMediacion } from '../../centros-mediacion/entities/centro-mediacion.entity';
+import { Rol } from "src/roles/entities/role.entity";
 
 @Entity('usuarios')
 export class Usuario {
@@ -66,18 +67,18 @@ export class Usuario {
 
     //ROL
     @Column({
-        type: 'int',
-        nullable: true,
-        default: 2
+        type: 'varchar',
+        length: 100,
+        nullable: false
     })
-    rol_id: number;
+    rol_id: string;
 
-    // @ManyToOne(type => Sexo, {eager: true} )
-    // @JoinColumn({
-    //     name: 'sexo_id',
-    //     referencedColumnName: 'id_sexo'
-    // })
-    // sexo: Sexo;
+    @ManyToOne(type => Rol, {eager: true} )
+    @JoinColumn({
+        name: 'rol_id',
+        referencedColumnName: 'id_rol'
+    })
+    rol: Rol;
     //FIN ROL
 
     @Column({

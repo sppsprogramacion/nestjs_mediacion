@@ -110,7 +110,7 @@ export class UsuariosTramiteService {
     let usuario: Usuario = await this.usuarioService.findOne(id_usuario);
 
 
-    if(usuario.rol_id != 1){
+    if(usuario.rol_id != "administrador"){
       const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
         .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
         .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
@@ -126,7 +126,7 @@ export class UsuariosTramiteService {
     return tramites;
     }
 
-    if(usuario.rol_id === 1) {
+    if(usuario.rol_id === "administrador") {
       const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
         .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
         .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  

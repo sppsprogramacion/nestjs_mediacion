@@ -144,7 +144,7 @@ export class TramitesService {
     let usuario: Usuario = await this.usuarioService.findOne(id_usuario);
 
     //cargar tramites nuevos usuarios del interior - no son administradores
-    if(id_estado === 1 && usuario.rol_id != 1){
+    if(id_estado === 1 && usuario.rol_id != "administrador"){
       let usuariosCentros: [UsuarioCentro[], number] = await this.usuarioCentroService.findByUsuarioByActivo(id_usuario, true);
       let tramites_aux: any[];
       
@@ -171,7 +171,7 @@ export class TramitesService {
     //FIN cargar tramites nuevos usuarios del interior - no son administradores
 
     // cargar tramites nuevos administrador - de capital y cercanos
-    if(id_estado === 1 && usuario.rol_id === 1){  
+    if(id_estado === 1 && usuario.rol_id === "administrador"){  
       let tramites_aux: any[];
       // tramites = await this.tramiteRepository.findAndCount(
       //   {        

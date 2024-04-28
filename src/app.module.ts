@@ -27,6 +27,7 @@ import { ConvocadosModule } from './convocados/convocados.module';
 import { VinculadosModule } from './vinculados/vinculados.module';
 import { AudienciasModule } from './audiencias/audiencias.module';
 import { ResultadosAudienciaModule } from './resultados-audiencia/resultados-audiencia.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -77,7 +78,8 @@ import { ResultadosAudienciaModule } from './resultados-audiencia/resultados-aud
     ConvocadosModule,
     VinculadosModule,
     AudienciasModule,
-    ResultadosAudienciaModule
+    ResultadosAudienciaModule,
+    RolesModule
 
     
     
