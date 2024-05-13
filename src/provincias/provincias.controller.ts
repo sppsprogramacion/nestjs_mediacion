@@ -5,6 +5,7 @@ import { UpdateProvinciaDto } from './dto/update-provincia.dto';
 
 @Controller('provincias')
 export class ProvinciasController {
+  
   constructor(private readonly provinciasService: ProvinciasService) {}
 
   @Post()

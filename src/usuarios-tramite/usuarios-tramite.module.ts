@@ -5,16 +5,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosTramite } from './entities/usuarios-tramite.entity';
 import { TramitesModule } from '../tramites/tramites.module';
 import { Tramite } from '../tramites/entities/tramite.entity';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
+import { UsuarioService } from 'src/usuario/usuario.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       UsuariosTramite,
-      Tramite
+      Tramite,
+      Usuario,
     ]),
     TramitesModule
   ],
   controllers: [UsuariosTramiteController],
-  providers: [UsuariosTramiteService]
+  providers: [UsuariosTramiteService, UsuarioService]
 })
 export class UsuariosTramiteModule {}

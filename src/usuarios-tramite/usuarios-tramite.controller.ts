@@ -22,13 +22,13 @@ export class UsuariosTramiteController {
 
     const usuarioTramite = this.usuariosTramiteService.create(data);
     //ESTABLECER con mediador
-    if(usuarioTramite){      
-      this.tramiteService.cambiarEstadoTramite(data.tramite_numero,2)
-    }
+    // if(usuarioTramite){      
+    //   this.tramiteService.cambiarEstadoTramite(data.tramite_numero,2)
+    // }
     return usuarioTramite;
   }
 
-  //BUSCAR TRAMITES ASIGNADOS POR ID-USUARIO
+  //BUSCAR TRAMITES POR ID-USUARIO
   @Get('buscar-xusuario')  
   async findTramiteXUsuario(
     @Query('id_usuario', ParseIntPipe) id_usuario: string, 
@@ -39,7 +39,30 @@ export class UsuariosTramiteController {
 
     return this.usuariosTramiteService.findTramitesXUsuario(id_usuariox);
   }
+  //FIN BUSCAR TRAMITES POR ID-USUARIO....................................................
+
+  //BUSCAR TRAMITES ASIGNADOS POR ID-USUARIO y estado del tramite 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO
+  @Get('buscar-xusuario-asignados')  
+  async findTramiteXUsuarioAsignados(
+    @Query('id_usuario', ParseIntPipe) id_usuario: string, 
+  ) {
+    let id_usuariox: number = +id_usuario;
+
+    return this.usuariosTramiteService.findTramitesXUsuarioXEstadoTramite(id_usuariox,2);
+  }
   //FIN BUSCAR TRAMITES ASIGNADOS POR ID-USUARIO....................................................
+
+  //BUSCAR TRAMITES FINALIZADOS POR ID-USUARIO y estado del tramite 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO
+  @Get('buscar-xusuario-finalizados')  
+  async findTramiteXUsuarioFinalizados(
+    @Query('id_usuario', ParseIntPipe) id_usuario: string, 
+  ) {
+    let id_usuariox: number = +id_usuario;
+
+    return this.usuariosTramiteService.findTramitesXUsuarioXEstadoTramite(id_usuariox,3);
+  }
+  //FIN BUSCAR TRAMITES FINALIZADOS POR ID-USUARIO....................................................
+
 
   //BUSCAR TRAMITES x numero de tramite
   @Get('buscar-xnumtramite-activo')  

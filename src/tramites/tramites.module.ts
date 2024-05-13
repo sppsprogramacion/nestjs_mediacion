@@ -15,10 +15,12 @@ import { Convocado } from '../convocados/entities/convocado.entity';
 import { VinculadosModule } from 'src/vinculados/vinculados.module';
 import { VinculadosService } from 'src/vinculados/vinculados.service';
 import { Vinculado } from 'src/vinculados/entities/vinculado.entity';
+import { Audiencia } from 'src/audiencias/entities/audiencia.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      Audiencia,
       Ciudadano,
       Convocado,
       Tramite,

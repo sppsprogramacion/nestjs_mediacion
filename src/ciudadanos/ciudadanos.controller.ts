@@ -13,9 +13,9 @@ export class CiudadanosController {
   @Post()
   create(@Body() data: CreateCiudadanoDto) {
     let edad: number;
-    //se crea una instanica de Date porque data.fecha_nac biene como cadena y la funcione no lo reconoce como date
+    //se crea una instanica de Date porque data.fecha_nac biene como cadena y la funcione no lo reconoce como date    
     edad= this.calcularEdad(new Date(data.fecha_nac));
-    console.log("edad", edad);
+
     if ( edad < 18 ) throw new NotFoundException("La edad minima para registrarse es 18 años. Revise la fecha de nacimiento");
     return this.ciudadanosService.create(data);
   }
@@ -36,14 +36,11 @@ export class CiudadanosController {
     return this.ciudadanosService.findAll();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-    
-  //   if(isNaN(Number(id))) throw new NotFoundException("El id del ciudadano debe ser un número.")
-  //   let id_ciudadano: number = parseFloat(id);
-  //   if(!Number.isInteger(id_ciudadano)) throw new NotFoundException("El id del ciudadano debe ser un número entero.")
-  //   return this.ciudadanosService.findOne(id_ciudadano);
-  // }
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id_ciudadano: string) {    
+   
+    return this.ciudadanosService.findOne(+id_ciudadano);
+  }
 
   //PARA RUTA NO DEFINIDA
   @Get('*')
@@ -67,6 +64,12 @@ export class CiudadanosController {
     @Body() dataDto: UpdateCiudadanoDto
   ) {
     
+    let edad: number;
+    //se crea una instanica de Date porque data.fecha_nac biene como cadena y la funcione no lo reconoce como date    
+    edad= this.calcularEdad(new Date(dataDto.fecha_nac));
+    
+    if ( edad < 18 ) throw new NotFoundException("La edad minima es 18 años. Revise la fecha de nacimiento");
+
     return this.ciudadanosService.update(+id, dataDto);
   }  
 

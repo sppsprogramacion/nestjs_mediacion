@@ -30,7 +30,7 @@ export class CreateTramiteDto {
     @IsInt({message: "El centro_mediacion_id debe ser un número entero."})
     centro_mediacion_id: number
 
-    @IsBoolean({message: "sta_asesorado debe ser verdadero o falso"})
+    @IsBoolean({message: "Esta_asesorado debe ser verdadero o falso"})
     esta_asesorado: boolean;    
     
     fecha_tramite: Date;

@@ -13,6 +13,7 @@ import { Convocado } from 'src/convocados/entities/convocado.entity';
 import { CreateVinculadoTramiteDto } from './dto/create-vinculado-tramite.dto';
 import { VinculadosService } from 'src/vinculados/vinculados.service';
 import { Vinculado } from 'src/vinculados/entities/vinculado.entity';
+import { UpdateTramiteFinalizacionDto } from './dto/update-tramite-finalizacion.dto';
 
 @Controller('tramites')
 export class TramitesController {
@@ -210,6 +211,21 @@ export class TramitesController {
     return this.tramitesService.findAll();
   }
 
+  //FINALIZAR TRAMITE
+  @Patch('finalizar')
+  updateFinalizarTramite(
+    @Query('numero_tramite', ParseIntPipe) numero_tramite: string, 
+    @Body() dataDto: UpdateTramiteFinalizacionDto
+  ) {
+
+    //cargar datos por defecto
+    let fecha_actual: any = new Date().toISOString().split('T')[0];    
+    dataDto.fecha_finalizacion = fecha_actual;
+     
+    return this.tramitesService.finalizarTramite(+numero_tramite, dataDto);
+  }
+  //FIN FINALIZAR TRAMITE
+  
   @Patch(':id')
   update(@Param('id') id: string, @Body() dataDto: UpdateTramiteDto) {
     if(isNaN(Number(id))) throw new NotFoundException("El id debe ser un número.")

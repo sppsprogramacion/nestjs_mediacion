@@ -43,7 +43,6 @@ export class Convocado {
      
     @Column({
         type: 'int',
-        nullable: true,
         default: 0
     })
     dni: number;

@@ -10,6 +10,9 @@ import { UsuarioCentro } from '../usuarios-centros/entities/usuario-centro.entit
 import { UsuariosCentrosService } from '../usuarios-centros/usuarios-centros.service';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { UsuarioService } from '../usuario/usuario.service';
+import { UpdateTramiteFinalizacionDto } from './dto/update-tramite-finalizacion.dto';
+import { Audiencia } from 'src/audiencias/entities/audiencia.entity';
+import { UpdateTramiteExpedienteDto } from './dto/update-tramite-expediente-numero.dto';
 
 @Injectable()
 export class TramitesService {
@@ -18,7 +21,9 @@ export class TramitesService {
     @InjectRepository(Tramite)
     private readonly tramiteRepository: Repository<Tramite>,
     @InjectRepository(Ciudadano)
-    private readonly ciudadanoRepository: Repository<Ciudadano>,    
+    private readonly ciudadanoRepository: Repository<Ciudadano>,
+    @InjectRepository(Audiencia)
+    private readonly audienciaRepository: Repository<Audiencia>,
 
     private readonly usuarioCentroService: UsuariosCentrosService,
     private readonly usuarioService: UsuarioService
@@ -135,10 +140,11 @@ export class TramitesService {
     let tramites_encontrados: Tramite[]=[];   
     let total_registros: number = 0;    
     let tramites: any= {};
+    
     let usuario: Usuario = await this.usuarioService.findOne(id_usuario);
 
-    //cargar tramites nuevos    
-    if(id_estado === 1 && usuario.rol_id != 1){
+    //cargar tramites nuevos usuarios del interior - no son administradores
+    if(id_estado === 1 && usuario.rol_id != "administrador"){
       let usuariosCentros: [UsuarioCentro[], number] = await this.usuarioCentroService.findByUsuarioByActivo(id_usuario, true);
       let tramites_aux: any[];
       
@@ -152,7 +158,7 @@ export class TramitesService {
                 centro_mediacion_id: usuarioCentro.centro_mediacion_id
               },
               order:{
-                numero_tramite: "DESC"
+                numero_tramite: "ASC"
               }
             }
           ); 
@@ -162,8 +168,10 @@ export class TramitesService {
         }
       }
     }
+    //FIN cargar tramites nuevos usuarios del interior - no son administradores
 
-    if(id_estado === 1 && usuario.rol_id === 1){  
+    // cargar tramites nuevos administrador - de capital y cercanos
+    if(id_estado === 1 && usuario.rol_id === "administrador"){  
       let tramites_aux: any[];
       // tramites = await this.tramiteRepository.findAndCount(
       //   {        
@@ -184,13 +192,14 @@ export class TramitesService {
         .leftJoinAndSelect('tramites.objeto', 'objeto')   
         .where('centro_mediacion.admin_es_responsable = :valor', { valor: true })
         .andWhere('tramites.estado_tramite_id = :id_estado', {id_estado: 1})
+        .orderBy('tramites.numero_tramite', 'ASC')
         .getManyAndCount();
     
       tramites_aux = tramites[0];
       tramites_encontrados.push(...tramites_aux);
       total_registros = total_registros + tramites[1];      
     }
-    //fin cargar tramites nuevo
+    //fin cargar tramites nuevos administrador  - de capital y cercanos....
 
     return [tramites_encontrados, total_registros];
   }
@@ -230,7 +239,7 @@ export class TramitesService {
   //BUSCAR  Xnumero tramite
   async findXNumeroTramite(numero_tramitex: number) {
 
-    const respuesta = await this.tramiteRepository.find(
+    const respuesta = await this.tramiteRepository.findOne(
       {
         relations: ['asignaciones','convocados','vinculados'],
         where: {
@@ -266,15 +275,92 @@ export class TramitesService {
   }
 
   async cambiarEstadoTramite(num_tramitex: number, id_estado_tramite:number) {
+    let data: UpdateTramiteExpedienteDto = new UpdateTramiteExpedienteDto;
+
+    const tramiteAux = await this.findXNumeroTramite(num_tramitex);
+
     try{
-      let data: UpdateTramiteDto = new UpdateTramiteDto;
+      
+      //generar numero de expediente
+      if ( id_estado_tramite === 2 && !tramiteAux.es_expediente){
+        
+        let fecha_actual: any = new Date().toISOString().split('T')[0];
+        let fecha_actual_aux: Date = new Date(fecha_actual);
+        data.fecha_expediente= fecha_actual;
+        
+        data.expediente_anio = fecha_actual_aux.getFullYear();
+        data.es_expediente = true;     
+
+        let num_expediente_nuevo:number = 0;
+        
+        //obtener numero de expediente maximo
+        const num_expediente_max = await this.tramiteRepository.createQueryBuilder('tramites')
+          .select('MAX(tramites.expediente_numero)','num_max')
+          .where('tramites.expediente_anio = :anio_actual', { anio_actual: data.expediente_anio })
+          .getRawOne();
+        
+        if(!num_expediente_max) {
+          num_expediente_max.num_max = 0;
+        }      
+        num_expediente_nuevo = num_expediente_max.num_max + 1;
+    
+        //cargar datos por defecto
+        data.expediente_numero = num_expediente_nuevo;
+        data.expediente = data.expediente_numero + "/" + data.expediente_anio        
+        
+      } 
+      //fin generar numero de expediente
+
       data.estado_tramite_id=id_estado_tramite;
       const respuesta = await this.tramiteRepository.update({numero_tramite: num_tramitex}, data);
       if((respuesta).affected == 0) throw new NotFoundException("No se modificó el tramite.");
       return respuesta;
     }
     catch(error){
-      throw new NotFoundException('Error al modificar el tramite: ',error.message);
+      if(error.code=='ER_DUP_ENTRY'){
+        
+        const existe = await this.tramiteRepository.findOneBy({expediente: data.expediente});
+        if(existe) throw new BadRequestException ("Error al generar el número de expediente. Intente guardar nuevamente");
+      }
+
+      throw new NotFoundException(error.message, 'Error al modificar el estado del tramite');
+    }
+  }
+
+  async finalizarTramite(num_tramitex: number, dataTramite: UpdateTramiteFinalizacionDto) {
+    //obtener cantidad de audiencias abiertas sin concluir
+    const cant_audiencias_activas = await this.audienciaRepository.createQueryBuilder('audiencias')
+    .select('count(audiencias.num_audiencia)','cantidad')
+    .where('audiencias.tramite_numero = :tramite_num', { tramite_num: num_tramitex })
+    .andWhere('audiencias.esta_cerrada= :activa', {activa: false})
+    .getRawOne();
+  
+    if(cant_audiencias_activas.cantidad >0) throw new NotFoundException ("La ultima audiencia aun no fue cerrada.")
+
+    //FIN obtener cantidad de audiencias abiertas sin concluir......................
+
+    //controlar si el tramite ya esta finalizado
+    const tramiteAux = await this.tramiteRepository.findOne(
+      {        
+        where: {
+          numero_tramite: num_tramitex,
+          estado_tramite_id: 3
+        }
+      }
+    );
+
+    if (tramiteAux) throw new NotFoundException("Este tramite ya está finalizado.");   
+    
+    //FIN controlar si el tramite ya esta finalizado.............................
+    
+    try{      
+      dataTramite.estado_tramite_id = 3;
+      const respuesta = await this.tramiteRepository.update({numero_tramite: num_tramitex}, dataTramite);
+      if((respuesta).affected == 0) throw new NotFoundException("No se finalizó el tramite.");
+      return respuesta;
+    }
+    catch(error){
+      throw new NotFoundException('Error al finalizar el tramite: ',error.message);
     }
   }
 

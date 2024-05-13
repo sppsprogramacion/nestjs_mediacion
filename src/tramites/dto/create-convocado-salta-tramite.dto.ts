@@ -13,8 +13,7 @@ export class CreateConvocadoSaltaDto {
     @IsNotEmpty({message: "Debe ingresar el nombre."})
     nombre: string;
 
-    @IsInt({message: "El dni debe ser un número entero."})
-    @IsOptional()
+    @IsInt({message: "El dni del convocado debe ser un número entero."})
     dni: number;
 
     @IsInt({message: "El sexo_id debe ser un número entero"})

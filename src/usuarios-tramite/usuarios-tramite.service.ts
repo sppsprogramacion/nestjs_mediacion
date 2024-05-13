@@ -5,12 +5,16 @@ import { Usuario } from '../usuario/entities/usuario.entity';
 import { UsuariosTramite } from './entities/usuarios-tramite.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UsuarioService } from 'src/usuario/usuario.service';
+import { TramitesService } from 'src/tramites/tramites.service';
 
 @Injectable()
 export class UsuariosTramiteService {
   constructor(
     @InjectRepository(UsuariosTramite)
-    private readonly usuariosTramiteRepository: Repository<UsuariosTramite>
+    private readonly usuariosTramiteRepository: Repository<UsuariosTramite>,
+    private readonly usuarioService: UsuarioService,
+    private readonly tramiteService: TramitesService  
   ){}
 
   //NUEVO
@@ -25,7 +29,12 @@ export class UsuariosTramiteService {
         }
       }
     );
+    
     if(existe) throw new BadRequestException ("Este usuario ya está asignado a este tramite.");
+    
+    //ESTABLECER con mediador ESTADO_TRAMITE = 2 ES CON MEDIADOR   
+    await this.tramiteService.cambiarEstadoTramite(data.tramite_numero,2)
+    
     
     //actualizar a activo=falso a los registros con funcion mediador  cuando se asigna un mediador (solo puede haber 1)
     if( data.funcion_tramite_id === 2 ){
@@ -78,7 +87,7 @@ export class UsuariosTramiteService {
   }
   //FIN DESHABILITAR USUARIO................
 
-  //BUSCAR  XID
+  //BUSCAR  TRAMITES X USUARIO
   async findTramitesXUsuario(id_usuario: number) {    
     //const respuesta = await this.usuariosCentroRepository.findOneBy({id_usuario_centro: id});
     const respuesta = await this.usuariosTramiteRepository.findAndCount(
@@ -93,7 +102,48 @@ export class UsuariosTramiteService {
     if (!respuesta) throw new NotFoundException("No se encontró el tramites para este usuario.");
     return respuesta;
   }
-  //FIN BUSCAR  XID..................................................................
+  //FIN BUSCAR  TRAMITES X USUARIO..................................................................
+
+  //BUSCAR TRAMITES X USUARIO XESTADO_TRAMITE --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
+  async findTramitesXUsuarioXEstadoTramite(id_usuario:number, id_estado:number){
+    
+    let usuario: Usuario = await this.usuarioService.findOne(id_usuario);
+
+
+    if(usuario.rol_id != "administrador"){
+      const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
+        .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
+        .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('tramite.objeto', 'objeto')  
+        .leftJoinAndSelect('usuario_tramite.usuario', 'usuario')
+        .leftJoinAndSelect('usuario_tramite.funcion_tramite', 'funcion_tramite')
+        .where('usuario_tramite.usuario_id = :id', { id: id_usuario })
+        .andWhere('usuario_tramite.activo = :activox', {activox: true})
+        .andWhere('tramite.estado_tramite_id = :estado_tramite_id', {estado_tramite_id: id_estado})
+        .orderBy('tramite.numero_tramite', 'DESC')
+        .getManyAndCount();
+
+    return tramites;
+    }
+
+    if(usuario.rol_id === "administrador") {
+      const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
+        .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
+        .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('tramite.objeto', 'objeto')  
+        .leftJoinAndSelect('usuario_tramite.usuario', 'usuario')
+        .leftJoinAndSelect('usuario_tramite.funcion_tramite', 'funcion_tramite')
+        .where('tramite.estado_tramite_id = :estado_tramite_id', {estado_tramite_id: id_estado})
+        .andWhere('usuario_tramite.activo = :activox', {activox: true})
+        .andWhere('usuario_tramite.funcion_tramite_id = :funcion_tramite_id', {funcion_tramite_id: 2})
+        .orderBy('tramite.numero_tramite', 'DESC')
+        .getManyAndCount();
+  
+      return tramites;
+    }
+    
+  }
+  //FIN BUSCAR TRAMITES X USUARIO XESTADO_TRAMITE
 
   //BUSCAR TRAMITES X CIUDADANO
   async findTramitesXCiudadano(id_ciudadano:number){

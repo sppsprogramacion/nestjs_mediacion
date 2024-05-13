@@ -6,6 +6,7 @@ import { Audiencia } from './entities/audiencia.entity';
 import { Repository } from 'typeorm';
 import { Tramite } from 'src/tramites/entities/tramite.entity';
 import { UsuariosTramite } from 'src/usuarios-tramite/entities/usuarios-tramite.entity';
+import { UpdateAudienciaResultadoDto } from './dto/update-audiencia-resultado.dto';
 
 @Injectable()
 export class AudienciasService {
@@ -140,6 +141,26 @@ export class AudienciasService {
     return respuesta;
   }
   //FIN BUSCAR  XID..................................................................
+
+  //RESULTADO AUDIENCIA
+  async resultadoAudiencia(id: number, data: UpdateAudienciaResultadoDto) {
+    
+    data.esta_cerrada = true;
+    
+    try{
+      const respuesta = await this.audienciaRepository.update(id, data);
+      if((await respuesta).affected == 0){
+        await this.findOne(id);
+      } 
+      return respuesta;
+    }
+    catch(error){
+      
+      this.handleDBErrors(error); 
+    }
+  }
+
+  //FIN RESULTADO AUDIENCIA.....................................................
 
   async update(id: number, data: UpdateAudienciaDto) {
 

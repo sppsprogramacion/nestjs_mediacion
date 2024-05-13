@@ -142,9 +142,21 @@ export class Tramite {
         type: 'varchar',
         length: 50,
         nullable: true,
-        unique: false
+        unique: true
     })
     expediente: string;
+
+    @Column({
+        type:'int',
+        nullable: true,
+    })
+    expediente_numero: number;
+
+    @Column({
+        type:'int',
+        nullable: true,
+    })
+    expediente_anio: number;
 
     @Column({
         type: 'date',
@@ -275,6 +287,13 @@ export class Tramite {
     })
     fecha_finalizacion: Date;
 
+    @Column({
+        type: 'varchar',
+        length: 1000,
+        nullable: true
+    })
+    observacion_finalizacion: string;
+
     //TRAMITES ASIGNADOS
     @OneToMany(() => UsuariosTramite, (asignacion) => asignacion.tramite)
     asignaciones : UsuariosTramite[];
@@ -285,9 +304,9 @@ export class Tramite {
     convocados : Convocado[];
     //FIN CONVOCADOS
 
-    //CONVOCADOS
+    //VINCULADOS
     @OneToMany(() => Vinculado, (vinculado) => vinculado.tramite)
     vinculados : Vinculado[];
-    //FIN CONVOCADOS
+    //FIN VINCULADOS
 
 }
