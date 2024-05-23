@@ -69,7 +69,8 @@ export class Usuario {
     @Column({
         type: 'varchar',
         length: 100,
-        nullable: false
+        nullable: false,
+        default: "mediador"
     })
     rol_id: string;
 
