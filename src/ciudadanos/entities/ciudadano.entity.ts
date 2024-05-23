@@ -1,6 +1,7 @@
 import { type } from "os";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Sexo } from '../../sexo/entities/sexo.entity';
+import { Rol } from "src/roles/entities/role.entity";
 
 @Entity('ciudadanos')
 export class Ciudadano {
@@ -63,6 +64,23 @@ export class Ciudadano {
         nullable: true
     })
     email:string;
+
+    //ROL
+    @Column({
+        type: 'varchar',
+        length: 100,
+        nullable: false,
+        default: 'ciudadano'
+    })
+    rol_id: string;
+
+    @ManyToOne(type => Rol, {eager: true} )
+    @JoinColumn({
+        name: 'rol_id',
+        referencedColumnName: 'id_rol'
+    })
+    rol: Rol;
+    //FIN ROL
 
     @Column({
         type: 'varchar',

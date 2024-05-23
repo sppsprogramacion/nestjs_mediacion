@@ -40,6 +40,12 @@ export class UsuarioController {
     return this.usuarioService.findUsuarios(true);
   }
 
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id_usuario: number) {    
+   
+    return this.usuarioService.findOne(+id_usuario);
+  }
+
   // @Get(':id')
   // findOne(@Param('id') id: string) {
     
