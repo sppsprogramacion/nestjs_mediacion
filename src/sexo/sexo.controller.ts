@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { SexoService } from './sexo.service';
 import { CreateSexoDto } from './dto/create-sexo.dto';
 import { UpdateSexoDto } from './dto/update-sexo.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('sexo')
 export class SexoController {
@@ -13,6 +14,7 @@ export class SexoController {
   }
 
   @Get()
+  @UseGuards( AuthGuard() )
   findAll() {
     return this.sexoService.findAll();
   }
