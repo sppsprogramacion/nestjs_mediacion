@@ -14,7 +14,7 @@ export class SexoController {
   }
 
   @Get()
-  @UseGuards( AuthGuard() )
+  //@UseGuards( AuthGuard() )
   findAll() {
     return this.sexoService.findAll();
   }

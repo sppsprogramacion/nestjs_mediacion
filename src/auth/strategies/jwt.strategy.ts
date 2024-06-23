@@ -36,7 +36,7 @@ export class JwtStrategy extends PassportStrategy( Strategy) {
 
         const { id_usuario, tipo } = payload;
         
-        if (tipo == "usuario"){
+        if (tipo === "usuario"){
             const usuario = await this.usuarioRepository.findOneBy ({id_usuario});
 
             if (!usuario) 
@@ -51,7 +51,7 @@ export class JwtStrategy extends PassportStrategy( Strategy) {
             return usuarioGeneral;
         }
 
-        if (tipo == "ciudadano"){
+        if (tipo === "ciudadano"){
             const ciudadano = await this.ciudadanoRepository.findOneBy ({id_ciudadano: id_usuario});
 
             if (!ciudadano) 
@@ -61,8 +61,8 @@ export class JwtStrategy extends PassportStrategy( Strategy) {
             //     throw new UnauthorizedException('El usuario esta inactivo')
             
             const {id_ciudadano, ...ciudadanoSinId} = ciudadano;
-            const ciudadanoNuevo = {...ciudadanoSinId, id_usuario: id_ciudadano, activo: true};
-            usuarioGeneral = ciudadanoNuevo;
+            const ciudadanoModificado = {...ciudadanoSinId, id_usuario: id_ciudadano, activo: true};
+            usuarioGeneral = ciudadanoModificado;
 
             console.log("ciudadano", usuarioGeneral);
 
