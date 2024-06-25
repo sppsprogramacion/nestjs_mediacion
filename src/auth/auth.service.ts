@@ -78,6 +78,10 @@ export class AuthService {
   }
   //FIN LOGIN USUARIO.................................................................
 
+  //CONTROLAR TOKEN
+    
+  //FIN CONTROLAR TOKEN
+
   //RETORNAR TOKEN
   private getJwtToken(payload: JwtPayload){
     const token = this.jwtService.sign(payload);
