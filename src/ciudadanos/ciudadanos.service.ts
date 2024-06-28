@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateCiudadanoDto } from './dto/create-ciudadano.dto';
 import { UpdateCiudadanoDto } from './dto/update-ciudadano.dto';
 import { Ciudadano } from './entities/ciudadano.entity';
@@ -53,6 +53,38 @@ export class CiudadanosService {
     );
   }
   //FIN BUSCAR TODOS LOS CIUDADANOS....................................
+
+  //BUSCAR LISTA POR DNI
+  async findListaXDni(dnix: number) {
+
+    return await this.ciudadanoRepository.findAndCount(
+      {
+        order:{
+            apellido: "ASC"
+        },
+        where: {
+          dni: dnix,          
+        }
+      }
+    );
+  }
+  //FIN BUSCAR LISTA POR DNI....................................
+
+  //BUSCAR LISTA POR APELLIDO
+  async findListaXApellido(apellidox: string) {
+
+    return await this.ciudadanoRepository.findAndCount(
+      {
+        order:{
+            apellido: "ASC"
+        },
+        where: {
+          apellido: Like(`%${apellidox}%`),          
+        }
+      }
+    );
+  }
+  //FIN BUSCAR LISTA POR APELLIDO....................................
 
   //BUSCAR  XDni
   async findXDni(dnix: number) {

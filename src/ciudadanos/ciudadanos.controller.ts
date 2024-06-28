@@ -31,6 +31,26 @@ export class CiudadanosController {
   }
   //FIN BUSCAR CIUDADANO X DNI...........................................
 
+  //BUSCAR LISTA X DNI
+  @Get('buscarlista-xdni')  
+  async findListaXDni(
+    @Query('dni', ParseIntPipe) dni: string, 
+  ) {    
+    
+    return this.ciudadanosService.findListaXDni(+dni);
+  }
+  //FIN BUSCAR LISTA X DNI...........................................
+
+  //BUSCAR LISTA X APELLIDO
+  @Get('buscarlista-xdni')  
+  async findListaXApellido(
+    @Query('apellido') apellido: string, 
+  ) {    
+    
+    return this.ciudadanosService.findListaXApellido(apellido);
+  }
+  //FIN BUSCAR LISTA X APELLIDO...........................................
+
   @Get()
   findAll() {
     return this.ciudadanosService.findAll();
