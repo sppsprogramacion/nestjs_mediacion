@@ -4,6 +4,7 @@ import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { UpdateUsuarioPassDto } from './dto/update-usuario-pass.dto';
+import { UpdateUsuarioPerfilDto } from './dto/update-usuario-perfil.dto';
 
 @Controller('usuarios')
 export class UsuarioController {
@@ -63,6 +64,16 @@ export class UsuarioController {
   ) {
     
     return this.usuarioService.updatePassword(+id, dataPasswordDto);
+
+  }
+
+  @Patch('editar-perfil/:id')
+  updatePerfil(
+    @Param('id', ParseIntPipe) id: string, 
+    @Body() dataDto: UpdateUsuarioPerfilDto
+  ) {
+    
+    return this.usuarioService.updatePerfil(+id, dataDto);
 
   }
 

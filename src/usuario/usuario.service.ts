@@ -7,6 +7,7 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
 import { UpdateUsuarioPassDto } from './dto/update-usuario-pass.dto';
+import { UpdateUsuarioPerfilDto } from './dto/update-usuario-perfil.dto';
 
 @Injectable()
 export class UsuarioService {
@@ -91,7 +92,7 @@ export class UsuarioService {
   //FIN BUSCAR  XID..................................................................
 
   
-  //MODIFICAR CIUDADANO
+  //MODIFICAR USUARIO
   async update(idx: number, data: UpdateUsuarioDto) {
 
     try{
@@ -109,7 +110,27 @@ export class UsuarioService {
 
     }
   }
-  //FIN MODIFICAR CIUDADANO.......................................
+  //FIN MODIFICAR USUARIO.......................................
+
+  //MODIFICAR PERFIL USUARIO
+  async updatePerfil(idx: number, data: UpdateUsuarioPerfilDto) {
+
+    try{
+      const respuesta = await this.usuariosRepository.update(idx, data);
+      // if(( await respuesta).affected == 0){
+      //   await this.findXDni(dnix);
+      //   throw new InternalServerErrorException("No se modificó el registro.");
+      // } 
+      
+      return respuesta;
+
+    }
+    catch(error){
+      this.handleDBErrors(error);
+
+    }
+  }
+  //FIN MODIFICAR PERFIL USUARIO.......................................
 
   //MODIFICAR PASSWORD
   async updatePassword(idx: number, data: UpdateUsuarioPassDto) {
