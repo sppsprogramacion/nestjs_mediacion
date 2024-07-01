@@ -42,7 +42,7 @@ export class CiudadanosController {
   //FIN BUSCAR LISTA X DNI...........................................
 
   //BUSCAR LISTA X APELLIDO
-  @Get('buscarlista-xdni')  
+  @Get('buscarlista-xapellido')  
   async findListaXApellido(
     @Query('apellido') apellido: string, 
   ) {    
