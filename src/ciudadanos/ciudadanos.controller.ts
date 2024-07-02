@@ -46,7 +46,7 @@ export class CiudadanosController {
   async findListaXApellido(
     @Query('apellido') apellido: string, 
   ) {    
-    
+        
     return this.ciudadanosService.findListaXApellido(apellido);
   }
   //FIN BUSCAR LISTA X APELLIDO...........................................
