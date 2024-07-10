@@ -13,8 +13,13 @@ export class SexoController {
     return this.sexoService.create(data);
   }
 
+  // @Get()
+  // //@UseGuards( AuthGuard() )
+  // findAll() {
+  //   return this.sexoService.findAll();
+  // }
+
   @Get()
-  //@UseGuards( AuthGuard() )
   findAll() {
     return this.sexoService.findAll();
   }
