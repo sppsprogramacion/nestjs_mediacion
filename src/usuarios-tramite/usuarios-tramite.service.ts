@@ -7,14 +7,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsuarioService } from 'src/usuario/usuario.service';
 import { TramitesService } from 'src/tramites/tramites.service';
+import { AudienciasService } from '../audiencias/audiencias.service';
 
 @Injectable()
 export class UsuariosTramiteService {
   constructor(
     @InjectRepository(UsuariosTramite)
+    
     private readonly usuariosTramiteRepository: Repository<UsuariosTramite>,
+    private readonly audienciasService: AudienciasService,
+    private readonly tramiteService: TramitesService,  
     private readonly usuarioService: UsuarioService,
-    private readonly tramiteService: TramitesService  
   ){}
 
   //NUEVO
@@ -45,6 +48,13 @@ export class UsuariosTramiteService {
         .where('tramite_numero = :tramite_numero',{tramite_numero: data.tramite_numero})
         .andWhere('funcion_tramite_id = :funcion_tramite_id', {funcion_tramite_id: 2})
         .execute();
+
+        //CAMBIAR USUARIO DE LA AUDIENCIA PENDIENTE
+        if((await respuesta).affected != 0){
+          this.audienciasService.cambiarMediador(data.tramite_numero, data.usuario_id);
+
+        } 
+
       }
       catch (error){
         this.handleDBErrors(error);
