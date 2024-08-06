@@ -162,6 +162,26 @@ export class AudienciasService {
 
   //FIN RESULTADO AUDIENCIA.....................................................
 
+  //CAMBIAR MEDIADOR AUDIENCIA
+  async cambiarMediador(numero_tramitex: number, id_usuariox: number) {
+    
+    try{
+      const respuesta = await this.audienciaRepository.createQueryBuilder('audiencias')
+      .update('audiencias')
+      .set({usuario_id: id_usuariox})
+      .where('tramite_numero = :tramite_numero',{tramite_numero: numero_tramitex})
+      .andWhere('esta_cerrada = :esta_cerrada', {esta_cerrada: false})
+      .execute();
+    }
+    catch (error){
+      this.handleDBErrors(error);
+    }
+    
+    
+  }
+
+  //FIN CAMBIAR MEDIADOR AUDIENCIA.....................................................
+
   async update(id: number, data: UpdateAudienciaDto) {
 
     try{

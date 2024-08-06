@@ -1,23 +1,27 @@
 import { Module } from '@nestjs/common';
-import { UsuariosTramiteService } from './usuarios-tramite.service';
-import { UsuariosTramiteController } from './usuarios-tramite.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsuariosTramite } from './entities/usuarios-tramite.entity';
-import { TramitesModule } from '../tramites/tramites.module';
+
+import { Audiencia } from 'src/audiencias/entities/audiencia.entity';
 import { Tramite } from '../tramites/entities/tramite.entity';
+import { TramitesModule } from '../tramites/tramites.module';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { UsuarioService } from 'src/usuario/usuario.service';
+import { UsuariosTramite } from './entities/usuarios-tramite.entity';
+import { UsuariosTramiteController } from './usuarios-tramite.controller';
+import { UsuariosTramiteService } from './usuarios-tramite.service';
+import { AudienciasService } from '../audiencias/audiencias.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      UsuariosTramite,
+      Audiencia,
       Tramite,
       Usuario,
+      UsuariosTramite,
     ]),
     TramitesModule
   ],
   controllers: [UsuariosTramiteController],
-  providers: [UsuariosTramiteService, UsuarioService]
+  providers: [AudienciasService,UsuariosTramiteService, UsuarioService]
 })
 export class UsuariosTramiteModule {}
