@@ -56,16 +56,13 @@ export class CreateTramiteDto {
     @IsBoolean({message: "medida_cautelar debe ser verdadero o falso"})
     medida_cautelar: boolean;
 
-    @IsBoolean({message: "pdf_denuncia debe ser verdadero o falso"})
+    
     pdf_denuncia: boolean;
-
-    @IsBoolean({message: "pdf_cautelar debe ser verdadero o falso"})
+    
     pdf_cautelar: boolean;
-
-    @IsBoolean({message: "El campo pdf-ingresos debe ser verdadero o falso"})
+    
     pdf_ingresos: boolean;
-
-    @IsBoolean({message: "pdf_ingresos debe ser verdadero o falso"})
+    
     pdf_negativa: boolean;
 
     // @IsInt({message: "El id-modalidad debe ser un número entero."})

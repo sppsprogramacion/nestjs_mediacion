@@ -211,25 +211,29 @@ export class Tramite {
 
     @Column({
         type: "boolean",
-        nullable: false
+        nullable: false,
+        default: false
     })
     pdf_denuncia: boolean;
 
     @Column({
         type: "boolean",
-        nullable: false
+        nullable: false,
+        default:false
     })
     pdf_cautelar: boolean;
 
     @Column({
         type: "boolean",
-        nullable: false
+        nullable: false,
+        default: false
     })
     pdf_ingresos: boolean;
 
     @Column({
         type: "boolean",
-        nullable: false
+        nullable: false,
+        default: false
     })
     pdf_negativa: boolean;
 
