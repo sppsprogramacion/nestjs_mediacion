@@ -37,7 +37,7 @@ export class Audiencia {
     @Column({
         type: 'varchar',
         length: 300,
-        nullable: false
+        nullable: true
     })
     detalles: string;
 

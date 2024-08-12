@@ -1,4 +1,4 @@
-import { IsDateString, IsEmpty, IsInt, IsNotEmpty, Length } from "class-validator";
+import { IsDateString, IsEmpty, IsInt, IsNotEmpty, Length, MaxLength } from "class-validator";
 
 
 
@@ -12,8 +12,7 @@ export class CreateUsuariosTramiteDto {
     @IsNotEmpty({message: "Debe ingresar el usuario_id."})
     usuario_id: number
    
-    @Length(1,200,{message: "detalles debe tener entre $constraint1 y $constraint2 caracteres."})
-    @IsNotEmpty({message: "Debe ingresar detalles."})
+    @MaxLength(200,{message: "detalles debe tener entre $constraint1 y $constraint2 caracteres."})
     detalles: string;
     
     @IsEmpty({message: "No debe enviar el campo fecha_asignacion."})
