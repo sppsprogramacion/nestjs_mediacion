@@ -1,4 +1,4 @@
-import { IsDateString, IsInt, IsString, Length } from "class-validator";
+import { IsDateString, IsInt, IsString, Length, MaxLength, IsOptional } from 'class-validator';
 
 export class CreateAudienciaDto {
 
@@ -7,7 +7,8 @@ export class CreateAudienciaDto {
     @IsInt({message: "El tramite_numero debe ser un número entero."})
     tramite_numero: number;
 
-    @Length(1,300,{message: "El detalle debe tener entre $constraint1 y $constraint2 caracteres."})
+    @MaxLength(300,{message: "El detalle debe tener hasta $constraint1 caracteres."})
+    @IsOptional()
     detalles: string;
    
     @IsDateString({message: "El formato de la fecha de inicio ingresada no es válida."})
