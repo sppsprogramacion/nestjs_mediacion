@@ -40,6 +40,20 @@ export class AudienciasService {
     if(cant_audiencias_activas.cantidad >0) throw new BadRequestException ("La ultima audiencia aun no fue cerrada.")
     //FIN obtener cantidad de audiencias abiertas sin concluir
 
+
+    //obtener cantidad de audiencias abiertas sin concluir en un horario
+    const cant_audiencias_horario = await this.audienciaRepository.createQueryBuilder('audiencias')
+      .select('count(audiencias.num_audiencia)','cantidad')
+      .where('audiencias.usuario_id = :usuario_id', { usuario_id: data.usuario_id })
+      .andWhere('audiencias.esta_cerrada= :activa', {activa: false})
+      .andWhere('audiencias.fecha_inicio= :fecha', {fecha: data.fecha_inicio})
+      .andWhere('audiencias.hora_inicio= :hora', {hora: data.hora_inicio})
+      .getRawOne();
+    
+    if(cant_audiencias_horario.cantidad >0) throw new BadRequestException ("Ya tiene una audiencia programada para esta fecha y hora.")
+    //FIN obtener cantidad de audiencias abiertas sin concluir en un horario
+
+
     //verificar si el usuario esta asigndo a este tramite
     const usuarioTramite = await this.usuarioTramiteRepository.findOne(
       {

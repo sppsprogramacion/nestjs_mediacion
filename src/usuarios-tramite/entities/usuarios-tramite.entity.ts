@@ -40,7 +40,7 @@ export class UsuariosTramite {
 
     @Column({
         type: 'varchar',
-        length: 200,
+        length: 300,
         nullable: true,
     })
     detalles: string;
