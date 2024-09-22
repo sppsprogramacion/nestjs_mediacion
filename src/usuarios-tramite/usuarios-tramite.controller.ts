@@ -63,7 +63,7 @@ export class UsuariosTramiteController {
   }
   //FIN BUSCAR TRAMITES FINALIZADOS POR ID-USUARIO....................................................
   
-  //BUSCAR TRAMITES FINALIZADOS POR ID-USUARIO y estado del tramite 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO
+  //BUSCAR TRAMITES FINALIZADOS POR ID-USUARIO POR ANIO y estado del tramite 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO
   @Get('buscar-xusuario-finalizados-xanio')  
   async findTramiteXUsuarioFinalizadosXanio(
     @Query('id_usuario', ParseIntPipe) id_usuario: string, 
@@ -74,7 +74,7 @@ export class UsuariosTramiteController {
     
     return this.usuariosTramiteService.findTramitesXUsuarioXEstadoTramiteXAnio(id_usuariox,3,aniox);
   }
-  //FIN BUSCAR TRAMITES FINALIZADOS POR ID-USUARIO....................................................
+  //BUSCAR TRAMITES FINALIZADOS POR ID-USUARIO POR ANIO y estado del tramite....................................................
 
   //BUSCAR TRAMITES x numero de tramite
   @Get('buscar-xnumtramite-activo')  
