@@ -109,7 +109,7 @@ export class UsuariosTramiteService {
       }
     );
     
-    if (!respuesta) throw new NotFoundException("No se encontró el tramites para este usuario.");
+    if (!respuesta) throw new NotFoundException("No se encontró tramites para este usuario.");
     return respuesta;
   }
   //FIN BUSCAR  TRAMITES X USUARIO..................................................................
@@ -146,6 +146,48 @@ export class UsuariosTramiteService {
         .where('tramite.estado_tramite_id = :estado_tramite_id', {estado_tramite_id: id_estado})
         .andWhere('usuario_tramite.activo = :activox', {activox: true})
         .andWhere('usuario_tramite.funcion_tramite_id = :funcion_tramite_id', {funcion_tramite_id: 2})
+        .orderBy('tramite.numero_tramite', 'DESC')
+        .getManyAndCount();
+  
+      return tramites;
+    }
+    
+  }
+  //FIN BUSCAR TRAMITES X USUARIO XESTADO_TRAMITE
+
+  //BUSCAR TRAMITES X AÑO X USUARIO XESTADO_TRAMITE --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
+  async findTramitesXUsuarioXEstadoTramiteXAnio(id_usuario:number, id_estado:number, anio: number){
+    
+    let usuario: Usuario = await this.usuarioService.findOne(id_usuario);
+
+    if(usuario.rol_id != "administrador"){
+      const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
+        .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
+        .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('tramite.objeto', 'objeto')  
+        .leftJoinAndSelect('usuario_tramite.usuario', 'usuario')
+        .leftJoinAndSelect('usuario_tramite.funcion_tramite', 'funcion_tramite')
+        .where('usuario_tramite.usuario_id = :id', { id: id_usuario })
+        .andWhere('usuario_tramite.activo = :activox', {activox: true})
+        .andWhere('tramite.estado_tramite_id = :estado_tramite_id', {estado_tramite_id: id_estado})
+        .andWhere('YEAR(tramite.fecha_tramite) = :aniox', {aniox: anio})
+        .orderBy('tramite.numero_tramite', 'DESC')
+        .getManyAndCount();
+
+    return tramites;
+    }
+
+    if(usuario.rol_id === "administrador") {
+      const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
+        .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
+        .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('tramite.objeto', 'objeto')  
+        .leftJoinAndSelect('usuario_tramite.usuario', 'usuario')
+        .leftJoinAndSelect('usuario_tramite.funcion_tramite', 'funcion_tramite')
+        .where('tramite.estado_tramite_id = :estado_tramite_id', {estado_tramite_id: id_estado})
+        .andWhere('usuario_tramite.activo = :activox', {activox: true})
+        .andWhere('usuario_tramite.funcion_tramite_id = :funcion_tramite_id', {funcion_tramite_id: 2})
+        .andWhere('YEAR(tramite.fecha_tramite) = :aniox', {aniox: anio})
         .orderBy('tramite.numero_tramite', 'DESC')
         .getManyAndCount();
   
