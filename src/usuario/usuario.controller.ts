@@ -5,6 +5,7 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { UpdateUsuarioPassDto } from './dto/update-usuario-pass.dto';
 import { UpdateUsuarioPerfilDto } from './dto/update-usuario-perfil.dto';
+import { UpdateUsuarioRolDto } from './dto/update-usuario-rol.dto';
 
 @Controller('usuarios')
 export class UsuarioController {
@@ -74,6 +75,16 @@ export class UsuarioController {
   ) {
     
     return this.usuarioService.updatePerfil(+id, dataDto);
+
+  }
+
+  @Patch('editar-estado/:id')
+  updatePRol(
+    @Param('id', ParseIntPipe) id: string, 
+    @Body() dataDto: UpdateUsuarioRolDto
+  ) {
+    
+    return this.usuarioService.updateRol(+id, dataDto);
 
   }
 

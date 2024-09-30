@@ -8,6 +8,7 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
 import { UpdateUsuarioPassDto } from './dto/update-usuario-pass.dto';
 import { UpdateUsuarioPerfilDto } from './dto/update-usuario-perfil.dto';
+import { UpdateUsuarioRolDto } from './dto/update-usuario-rol.dto';
 
 @Injectable()
 export class UsuarioService {
@@ -131,6 +132,22 @@ export class UsuarioService {
     }
   }
   //FIN MODIFICAR PERFIL USUARIO.......................................
+
+  //MODIFICAR ROL USUARIO
+  async updateRol(idx: number, data: UpdateUsuarioRolDto) {
+
+    try{
+      const respuesta = await this.usuariosRepository.update(idx, data);
+            
+      return respuesta;
+
+    }
+    catch(error){
+      this.handleDBErrors(error);
+
+    }
+  }
+  //FIN MODIFICAR ROL USUARIO.......................................
 
   //MODIFICAR PASSWORD
   async updatePassword(idx: number, data: UpdateUsuarioPassDto) {
