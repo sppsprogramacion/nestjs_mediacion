@@ -6,6 +6,7 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { UpdateUsuarioPassDto } from './dto/update-usuario-pass.dto';
 import { UpdateUsuarioPerfilDto } from './dto/update-usuario-perfil.dto';
 import { UpdateUsuarioRolDto } from './dto/update-usuario-rol.dto';
+import { UpdateUsuarioResetPassDto } from './dto/update-usuario-resetpass.dto';
 
 @Controller('usuarios')
 export class UsuarioController {
@@ -65,6 +66,17 @@ export class UsuarioController {
   ) {
     
     return this.usuarioService.updatePassword(+id, dataPasswordDto);
+
+  }
+
+  
+  @Patch('reset-password/:id')
+  updateResetPassword(
+    @Param('id', ParseIntPipe) id: string, 
+    @Body() dataPasswordDto: UpdateUsuarioResetPassDto
+  ) {
+    
+    return this.usuarioService.updateResetPassword(+id);
 
   }
 

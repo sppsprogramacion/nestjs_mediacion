@@ -170,6 +170,33 @@ export class UsuarioService {
   }
   //FIN MODIFICAR PASSWORD.......................................
 
+  //MODIFICAR PASSWORD
+  async updateResetPassword(idx: number) {
+    const data = await this.usuariosRepository.findOneBy({id_usuario: idx});    
+    if (data){
+      let claveNueva: string = "Aa" + data.dni; 
+      data.clave = bcrypt.hashSync(claveNueva, 10);
+      
+      try{
+        const respuesta = await this.usuariosRepository.update(idx, data);
+                
+        return respuesta;
+      }
+      catch(error){
+        this.handleDBErrors(error);
+  
+      }
+    }
+
+    throw new NotFoundException("No se encontró el registro de usuario solicitado.");
+
+
+    
+
+    
+  }
+  //FIN MODIFICAR PASSWORD.......................................
+
   async remove(dnix: number) {
     const respuesta = await this.usuariosRepository.findOneBy({dni: dnix});
     if(!respuesta) throw new NotFoundException("No existe el registro de usuario que intenta eliminar");
