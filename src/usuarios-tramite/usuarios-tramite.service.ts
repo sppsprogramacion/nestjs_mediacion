@@ -132,7 +132,7 @@ export class UsuariosTramiteService {
         .orderBy('tramite.numero_tramite', 'DESC')
         .getManyAndCount();
 
-    return tramites;
+      return tramites;
     }
 
     if(usuario.rol_id === "administrador") {
@@ -155,8 +155,7 @@ export class UsuariosTramiteService {
   //FIN BUSCAR TRAMITES X USUARIO XESTADO_TRAMITE
 
   //BUSCAR TRAMITES X USUARIO-ADMINISTRADO XESTADO_TRAMITE --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
-  async findTramitesXUsuarioAdministradoXEstadoTramite(id_usuario:number, id_estado:number){
-    
+  async findTramitesXUsuarioAdministradoXEstadoTramite(id_usuario:number, id_estado:number){    
     let usuario: Usuario = await this.usuarioService.findOne(id_usuario);
     
     const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
