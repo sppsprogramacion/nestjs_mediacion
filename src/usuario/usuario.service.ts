@@ -42,8 +42,22 @@ export class UsuarioService {
     );
   }
 
+  //BUSCAR USUARIOS TODOS
+  async findUsuarios() {
+    const usuarios = await this.usuariosRepository.findAndCount(
+      {        
+        
+        order:{
+          apellido: "ASC"
+        }
+      }
+    );   
+    return usuarios;
+  }
+  //FIN BUSCAR USUARIOS TODOS .........................................
+
   //BUSCAR USUARIOS ACTIVOS O INACTIVOS
-  async findUsuarios(activox: boolean) {
+  async findUsuariosActivos(activox: boolean) {
     const usuarios = await this.usuariosRepository.findAndCount(
       {        
         where: {

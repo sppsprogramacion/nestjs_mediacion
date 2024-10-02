@@ -40,7 +40,7 @@ export class UsuarioController {
 
   @Get()
   findAll() {
-    return this.usuarioService.findUsuarios(true);
+    return this.usuarioService.findUsuarios();
   }
 
   @Get(':id')
