@@ -119,7 +119,7 @@ export class UsuariosTramiteService {
     
     let usuario: Usuario = await this.usuarioService.findOne(id_usuario);
 
-    if(usuario.rol_id != "administrador"){
+    if(usuario.rol_id === "mediador"){
       const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
         .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
         .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
@@ -135,7 +135,7 @@ export class UsuariosTramiteService {
       return tramites;
     }
 
-    if(usuario.rol_id === "administrador") {
+    if(usuario.rol_id === "administrador" || usuario.rol_id === "supervisor") {
       const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
         .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
         .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
@@ -159,7 +159,7 @@ export class UsuariosTramiteService {
     
     let usuario: Usuario = await this.usuarioService.findOne(id_usuario);
 
-    if(usuario.rol_id != "administrador"){
+    if(usuario.rol_id === "mediador"){
       const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
         .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
         .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
@@ -176,7 +176,7 @@ export class UsuariosTramiteService {
       return tramites;
     }
 
-    if(usuario.rol_id === "administrador") {
+    if(usuario.rol_id === "administrador" || usuario.rol_id === "supervisor") {
       const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
         .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
         .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  

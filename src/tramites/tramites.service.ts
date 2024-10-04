@@ -144,7 +144,7 @@ export class TramitesService {
     let usuario: Usuario = await this.usuarioService.findOne(id_usuario);
 
     //cargar tramites nuevos usuarios del interior - no son administradores
-    if(id_estado === 1 && usuario.rol_id != "administrador"){
+    if(id_estado === 1 && usuario.rol_id == "mediador"){
       let usuariosCentros: [UsuarioCentro[], number] = await this.usuarioCentroService.findByUsuarioByActivo(id_usuario, true);
       let tramites_aux: any[];
       
@@ -171,21 +171,9 @@ export class TramitesService {
     //FIN cargar tramites nuevos usuarios del interior - no son administradores
 
     // cargar tramites nuevos administrador - de capital y cercanos
-    if(id_estado === 1 && usuario.rol_id === "administrador"){  
+    if(id_estado === 1 && (usuario.rol_id === "administrador" || usuario.rol_id === "supervisor")){  
       let tramites_aux: any[];
-      // tramites = await this.tramiteRepository.findAndCount(
-      //   {        
-      //     where: {
-      //       estado_tramite_id: id_estado,
-      //       centro_mediacion_id: usuarioCentro.centro_mediacion_id
-      //     },
-      //     order:{
-      //       numero_tramite: "DESC"
-      //     }
-      //   }
-      // ); 
-
-      
+            
       tramites = await this.tramiteRepository.createQueryBuilder('tramites') 
         .leftJoinAndSelect('tramites.centro_mediacion', 'centro_mediacion')
         .leftJoinAndSelect('tramites.ciudadano', 'ciudadano')  
