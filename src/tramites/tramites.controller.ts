@@ -14,6 +14,7 @@ import { CreateVinculadoTramiteDto } from './dto/create-vinculado-tramite.dto';
 import { VinculadosService } from 'src/vinculados/vinculados.service';
 import { Vinculado } from 'src/vinculados/entities/vinculado.entity';
 import { UpdateTramiteFinalizacionDto } from './dto/update-tramite-finalizacion.dto';
+import { DateValidationPipe } from 'src/pipes/date-validation.pipe';
 
 @Controller('tramites')
 export class TramitesController {
@@ -74,7 +75,6 @@ export class TramitesController {
         const verConvocados = await this.convocadosService.findXTramite(tramiteCreado.numero_tramite);
         convocadosCreados = verConvocados[0];
       } 
-      console.log("convocados: ", convocadosCreados);
       //fin guardar convocados........
 
       //guardar vinculados
@@ -85,7 +85,6 @@ export class TramitesController {
           vinculado.tramite_numero = tramiteCreado.numero_tramite;
         }
       }
-      console.log("vinculados previos: ", vinculados);
 
       //crear Vinculados
       vinculadosCreados = await this.vinculadosService.createVinculados(vinculados);
@@ -95,12 +94,10 @@ export class TramitesController {
         const verVinculados = await this.vinculadosService.findXTramite(tramiteCreado.numero_tramite);
         vinculadosCreados = verVinculados[0];
       } 
-      console.log("vinculados: ", vinculadosCreados);
 
       //fin guardar vinculados........
       
     }
-    console.log("tramite: ", tramiteCreado);
     
     return {
       tramiteCreado,
@@ -205,6 +202,52 @@ export class TramitesController {
     return {nuevos: cant_nuevos,asignados: cant_asignado, finalizados: cant_finalizados};
   }
   //FIN CONTAR TRAMITES............................................................................
+
+  //BUSCAR TRAMITES TODOS XNUMTRAMITE
+  @Get('todos-xnumtramite')
+  async findTodosXNumTramite(  
+    @Query('numero_tramite', ParseIntPipe) numero_tramite: string  
+  ) {    
+
+    return this.tramitesService.findTodosXNumTramite(+numero_tramite);
+  }
+  //FIN BUSCAR TRAMITES TODOS XNUMTRAMITE.....................................................
+  
+  //BUSCAR TRAMITES TODOS X DNI-CIUDADANO
+  @Get('todos-xdniciudadano')
+  async findTodosXDniCiudadano(  
+    @Query('numero_dni', ParseIntPipe) numero_dni: string  
+  ) {    
+
+    return this.tramitesService.findTodosXDni(+numero_dni);
+  }
+  //FIN BUSCAR TRAMITES TODOS X DNI-CIUDADANO.....................................................
+
+  //BUSCAR TRAMITES TODOS X APELLIDO-CIUDADANO
+  @Get('todos-xapellidociudadano')
+  async findTodosXApellidoCiudadano(  
+    @Query('apellido') apellido: string  
+  ) {    
+
+    return this.tramitesService.findTodosXApellidoCiudadano(apellido);
+  }
+  //FIN BUSCAR TRAMITES TODOS X APELLIDO-CIUDADANO.....................................................
+  
+  //BUSCAR TRAMITES TODOS X APELLIDO-CIUDADANO
+  @Get('todos-xfecha')
+  async findTodosXFecha(  
+    @Query('fecha_ini', DateValidationPipe) fecha_ini: string,
+    @Query('fecha_fin', DateValidationPipe) fecha_fin: string  
+  ) {    
+    
+    const f_inicio = new Date(fecha_ini);
+    const f_fin = new Date(fecha_fin);
+    // Aquí ya tienes la fecha validada
+    return `Evento en la fecha: ${f_inicio.toISOString()}`;
+    //return this.tramitesService.findTodosXApellidoCiudadano(apellido);
+  }
+  //FIN BUSCAR TRAMITES TODOS X APELLIDO-CIUDADANO.....................................................
+  
 
   @Get()
   findAll() {

@@ -71,6 +71,63 @@ export class TramitesService {
   //FIN NUEVO TRAMITE..................................................................
 
   //TODOS LOS TRAMITES
+  async findTodosXNumTramite(numtramitex: number) {
+    return await this.tramiteRepository.findAndCount(
+      {
+        where: {
+          numero_tramite: numtramitex
+        },
+          order:{
+              numero_tramite: "DESC"
+          }
+      }
+    );
+  }
+  //FIN TODOS LOS TRAMITES..............................
+
+  //TODOS LOS TRAMITES x dni del ciudadano
+  async findTodosXDni(dnix: number) {
+    let tramites_encontrados: Tramite[]=[];   
+    let total_registros: number = 0;    
+    let tramites: any= {};
+   
+    tramites = await this.tramiteRepository.createQueryBuilder('tramites') 
+        .leftJoinAndSelect('tramites.centro_mediacion', 'centro_mediacion')
+        .leftJoinAndSelect('tramites.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('tramites.objeto', 'objeto')   
+        .where('ciudadano.dni = :dni', { dni: dnix })
+        .orderBy('tramites.numero_tramite', 'ASC')
+        .getManyAndCount();
+    
+    tramites_encontrados = tramites[0];
+    total_registros = tramites[1];   
+    
+    return [tramites_encontrados, total_registros];
+  }
+  //FIN TODOS LOS TRAMITES x dni del ciudadano..............................
+
+  //TODOS LOS TRAMITES x dni del ciudadano
+  async findTodosXApellidoCiudadano(apellidox: string) {
+    let tramites_encontrados: Tramite[]=[];   
+    let total_registros: number = 0;    
+    let tramites: any= {};
+   
+    tramites = await this.tramiteRepository.createQueryBuilder('tramites') 
+        .leftJoinAndSelect('tramites.centro_mediacion', 'centro_mediacion')
+        .leftJoinAndSelect('tramites.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('tramites.objeto', 'objeto')   
+        .where('ciudadano.apellido LIKE :apellido', { apellido: `%${apellidox}%` })
+        .orderBy('tramites.numero_tramite', 'ASC')
+        .getManyAndCount();
+    
+    tramites_encontrados = tramites[0];
+    total_registros = tramites[1];   
+    
+    return [tramites_encontrados, total_registros];
+  }
+  //FIN TODOS LOS TRAMITES x dni del ciudadano..............................
+
+  //TODOS LOS TRAMITES
   async findAll() {
     return await this.tramiteRepository.findAndCount(
       {
@@ -182,7 +239,7 @@ export class TramitesService {
         .andWhere('tramites.estado_tramite_id = :id_estado', {id_estado: 1})
         .orderBy('tramites.numero_tramite', 'ASC')
         .getManyAndCount();
-    
+      
       tramites_aux = tramites[0];
       tramites_encontrados.push(...tramites_aux);
       total_registros = total_registros + tramites[1];      
