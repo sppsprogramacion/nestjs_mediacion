@@ -106,7 +106,7 @@ export class TramitesService {
   }
   //FIN TODOS LOS TRAMITES x dni del ciudadano..............................
 
-  //TODOS LOS TRAMITES x dni del ciudadano
+  //TODOS LOS TRAMITES x apellido del ciudadano
   async findTodosXApellidoCiudadano(apellidox: string) {
     let tramites_encontrados: Tramite[]=[];   
     let total_registros: number = 0;    
@@ -125,7 +125,28 @@ export class TramitesService {
     
     return [tramites_encontrados, total_registros];
   }
-  //FIN TODOS LOS TRAMITES x dni del ciudadano..............................
+  //FIN TODOS LOS TRAMITES x apellido del ciudadano..............................
+
+  //TODOS LOS TRAMITES x apellido del ciudadano
+  async findTodosXFechaTramite(fecha_inix: Date, fecha_finx: Date) {
+    let tramites_encontrados: Tramite[]=[];   
+    let total_registros: number = 0;    
+    let tramites: any= {};
+   
+    tramites = await this.tramiteRepository.createQueryBuilder('tramites') 
+        .leftJoinAndSelect('tramites.centro_mediacion', 'centro_mediacion')
+        .leftJoinAndSelect('tramites.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('tramites.objeto', 'objeto')   
+        .where('tramites.fecha_tramite BETWEEN :fecha_inix AND :fecha_finx', { fecha_inix, fecha_finx })
+        .orderBy('tramites.numero_tramite', 'ASC')
+        .getManyAndCount();
+    
+    tramites_encontrados = tramites[0];
+    total_registros = tramites[1];   
+    
+    return [tramites_encontrados, total_registros];
+  }
+  //FIN TODOS LOS TRAMITES x apellido del ciudadano..............................
 
   //TODOS LOS TRAMITES
   async findAll() {

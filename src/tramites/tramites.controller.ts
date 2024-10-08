@@ -243,8 +243,8 @@ export class TramitesController {
     const f_inicio = new Date(fecha_ini);
     const f_fin = new Date(fecha_fin);
     // Aquí ya tienes la fecha validada
-    return `Evento en la fecha: ${f_inicio.toISOString()}`;
-    //return this.tramitesService.findTodosXApellidoCiudadano(apellido);
+
+    return this.tramitesService.findTodosXFechaTramite(f_inicio, f_fin);
   }
   //FIN BUSCAR TRAMITES TODOS X APELLIDO-CIUDADANO.....................................................
   
