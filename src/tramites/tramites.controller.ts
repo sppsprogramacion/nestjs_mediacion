@@ -212,6 +212,16 @@ export class TramitesController {
     return this.tramitesService.findTodosXNumTramite(+numero_tramite);
   }
   //FIN BUSCAR TRAMITES TODOS XNUMTRAMITE.....................................................
+
+  //BUSCAR TRAMITES TODOS X EXPEDIENTE
+  @Get('todos-xexpediente')
+  async findTodosXExpediente(  
+    @Query('expediente') expediente: string  
+  ) {    
+
+    return this.tramitesService.findTodosXExpediente(expediente);
+  }
+  //FIN BUSCAR TRAMITES TODOS x EXPEDIENTE....................................................
   
   //BUSCAR TRAMITES TODOS X DNI-CIUDADANO
   @Get('todos-xdniciudadano')

@@ -85,6 +85,21 @@ export class TramitesService {
   }
   //FIN TODOS LOS TRAMITES..............................
 
+  //TODOS LOS TRAMITES x EXPEIDENTE
+  async findTodosXExpediente(expedientex: string) {
+    return await this.tramiteRepository.findAndCount(
+      {
+        where: {
+          expediente: expedientex
+        },
+          order:{
+              numero_tramite: "DESC"
+          }
+      }
+    );
+  }
+  //FIN TODOS LOS TRAMITES x EXPEIDENTE..............................
+
   //TODOS LOS TRAMITES x dni del ciudadano
   async findTodosXDni(dnix: number) {
     let tramites_encontrados: Tramite[]=[];   
