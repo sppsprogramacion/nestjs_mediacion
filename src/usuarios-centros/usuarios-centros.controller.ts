@@ -59,7 +59,7 @@ export class UsuariosCentrosController {
   }
 
   //DESHABILITAR USUARIO
-  @Put('deshabilitar-usuario')
+  @Patch('deshabilitar-usuario')
   async deshabilitarUsuario(    
     @Query('id_usuario_centro', ParseIntPipe) id_usuario_centro: string,
     @Body() dataDtox: UpdateUsuarioCentroDto
