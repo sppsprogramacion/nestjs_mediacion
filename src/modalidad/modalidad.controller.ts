@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { ModalidadService } from './modalidad.service';
 import { CreateModalidadDto } from './dto/create-modalidad.dto';
 import { UpdateModalidadDto } from './dto/update-modalidad.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards( AuthGuard() )
 @Controller('modalidad')
 export class ModalidadController {
   constructor(private readonly modalidadService: ModalidadService) {}
@@ -38,9 +40,9 @@ export class ModalidadController {
     return this.modalidadService.update(+id, dataDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
+  // @Delete(':id')
+  // remove(@Param('id', ParseIntPipe) id: string) {
     
-    return this.modalidadService.remove(+id);
-  }
+  //   return this.modalidadService.remove(+id);
+  // }
 }

@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, NotFoundException, Put, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, NotFoundException, Put, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { UsuariosCentrosService } from './usuarios-centros.service';
 import { CreateUsuarioCentroDto } from './dto/create-usuario-centro.dto';
 import { UpdateUsuarioCentroDto } from './dto/update-usuario-centro.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards( AuthGuard() )
 @Controller('usuarios-centros')
 export class UsuariosCentrosController {
   constructor(private readonly usuariosCentrosService: UsuariosCentrosService) {}
@@ -96,9 +98,9 @@ export class UsuariosCentrosController {
 
   
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
+  // @Delete(':id')
+  // remove(@Param('id', ParseIntPipe) id: string) {
 
-    return this.usuariosCentrosService.remove(+id);
-  }
+  //   return this.usuariosCentrosService.remove(+id);
+  // }
 }

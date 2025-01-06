@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseArrayPipe, BadRequestException, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseArrayPipe, BadRequestException, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { VinculadosService } from './vinculados.service';
 import { CreateVinculadoDto } from './dto/create-vinculado.dto';
 import { UpdateVinculadoDto } from './dto/update-vinculado.dto';
-import { Vinculado } from './entities/vinculado.entity';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards( AuthGuard() )
 @Controller('vinculados')
 export class VinculadosController {
 
@@ -64,10 +65,10 @@ export class VinculadosController {
     return this.vinculadosService.update(+id, dataDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
+  // @Delete(':id')
+  // remove(@Param('id', ParseIntPipe) id: string) {
 
-    return this.vinculadosService.remove(+id);
-  }
+  //   return this.vinculadosService.remove(+id);
+  // }
   
 }

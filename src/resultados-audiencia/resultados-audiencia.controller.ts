@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, UseGuards } from '@nestjs/common';
 import { ResultadosAudienciaService } from './resultados-audiencia.service';
 import { CreateResultadoAudienciaDto } from './dto/create-resultado-audiencia.dto';
 import { UpdateResultadoAudienciaDto } from './dto/update-resultado-audiencia.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards( AuthGuard() )
 @Controller('resultados-audiencia')
 export class ResultadosAudienciaController {
   constructor(private readonly resultadosAudienciaService: ResultadosAudienciaService) {}
@@ -38,9 +40,9 @@ export class ResultadosAudienciaController {
     return this.resultadosAudienciaService.update(+id, dataDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
+  // @Delete(':id')
+  // remove(@Param('id', ParseIntPipe) id: string) {
     
-    return this.resultadosAudienciaService.remove(+id);
-  }
+  //   return this.resultadosAudienciaService.remove(+id);
+  // }
 }

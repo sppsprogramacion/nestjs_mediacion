@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { TiposAudienciaService } from './tipos-audiencia.service';
 import { CreateTipoAudienciaDto } from './dto/create-tipo-audiencia.dto';
 import { UpdateTipoAudienciaDto } from './dto/update-tipo-audiencia.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards( AuthGuard() )
 @Controller('tipos-audiencia')
 export class TiposAudienciaController {
   constructor(private readonly tiposAudienciaService: TiposAudienciaService) {}
@@ -39,9 +41,9 @@ export class TiposAudienciaController {
     return this.tiposAudienciaService.update(+id, dataDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
+  // @Delete(':id')
+  // remove(@Param('id', ParseIntPipe) id: string) {
     
-    return this.tiposAudienciaService.remove(+id);
-  }
+  //   return this.tiposAudienciaService.remove(+id);
+  // }
 }

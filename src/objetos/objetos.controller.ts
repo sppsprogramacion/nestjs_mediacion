@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { Request } from 'express'
 import { ObjetosService } from './objetos.service';
 import { CreateObjetoDto } from './dto/create-objeto.dto';
 import { UpdateObjetoDto } from './dto/update-objeto.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards( AuthGuard() )
 @Controller('objetos')
 export class ObjetosController {
   constructor(private readonly objetosService: ObjetosService) {}

@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { EstadosTramiteService } from './estados-tramite.service';
 import { CreateEstadoTramiteDto } from './dto/create-estado-tramite.dto';
 import { UpdateEstadoTramiteDto } from './dto/update-estado-tramite.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards( AuthGuard() )
 @Controller('estados-tramite')
 export class EstadosTramiteController {
   constructor(private readonly estadosTramiteService: EstadosTramiteService) {}
@@ -39,9 +41,9 @@ export class EstadosTramiteController {
     return this.estadosTramiteService.update(+id, dataDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
+  // @Delete(':id')
+  // remove(@Param('id', ParseIntPipe) id: string) {
     
-    return this.estadosTramiteService.remove(+id);
-  }
+  //   return this.estadosTramiteService.remove(+id);
+  // }
 }

@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { FuncionTramiteService } from './funcion-tramite.service';
 import { CreateFuncionTramiteDto } from './dto/create-funcion-tramite.dto';
 import { UpdateFuncionTramiteDto } from './dto/update-funcion-tramite.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards( AuthGuard() )
 @Controller('funcion-tramite')
 export class FuncionTramiteController {
   constructor(private readonly funcionTramiteService: FuncionTramiteService) {}
@@ -39,9 +41,9 @@ export class FuncionTramiteController {
     return this.funcionTramiteService.update(+id, dataDto);
   }  
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
+  // @Delete(':id')
+  // remove(@Param('id', ParseIntPipe) id: string) {
     
-    return this.funcionTramiteService.remove(+id);
-  }
+  //   return this.funcionTramiteService.remove(+id);
+  // }
 }

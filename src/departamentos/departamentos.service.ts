@@ -4,12 +4,15 @@ import { Repository } from 'typeorm';
 import { CreateDepartamentoDto } from './dto/create-departamento.dto';
 import { UpdateDepartamentoDto } from './dto/update-departamento.dto';
 import { Departamento } from './entities/departamento.entity';
+import { CentroMediacion } from 'src/centros-mediacion/entities/centro-mediacion.entity';
 
 @Injectable()
 export class DepartamentosService {
   constructor(
     @InjectRepository(Departamento)
-    private readonly departamentoRepository: Repository<Departamento>
+    private readonly departamentoRepository: Repository<Departamento>,
+    @InjectRepository(CentroMediacion)
+    private readonly centrosMediacionRepository: Repository<CentroMediacion>,
   ){}
 
   async create(data: CreateDepartamentoDto): Promise<Departamento> {
@@ -35,7 +38,7 @@ export class DepartamentosService {
         }
       }
     );
-    if (!respuesta) throw new NotFoundException("No se encontró el registro de tramite solicitado.");
+    if (!respuesta) throw new NotFoundException("No se encontraron registros.");
     return respuesta;
     
     
@@ -51,6 +54,42 @@ export class DepartamentosService {
       }
     );
   }
+
+  //RETORNAR DEPARTAMENTOS ACTUALIZADOS
+  async findActualizarConCentroMediacion() {
+    let dataDepartamento: UpdateDepartamentoDto = new UpdateDepartamentoDto;
+    const respuestaDepartamentos = await this.departamentoRepository.find();
+
+    if (respuestaDepartamentos){
+      for (const departamento of respuestaDepartamentos) {
+        //verificar si hay centros de mediacion activos para el departamento
+        const cant_centros = await this.centrosMediacionRepository.createQueryBuilder('centros_mediacion')
+          .select('count(centros_mediacion.id_centro_mediacion)','cantidad')
+          .where('centros_mediacion.departamento_id = :id_departamento', { id_departamento: departamento.id_departamento })
+          .andWhere('centros_mediacion.activo= :activa', {activa: true})
+          .getRawOne();
+        
+          if(cant_centros.cantidad > 0){
+            dataDepartamento.tiene_centro_mediacion = true;
+          } 
+          if(cant_centros.cantidad == 0){
+            dataDepartamento.tiene_centro_mediacion = false;
+          }   
+        
+          try{
+
+            const respuesta = await this.departamentoRepository.update(departamento.id_departamento,dataDepartamento);
+          }
+          catch (error){
+            this.handleDBErrors(error);
+          }
+      }
+    }
+
+    return this.findAll();
+    
+  }
+  //FIN RETORNAR DEPARTAMENETOS ACTUALIZADOS........................................
 
   //BUSCAR  XID
   async findOne(id: number) {

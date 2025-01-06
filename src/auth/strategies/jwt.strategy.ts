@@ -43,10 +43,9 @@ export class JwtStrategy extends PassportStrategy( Strategy) {
                 throw new UnauthorizedException('Token no es valido.')
     
             if (!usuario.activo)
-                throw new UnauthorizedException('El usuario esta inactivo')
+                throw new UnauthorizedException('El usuario no esta inactivo')
             
             usuarioGeneral = usuario;
-            console.log("usuario", usuarioGeneral);
             
             return usuarioGeneral;
         }
@@ -57,14 +56,10 @@ export class JwtStrategy extends PassportStrategy( Strategy) {
             if (!ciudadano) 
                 throw new UnauthorizedException('Token no es valido.')
     
-            // if (!usuario.activo)
-            //     throw new UnauthorizedException('El usuario esta inactivo')
             
             const {id_ciudadano, ...ciudadanoSinId} = ciudadano;
             const ciudadanoModificado = {...ciudadanoSinId, id_usuario: id_ciudadano, activo: true};
             usuarioGeneral = ciudadanoModificado;
-
-            console.log("ciudadano", usuarioGeneral);
 
             return usuarioGeneral;
         }

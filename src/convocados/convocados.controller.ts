@@ -1,11 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, ParseArrayPipe, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, ParseArrayPipe, BadRequestException, UseGuards } from '@nestjs/common';
 import { ConvocadosService } from './convocados.service';
 import { CreateConvocadoNoSaltaDto } from './dto/create-convocado-nosalta.dto';
 import { CreateConvocadoSaltaDto } from './dto/create-convocado-salta.dto';
 import { Convocado } from './entities/convocado.entity';
 import { UpdateConvocadoDto } from './dto/update-convocado.dto';
 import { Type } from 'class-transformer';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards( AuthGuard() )
 @Controller('convocados')
 export class ConvocadosController {
   
@@ -97,9 +99,9 @@ export class ConvocadosController {
     return this.convocadosService.update(+id, dataDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
+  // @Delete(':id')
+  // remove(@Param('id', ParseIntPipe) id: string) {
 
-    return this.convocadosService.remove(+id);
-  }
+  //   return this.convocadosService.remove(+id);
+  // }
 }

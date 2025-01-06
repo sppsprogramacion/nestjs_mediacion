@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Req, NotFoundException, Put, Patch, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Req, NotFoundException, Put, Patch, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -7,7 +7,9 @@ import { UpdateUsuarioPassDto } from './dto/update-usuario-pass.dto';
 import { UpdateUsuarioPerfilDto } from './dto/update-usuario-perfil.dto';
 import { UpdateUsuarioRolDto } from './dto/update-usuario-rol.dto';
 import { UpdateUsuarioResetPassDto } from './dto/update-usuario-resetpass.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards( AuthGuard() )
 @Controller('usuarios')
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
@@ -109,11 +111,11 @@ export class UsuarioController {
     return this.usuarioService.update(+id, dataDto);
   }  
 
-  @Delete(':dni')
-  remove(@Param('dni') dni: string) {
-    if(isNaN(Number(dni))) throw new NotFoundException("El dni debe ser un número.")
-    let dnix: number = parseFloat(dni);
-    if(!Number.isInteger(dnix)) throw new NotFoundException("El dni debe ser un número entero.")
-    return this.usuarioService.remove(dnix);
-  }
+  // @Delete(':dni')
+  // remove(@Param('dni') dni: string) {
+  //   if(isNaN(Number(dni))) throw new NotFoundException("El dni debe ser un número.")
+  //   let dnix: number = parseFloat(dni);
+  //   if(!Number.isInteger(dnix)) throw new NotFoundException("El dni debe ser un número entero.")
+  //   return this.usuarioService.remove(dnix);
+  // }
 }

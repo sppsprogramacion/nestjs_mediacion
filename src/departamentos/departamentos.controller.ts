@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe, Query, UseGuards } from '@nestjs/common';
 import { DepartamentosService } from './departamentos.service';
 import { CreateDepartamentoDto } from './dto/create-departamento.dto';
 import { UpdateDepartamentoDto } from './dto/update-departamento.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards( AuthGuard() )
 @Controller('departamentos')
 export class DepartamentosController {
   constructor(private readonly departamentosService: DepartamentosService) {}
@@ -23,6 +25,15 @@ export class DepartamentosController {
   ) {    
 
     return this.departamentosService.findConCentroMediacion();    
+  }
+  //BUSCAR DEPARTAMENTOS CON CENTROS DE MEDIACION.....................................................
+
+  //BUSCAR DEPARTAMENTOS CON CENTROS DE MEDIACION
+  @Get('actualizar-con-centro-mediacion')
+  async findActualizarConCentroMEdiacion(
+  ) {    
+
+    return this.departamentosService.findActualizarConCentroMediacion();    
   }
   //BUSCAR DEPARTAMENTOS CON CENTROS DE MEDIACION.....................................................
 

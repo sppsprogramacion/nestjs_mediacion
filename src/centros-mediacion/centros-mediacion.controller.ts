@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe, Query, UseGuards } from '@nestjs/common';
 import { CentrosMediacionService } from './centros-mediacion.service';
 import { CreateCentroMediacionDto } from './dto/create-centro-mediacion.dto';
 import { UpdateCentroMediacionDto } from './dto/update-centro-mediacion.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards( AuthGuard() )
 @Controller('centros-mediacion')
 export class CentrosMediacionController {
   constructor(private readonly centrosMediacionService: CentrosMediacionService) {}
@@ -48,9 +50,9 @@ export class CentrosMediacionController {
     return this.centrosMediacionService.update(+id, dataDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: string) {
+  // @Delete(':id')
+  // remove(@Param('id', ParseIntPipe) id: string) {
 
-    return this.centrosMediacionService.remove(+id);
-  }
+  //   return this.centrosMediacionService.remove(+id);
+  // }
 }

@@ -9,6 +9,7 @@ import { LoginUsuarioDto } from './dto/login-usuario.dto';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
+import { UsuarioGeneral } from './interfaces/usuario-general.interface';
 
 
 @Injectable()
@@ -64,7 +65,7 @@ export class AuthService {
     if( !bcrypt.compareSync(clave, usuario.clave) )
       throw new UnauthorizedException ("Los datos de login no son válidos (clave)");
 
-      const usuario2 = await this.usuarioRepository.findOneBy({dni: dni});
+    const usuario2 = await this.usuarioRepository.findOneBy({dni: dni});
     
     return {
       ...usuario2,
@@ -78,9 +79,30 @@ export class AuthService {
   }
   //FIN LOGIN USUARIO.................................................................
 
-  //CONTROLAR TOKEN
+  //CONTROLAR TOKEN ciudadano
+  async checkAuthStatusCiudadano(ciudadanox:UsuarioGeneral){
     
-  //FIN CONTROLAR TOKEN
+    const {id_usuario, ...ciudadanoSinId} = ciudadanox;
+    const ciudadanoModificado = {...ciudadanoSinId, id_ciudadano: id_usuario};
+    
+    return {
+      ...ciudadanoModificado,
+      token: this.getJwtToken( {id_usuario: ciudadanox.id_usuario, tipo: "ciudadano"} )
+    };
+  }
+  //FIN CONTROLAR TOKEN ciudadano..................
+
+  //CONTROLAR TOKEN usuario
+  async checkAuthStatusUsuario(id_usuariox:number){
+    const usuario2 = await this.usuarioRepository.findOneBy({id_usuario: id_usuariox});
+  
+    return {
+      ...usuario2,
+      //token: this.getJwtToken( {dni: usuario2.dni})
+      token: this.getJwtToken( {id_usuario: usuario2.id_usuario, tipo: "usuario"} )
+    };
+  }
+  //FIN CONTROLAR TOKEN USUARIO...............................
 
   //RETORNAR TOKEN
   private getJwtToken(payload: JwtPayload){
