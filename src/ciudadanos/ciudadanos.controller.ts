@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Req, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Req, ParseIntPipe, Query, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { CiudadanosService } from './ciudadanos.service';
 import { CreateCiudadanoDto } from './dto/create-ciudadano.dto';
 import { UpdateCiudadanoDto } from './dto/update-ciudadano.dto';
 import { UpdateCiudadanoPassDto } from './dto/update-ciudadano-pass.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('ciudadanos')
 export class CiudadanosController {
@@ -42,7 +43,8 @@ export class CiudadanosController {
   //FIN BUSCAR LISTA X DNI...........................................
 
   //BUSCAR LISTA X APELLIDO
-  @Get('buscarlista-xapellido')  
+  @Get('buscarlista-xapellido')
+  @UseGuards( AuthGuard() )  
   async findListaXApellido(
     @Query('apellido') apellido: string, 
   ) {    
@@ -52,11 +54,13 @@ export class CiudadanosController {
   //FIN BUSCAR LISTA X APELLIDO...........................................
 
   @Get()
+  @UseGuards( AuthGuard() )
   findAll() {
     return this.ciudadanosService.findAll();
   }
 
   @Get(':id')
+  @UseGuards( AuthGuard() )
   findOne(@Param('id', ParseIntPipe) id_ciudadano: string) {    
    
     return this.ciudadanosService.findOne(+id_ciudadano);
@@ -64,12 +68,14 @@ export class CiudadanosController {
 
   //PARA RUTA NO DEFINIDA
   @Get('*')
+  @UseGuards( AuthGuard() )
   rutasNoDefinidas() {
     throw new NotFoundException('No se encontró la ruta especificada. Verifique si la ruta es correcta');
   }
   //FIN PARA RUTA NO DEFINIDA...........
 
   @Patch('cambiar-password/:id')
+  @UseGuards( AuthGuard() )
   updatePassword(
     @Param('id', ParseIntPipe) id: string, 
     @Body() dataPasswordDto: UpdateCiudadanoPassDto
@@ -79,6 +85,7 @@ export class CiudadanosController {
   }
 
   @Patch(':id')
+  @UseGuards( AuthGuard() )
   update(
     @Param('id', ParseIntPipe) id: string, 
     @Body() dataDto: UpdateCiudadanoDto
@@ -94,6 +101,7 @@ export class CiudadanosController {
   }  
 
   @Delete(':dni')
+  @UseGuards( AuthGuard() )
   remove(@Param('dni') dni: string) {
     
     return this.ciudadanosService.remove(+dni);

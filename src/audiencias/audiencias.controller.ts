@@ -1,9 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, NotFoundException, Query, UseGuards } from '@nestjs/common';
 import { AudienciasService } from './audiencias.service';
 import { CreateAudienciaDto } from './dto/create-audiencia.dto';
 import { UpdateAudienciaDto } from './dto/update-audiencia.dto';
 import { UpdateAudienciaResultadoDto } from './dto/update-audiencia-resultado.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+
+@UseGuards( AuthGuard() )
 @Controller('audiencias')
 export class AudienciasController {
   constructor(private readonly audienciasService: AudienciasService) {}
