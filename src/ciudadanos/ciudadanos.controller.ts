@@ -24,6 +24,7 @@ export class CiudadanosController {
 
   //BUSCAR CIUDADANO X DNI
   @Get('buscar-xdni')  
+  @UseGuards( AuthGuard() )
   async findCiudadanoXDni(
     @Query('dni', ParseIntPipe) dni: string, 
   ) {    
@@ -33,7 +34,8 @@ export class CiudadanosController {
   //FIN BUSCAR CIUDADANO X DNI...........................................
 
   //BUSCAR LISTA X DNI
-  @Get('buscarlista-xdni')  
+  @Get('buscarlista-xdni') 
+  @UseGuards( AuthGuard() ) 
   async findListaXDni(
     @Query('dni', ParseIntPipe) dni: string, 
   ) {    
