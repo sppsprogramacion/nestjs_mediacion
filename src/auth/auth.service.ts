@@ -35,10 +35,10 @@ export class AuthService {
     .getOne();
     
     if(!ciudadano)
-      throw new UnauthorizedException ("Los datos de login no son válidos (dni)");
+      throw new UnauthorizedException ("Los datos de login no son válidos");
 
     if( !bcrypt.compareSync(clave, ciudadano.clave) )
-      throw new UnauthorizedException ("Los datos de login no son válidos (clave)");
+      throw new UnauthorizedException ("Los datos de login no son válidos");
 
     const ciudadano2 = await this.ciudadanoRepository.findOneBy({dni: dni});
 
