@@ -10,9 +10,11 @@ import { UsuariosTramite } from './entities/usuarios-tramite.entity';
 import { UsuariosTramiteController } from './usuarios-tramite.controller';
 import { UsuariosTramiteService } from './usuarios-tramite.service';
 import { AudienciasService } from '../audiencias/audiencias.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     TypeOrmModule.forFeature([
       Audiencia,
       Tramite,
