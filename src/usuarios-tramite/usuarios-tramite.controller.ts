@@ -1,11 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { UsuariosTramiteService } from './usuarios-tramite.service';
 import { CreateUsuariosTramiteDto } from './dto/create-usuarios-tramite.dto';
 import { UpdateUsuariosTramiteDto } from './dto/update-usuarios-tramite.dto';
 import { TramitesService } from '../tramites/tramites.service';
+import { AuthGuard } from '@nestjs/passport';
 
-
+@UseGuards( AuthGuard() )
 @Controller('usuarios-tramite')
 export class UsuariosTramiteController {
   constructor(

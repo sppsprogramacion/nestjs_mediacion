@@ -16,9 +16,11 @@ import { VinculadosModule } from 'src/vinculados/vinculados.module';
 import { VinculadosService } from 'src/vinculados/vinculados.service';
 import { Vinculado } from 'src/vinculados/entities/vinculado.entity';
 import { Audiencia } from 'src/audiencias/entities/audiencia.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     TypeOrmModule.forFeature([
       Audiencia,
       Ciudadano,

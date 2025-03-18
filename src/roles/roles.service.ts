@@ -3,7 +3,7 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Rol } from './entities/role.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 
 @Injectable()
 export class RolesService {
@@ -18,7 +18,9 @@ export class RolesService {
 
   async findAll() {
     return await this.rolRepository.findAndCount(
-      {
+      { where: {
+                id_rol: Not("superadmincuentas"),          
+              },
           order:{
               rol: "ASC"
           }

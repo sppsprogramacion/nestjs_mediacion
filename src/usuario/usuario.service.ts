@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 
@@ -46,7 +46,9 @@ export class UsuarioService {
   async findUsuarios() {
     const usuarios = await this.usuariosRepository.findAndCount(
       {        
-        
+        where: {
+          rol_id: Not("superadmincuentas"),          
+        },
         order:{
           apellido: "ASC"
         }

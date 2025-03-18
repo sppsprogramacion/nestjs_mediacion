@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query, ParseIntPipe, ParseArrayPipe, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query, ParseIntPipe, ParseArrayPipe, BadRequestException, InternalServerErrorException, UseGuards } from '@nestjs/common';
 
 import { TramitesService } from './tramites.service';
 import { CreateTramiteDto } from './dto/create-tramite.dto';
@@ -15,7 +15,10 @@ import { VinculadosService } from 'src/vinculados/vinculados.service';
 import { Vinculado } from 'src/vinculados/entities/vinculado.entity';
 import { UpdateTramiteFinalizacionDto } from './dto/update-tramite-finalizacion.dto';
 import { DateValidationPipe } from 'src/pipes/date-validation.pipe';
+import { AuthGuard } from '@nestjs/passport';
 
+
+@UseGuards( AuthGuard() )
 @Controller('tramites')
 export class TramitesController {
   constructor(
