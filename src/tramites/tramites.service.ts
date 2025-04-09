@@ -142,7 +142,7 @@ export class TramitesService {
   }
   //FIN TODOS LOS TRAMITES x apellido del ciudadano..............................
 
-  //TODOS LOS TRAMITES x apellido del ciudadano
+  //TODOS LOS TRAMITES x fecha del tramite
   async findTodosXFechaTramite(fecha_inix: Date, fecha_finx: Date) {
     let tramites_encontrados: Tramite[]=[];   
     let total_registros: number = 0;    
@@ -161,7 +161,7 @@ export class TramitesService {
     
     return [tramites_encontrados, total_registros];
   }
-  //FIN TODOS LOS TRAMITES x apellido del ciudadano..............................
+  //FIN TODOS LOS TRAMITES x fecha del tramite..............................
 
   //TODOS LOS TRAMITES
   async findAll() {

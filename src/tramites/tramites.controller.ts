@@ -246,7 +246,7 @@ export class TramitesController {
   }
   //FIN BUSCAR TRAMITES TODOS X APELLIDO-CIUDADANO.....................................................
   
-  //BUSCAR TRAMITES TODOS X APELLIDO-CIUDADANO
+  //BUSCAR TRAMITES TODOS X FECHA
   @Get('todos-xfecha')
   async findTodosXFecha(  
     @Query('fecha_ini', DateValidationPipe) fecha_ini: string,
@@ -259,7 +259,7 @@ export class TramitesController {
 
     return this.tramitesService.findTodosXFechaTramite(f_inicio, f_fin);
   }
-  //FIN BUSCAR TRAMITES TODOS X APELLIDO-CIUDADANO.....................................................
+  //FIN BUSCAR TRAMITES TODOS X FECHA.....................................................
   
 
   @Get()
