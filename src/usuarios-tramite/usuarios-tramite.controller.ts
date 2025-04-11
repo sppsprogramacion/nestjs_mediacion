@@ -134,6 +134,21 @@ export class UsuariosTramiteController {
   }
   //FIN BUSCAR TRAMITES TODOS X FECHA.....................................................
 
+  //BUSCAR TRAMITES TODOS X FECHA
+  @Get('todos-xfecha-excel')
+  async findTodosXFechaExcel(  
+    @Query('fecha_ini', DateValidationPipe) fecha_ini: string,
+    @Query('fecha_fin', DateValidationPipe) fecha_fin: string  
+  ) {    
+    
+    const f_inicio = new Date(fecha_ini);
+    const f_fin = new Date(fecha_fin);
+    // Aquí ya tienes la fecha validada
+
+    return this.usuariosTramiteService.findTramitesXFechaTramite(f_inicio, f_fin);
+  }
+  //FIN BUSCAR TRAMITES TODOS X FECHA.....................................................
+
   //BUSCAR TRAMITES x numero de tramite
   @Get('buscar-xnumtramite-activo')  
   async findTramiteXNumero(
