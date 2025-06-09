@@ -156,7 +156,7 @@ export class AudienciasService {
           fecha_inicio: Between(fecha_inix, fecha_finx)
         },
         order:{
-          num_audiencia: "DESC",
+          tramite_numero: "DESC",
         }
       }
     );   

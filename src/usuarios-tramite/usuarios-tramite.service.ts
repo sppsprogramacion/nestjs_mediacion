@@ -262,6 +262,7 @@ export class UsuariosTramiteService {
       const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
         .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
         .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('ciudadano.sexo', 'sexo') 
         .leftJoinAndSelect('tramite.objeto', 'objeto')
         .leftJoinAndSelect('tramite.estado_tramite', 'estado_tramite')   
         .leftJoinAndSelect('usuario_tramite.usuario', 'usuario')
