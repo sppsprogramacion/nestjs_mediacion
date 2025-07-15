@@ -18,7 +18,7 @@ async function bootstrap() {
   app.disable('x-powered-by');
   //Configurar CORS de forma segura -   <<app.enableCors();>> sin argumentos permite cualquier origen
   app.enableCors({
-    origin: ['https://bdmediacion.salta.gob.ar'], // o más de uno si tenés
+    origin: ['https://bdmediacion.salta.gob.ar', 'http://localhost:4200'], // o más de uno si tenés
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
   });
