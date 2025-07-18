@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ciudadano } from 'src/ciudadanos/entities/ciudadano.entity';
 import databaseConfig from 'src/config/database.config';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { CreateTramiteDto } from './dto/create-tramite.dto';
 import { UpdateTramiteDto } from './dto/update-tramite.dto';
 import { Tramite } from './entities/tramite.entity';
@@ -142,7 +142,7 @@ export class TramitesService {
   }
   //FIN TODOS LOS TRAMITES x apellido del ciudadano..............................
 
-  //TODOS LOS TRAMITES x apellido del ciudadano
+  //TODOS LOS TRAMITES x fecha del tramite
   async findTodosXFechaTramite(fecha_inix: Date, fecha_finx: Date) {
     let tramites_encontrados: Tramite[]=[];   
     let total_registros: number = 0;    
@@ -161,7 +161,24 @@ export class TramitesService {
     
     return [tramites_encontrados, total_registros];
   }
-  //FIN TODOS LOS TRAMITES x apellido del ciudadano..............................
+  //FIN TODOS LOS TRAMITES x fecha del tramite..............................
+
+  //BUSCAR X Fecha tramite para excel
+  async findByFechaTramiteExcel(fecha_inix: Date, fecha_finx: Date) {
+    const tramites = await this.tramiteRepository.findAndCount(
+      {        
+        where: {
+          fecha_tramite: Between(fecha_inix, fecha_finx)
+        },
+        order:{
+          id_tramite: "ASC",
+        }
+      }
+    );   
+
+    return tramites;
+  }
+  //FIN BUSCAR  X Fecha tramite para excel..........................................
 
   //TODOS LOS TRAMITES
   async findAll() {

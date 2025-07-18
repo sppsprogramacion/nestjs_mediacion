@@ -24,7 +24,6 @@ export class VinculadosController {
         
     if(vinculadoDto.length == 0) new BadRequestException ("Debe enviar por lo menos un vinculado");
     
-    console.log("vinculados en controller", vinculados);
     return this.vinculadosService.createVinculados(vinculadoDto);
   }
 

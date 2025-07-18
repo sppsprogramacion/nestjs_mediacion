@@ -3,7 +3,7 @@ import { CreateAudienciaDto } from './dto/create-audiencia.dto';
 import { UpdateAudienciaDto } from './dto/update-audiencia.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Audiencia } from './entities/audiencia.entity';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { Tramite } from 'src/tramites/entities/tramite.entity';
 import { UsuariosTramite } from 'src/usuarios-tramite/entities/usuarios-tramite.entity';
 import { UpdateAudienciaResultadoDto } from './dto/update-audiencia-resultado.dto';
@@ -146,6 +146,24 @@ export class AudienciasService {
     return audiencias;
   }
   //FIN BUSCAR  X TRAMITE..........................................
+
+  //BUSCAR X Fecha Audiencia
+  async findByFechaAudiencia(fecha_inix: Date, fecha_finx: Date) {
+    const audiencias = await this.audienciaRepository.findAndCount(
+      {        
+        //relations: ['asignaciones','convocados','vinculados'],
+        where: {
+          fecha_inicio: Between(fecha_inix, fecha_finx)
+        },
+        order:{
+          tramite_numero: "DESC",
+        }
+      }
+    );   
+
+    return audiencias;
+  }
+  //FIN BUSCAR  X Fecha Audiencia..........................................
 
   //BUSCAR  XID
   async findOne(id: number) {

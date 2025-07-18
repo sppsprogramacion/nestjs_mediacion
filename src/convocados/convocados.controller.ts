@@ -36,9 +36,7 @@ export class ConvocadosController {
       let noSalta: any[]= createConvocadoNoSaltaDto;
       convocados.push(...noSalta);
     }
-    
-    console.log("dataDto", convocados);
-    
+        
     return this.convocadosService.createConvocados(convocados);
   }
 
@@ -50,7 +48,6 @@ export class ConvocadosController {
     
     if(dataDto.length == 0) throw new BadRequestException ("La data es nula")
     
-    console.log("dataDto", dataDto);
     return this.convocadosService.createSalta(dataDto);
   }
 

@@ -5,6 +5,7 @@ import { CreateUsuariosTramiteDto } from './dto/create-usuarios-tramite.dto';
 import { UpdateUsuariosTramiteDto } from './dto/update-usuarios-tramite.dto';
 import { TramitesService } from '../tramites/tramites.service';
 import { AuthGuard } from '@nestjs/passport';
+import { DateValidationPipe } from 'src/pipes/date-validation.pipe';
 
 @UseGuards( AuthGuard() )
 @Controller('usuarios-tramite')
@@ -117,6 +118,36 @@ export class UsuariosTramiteController {
     return this.usuariosTramiteService.findTramitesXUsuarioAdministradoXEstadoTramiteXAnio(id_usuariox,3,aniox);
   }
   //BUSCAR TRAMITES FINALIZADOS POR USUARIO-ADMINISTRADO POR ANIO y estado del tramite....................................................
+
+  //BUSCAR TRAMITES TODOS X FECHA
+  @Get('todos-xfecha')
+  async findTodosXFecha(  
+    @Query('fecha_ini', DateValidationPipe) fecha_ini: string,
+    @Query('fecha_fin', DateValidationPipe) fecha_fin: string  
+  ) {    
+    
+    const f_inicio = new Date(fecha_ini);
+    const f_fin = new Date(fecha_fin);
+    // Aquí ya tienes la fecha validada
+
+    return this.usuariosTramiteService.findTramitesXFechaTramite(f_inicio, f_fin);
+  }
+  //FIN BUSCAR TRAMITES TODOS X FECHA.....................................................
+
+  //BUSCAR TRAMITES TODOS X FECHA
+  @Get('todos-xfecha-excel')
+  async findTodosXFechaExcel(  
+    @Query('fecha_ini', DateValidationPipe) fecha_ini: string,
+    @Query('fecha_fin', DateValidationPipe) fecha_fin: string  
+  ) {    
+    
+    const f_inicio = new Date(fecha_ini);
+    const f_fin = new Date(fecha_fin);
+    // Aquí ya tienes la fecha validada
+
+    return this.usuariosTramiteService.findTramitesXFechaTramite(f_inicio, f_fin);
+  }
+  //FIN BUSCAR TRAMITES TODOS X FECHA.....................................................
 
   //BUSCAR TRAMITES x numero de tramite
   @Get('buscar-xnumtramite-activo')  

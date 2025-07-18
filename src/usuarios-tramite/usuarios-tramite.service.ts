@@ -254,8 +254,28 @@ export class UsuariosTramiteService {
 
     return tramites;
   }
-
   //FIN BUSCAR TRAMITES X CIUDADANO
+
+  //BUSCAR TRAMITES X FECHA DE TRAMITE 
+  async findTramitesXFechaTramite(fecha_inix: Date, fecha_finx: Date){
+        
+      const tramites = await this.usuariosTramiteRepository.createQueryBuilder('usuario_tramite')
+        .leftJoinAndSelect('usuario_tramite.tramite', 'tramite') 
+        .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('ciudadano.sexo', 'sexo') 
+        .leftJoinAndSelect('tramite.objeto', 'objeto')
+        .leftJoinAndSelect('tramite.estado_tramite', 'estado_tramite')   
+        .leftJoinAndSelect('usuario_tramite.usuario', 'usuario')
+        .leftJoinAndSelect('usuario_tramite.funcion_tramite', 'funcion_tramite')
+        .where('tramite.fecha_tramite BETWEEN :fecha_inix AND :fecha_finx', { fecha_inix, fecha_finx })
+        .andWhere('usuario_tramite.activo = :activox', {activox: true})
+        .andWhere('usuario_tramite.funcion_tramite_id = :funcion_tramite_id', {funcion_tramite_id: 2})
+        .orderBy('tramite.numero_tramite', 'DESC')
+        .getManyAndCount();
+  
+      return tramites;    
+  }
+  //FIN BUSCAR TRAMITES X FECHA DE TRAMITE .......................................................
 
 
   //BUSCAR  TRAMITES ASIGNADOS ACTIVOS

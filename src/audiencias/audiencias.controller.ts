@@ -4,6 +4,7 @@ import { CreateAudienciaDto } from './dto/create-audiencia.dto';
 import { UpdateAudienciaDto } from './dto/update-audiencia.dto';
 import { UpdateAudienciaResultadoDto } from './dto/update-audiencia-resultado.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { DateValidationPipe } from 'src/pipes/date-validation.pipe';
 
 
 @UseGuards( AuthGuard() )
@@ -15,6 +16,37 @@ export class AudienciasController {
   create(@Body() data: CreateAudienciaDto) {
     return this.audienciasService.create(data);
   }
+
+  
+  //BUSCAR TRAMITES TODOS X fecha audiencia
+  @Get('todos-xfecha-audiencia')
+  async findTodosXFechaAudiencia(  
+    @Query('fecha_ini', DateValidationPipe) fecha_ini: string,
+    @Query('fecha_fin', DateValidationPipe) fecha_fin: string  
+  ) {    
+    
+    const f_inicio = new Date(fecha_ini);
+    const f_fin = new Date(fecha_fin);
+    // Aquí ya tienes la fecha validada
+
+    return this.audienciasService.findByFechaAudiencia(f_inicio, f_fin);
+  }
+  //FIN BUSCAR TRAMITES TODOS X fecha audiencia.....................................................
+  
+  //BUSCAR TRAMITES TODOS X FECHA
+  @Get('todos-xfecha-excel')
+  async findTodosXFechaExcel(  
+    @Query('fecha_ini', DateValidationPipe) fecha_ini: string,
+    @Query('fecha_fin', DateValidationPipe) fecha_fin: string  
+  ) {    
+    
+    const f_inicio = new Date(fecha_ini);
+    const f_fin = new Date(fecha_fin);
+    // Aquí ya tienes la fecha validada
+
+    return this.audienciasService.findByFechaAudiencia(f_inicio, f_fin);
+  }
+  //FIN BUSCAR TRAMITES TODOS X FECHA.....................................................
 
   @Get()
   findAll() {
