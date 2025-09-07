@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateAudienciaDto } from './dto/create-audiencia.dto';
 import { UpdateAudienciaDto } from './dto/update-audiencia.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,22 +25,43 @@ export class AudienciasService {
   async create(data: CreateAudienciaDto): Promise<Audiencia> {
     let num_audiencia_nuevo:number = 0;
     let audiencia: Audiencia = new Audiencia;
+
+    //controlar si se especifico la modalidad
+    if(data.modalidad_id == 1){
+      throw new BadRequestException ("Debe especificar la modalidad de la audiencia.")
+    }
+
     //Control de existencia del tramite
     const tramiteExiste = await this.tramiteRepository.findOneBy({ numero_tramite: data.tramite_numero});
     if(!tramiteExiste) throw new BadRequestException ("El número de tramite para el que se desea crear la audiencia no existe.")
     //FIN Control de existencia del tramite
 
-    //obtener cantidad de audiencias abiertas sin concluir
-    const cant_audiencias_activas = await this.audienciaRepository.createQueryBuilder('audiencias')
-      .select('count(audiencias.num_audiencia)','cantidad')
+    //Control de la modalidad de las audiencias
+    let audiencias_activas = await this.audienciaRepository.createQueryBuilder('audiencias')
       .where('audiencias.tramite_numero = :tramite_num', { tramite_num: data.tramite_numero })
       .andWhere('audiencias.esta_cerrada= :activa', {activa: false})
-      .getRawOne();
+      .getMany();
     
-    if(cant_audiencias_activas.cantidad >0) throw new BadRequestException ("La ultima audiencia aun no fue cerrada.")
-    //FIN obtener cantidad de audiencias abiertas sin concluir
+    //controlar: para nueva audiencia modalidad conjunta (modalidad_id = 2) no deben haber ninguna audiencia abierta
+    if(data.modalidad_id == 2 && audiencias_activas.length > 0){
+      throw new ConflictException("No puede crear una nueva audiencia con modalidad conjunta cuando tiene una o mas audiencias abiertas.");
+    }
 
+    //controlar: para nueva audiencia modalidad separado (modalidad_id = 3) no deben haber ninguna audiencia abierta
+    if(data.modalidad_id == 3 && audiencias_activas.length > 0){
+      let cantSeparadas: number = 0;
+      for(const audienciax of audiencias_activas){
+        if(audienciax.modalidad_id == 3)
+          cantSeparadas = cantSeparadas + 1;
 
+      }
+
+      if(cantSeparadas != audiencias_activas.length)
+        throw new ConflictException("Solo se puede crear una nueva audiencia con modalidad separado cuando las audiencias que estan abiertas tambien tienen modalidad separado.");
+    }
+    //fin control de modalidad de la audiencia..........................
+
+        
     //obtener cantidad de audiencias abiertas sin concluir en un horario
     const cant_audiencias_horario = await this.audienciaRepository.createQueryBuilder('audiencias')
       .select('count(audiencias.num_audiencia)','cantidad')
