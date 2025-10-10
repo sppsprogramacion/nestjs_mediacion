@@ -91,7 +91,21 @@ export class UsuariosTramiteController {
   }
   //BUSCAR TRAMITES FINALIZADOS POR USUARIO POR ANIO y estado del tramite....................................................
 
-  
+  //BUSCAR TRAMITES FINALIZADOS POR USUARIO POR ANIO y estado del tramite 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO - 4 VENCIDO
+  //utilizado para que los usuarios logueados obtengan todos sus tramites finalizados por año especificado. El admministrador ve todos.
+  @Get('buscar-xusuario-vencidos-xanio')  
+  async findTramiteXUsuarioVencidosXanio(
+    @Query('id_usuario', ParseIntPipe) id_usuario: string, 
+    @Query('anio', ParseIntPipe) anio: string, 
+  ) {
+    let id_usuariox: number = +id_usuario;
+    let aniox: number = +anio;
+    
+    return this.usuariosTramiteService.findTramitesXUsuarioXEstadoTramiteXAnio(id_usuariox,4,aniox);
+  }
+  //BUSCAR TRAMITES FINALIZADOS POR USUARIO POR ANIO y estado del tramite....................................................
+
+
   //BUSCAR TRAMITES FINALIZADOS POR USUARIO-ADMINISTRADO y estado del tramite 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO
   //utilizado por el administrador para ver todos los tramites del usuario que esta administrando
   @Get('buscar-xusuarioadministrado-finalizados')  
