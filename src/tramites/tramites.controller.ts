@@ -187,6 +187,20 @@ export class TramitesController {
   }
   //FIN BUSCAR TRAMITES FINALIZADOS.....................................................
 
+  //BUSCAR TRAMITES FINALIZADOS
+  @Get('finalizados')
+  async findVencidos(  
+    @Query('id_ciudadano', ParseIntPipe) id_ciudadano: string,  
+  ) {    
+
+    let id_ciudadanox: number = +id_ciudadano;
+
+    if (id_ciudadanox === 0) return this.tramitesService.findxestado(3);
+    
+    return this.tramitesService.findByCiudadanoByEstado(3, id_ciudadanox);
+  }
+  //FIN BUSCAR TRAMITES FINALIZADOS.....................................................
+
   //BUSCAR TRAMITES con ASIGNACIONES
   @Get('asignados-datos')
   async findAsignaciones(    
@@ -194,6 +208,33 @@ export class TramitesController {
     return this.tramitesService.findAsignadosConDatos();
   }
   //FIN BUSCAR TRAMITES ASIGNADOS A MEDIADORS.....................................................
+
+  //BUSCAR TRAMITES FINALIZADOS POR USUARIO POR ANIO y estado del tramite 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO - 4 VENCIDO
+  //utilizado para que los usuarios logueados obtengan todos sus tramites finalizados por año especificado. El admministrador ve todos.
+  @Get('buscar-vencidos-xanio')  
+  async findTramiteXUsuarioVencidosXanio(
+    @Query('id_usuario', ParseIntPipe) id_usuario: string, 
+    @Query('anio', ParseIntPipe) anio: string, 
+  ) {
+    let id_usuariox: number = +id_usuario;
+    let aniox: number = +anio;
+    
+    return this.tramitesService.findTramitesXUsuarioXEstadoTramiteXAnio(id_usuariox,4,aniox);
+  }
+  //BUSCAR TRAMITES FINALIZADOS POR USUARIO POR ANIO y estado del tramite....................................................
+
+  //BUSCAR TRAMITES FINALIZADOS POR USUARIO POR ANIO y estado del tramite 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO - 4 VENCIDO
+  //utilizado para que los usuarios logueados obtengan todos sus tramites finalizados por año especificado. El admministrador ve todos.
+  @Get('buscar-avencer-xdias')  
+  async findTramiteAVencerXDias(
+    @Query('dias', ParseIntPipe) dias: string, 
+  ) {
+
+    let diasx: number = +dias;
+    
+    return this.tramitesService.findTramitesAVencerEnDias(diasx);
+  }
+  //BUSCAR TRAMITES FINALIZADOS POR USUARIO POR ANIO y estado del tramite......................
 
   //CONTAR TRAMITES
   @Get('totales-tramites')
