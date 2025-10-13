@@ -16,6 +16,7 @@ import { Vinculado } from 'src/vinculados/entities/vinculado.entity';
 import { UpdateTramiteFinalizacionDto } from './dto/update-tramite-finalizacion.dto';
 import { DateValidationPipe } from 'src/pipes/date-validation.pipe';
 import { AuthGuard } from '@nestjs/passport';
+import { UpdateTramiteAplicarVencidosDto } from './dto/update-tramite-aplicar-vencidos.dto';
 
 
 @UseGuards( AuthGuard() )
@@ -335,7 +336,19 @@ export class TramitesController {
      
     return this.tramitesService.finalizarTramite(+numero_tramite, dataDto);
   }
-  //FIN FINALIZAR TRAMITE
+  //FIN FINALIZAR TRAMITE..............................
+
+  //APLICAR CONTROL TRAMITE VENCIDO
+  @Patch('aplicar-control-vencidos')
+  updateAplicarControlVencidos(
+    @Query('dias', ParseIntPipe) dias: string, 
+    //@Body() dataDto: UpdateTramiteAplicarVencidosDto
+  ) {
+    console.log("dias", dias);
+    
+    return this.tramitesService.aplicarControlTramitesVencidos(+dias);
+  }
+  //FIN APLICAR CONTROL TRAMITE VENCIDO.................................
   
   @Patch(':id')
   update(@Param('id') id: string, @Body() dataDto: UpdateTramiteDto) {

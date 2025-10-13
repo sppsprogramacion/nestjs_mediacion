@@ -333,7 +333,7 @@ export class TramitesService {
 
     return tramites;
   }
-  //FIN BUSCAR TRAMITES NUEVOS..........................................
+  //FIN BUSCAR TRAMITES ASIGNADOS Usuario - (2 CON MEDIADOR) -..........................................
   
 //BUSCAR TRAMITES X AÑO X USUARIO XESTADO_TRAMITE --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
   async findTramitesXUsuarioXEstadoTramiteXAnio(id_usuario:number, id_estado:number, anio: number){
@@ -513,12 +513,15 @@ export class TramitesService {
         .update('tramites')
         .set({ estado_tramite_id: 4 }) // 👈 columnas a actualizar
         .where('fecha_tramite < :fechaAux', { fechaAux: fechaAuxString })
+        .andWhere('estado_tramite_id = :estado_tramite_id', {estado_tramite_id: 1})
         .execute();
-        
+      
+      if((respuesta).affected == 0) throw new NotFoundException("No se vencio ningun tramite.");
+
       return respuesta;
     }
     catch(error){
-      throw new NotFoundException('Error al finalizar el tramite: ',error.message);
+      throw new NotFoundException('Error al realizar los cambios: ',error.message);
     }
   }
 
