@@ -40,6 +40,13 @@ export class Convocado {
         nullable: false
     })
     nombre: string;
+
+    @Column({
+        type:'varchar',
+        length: 100,
+        nullable: false
+    })
+    razon_social: string;
      
     @Column({
         type: 'int',
