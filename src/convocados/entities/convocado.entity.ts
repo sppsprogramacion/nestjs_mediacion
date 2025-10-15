@@ -47,6 +47,12 @@ export class Convocado {
         nullable: false
     })
     razon_social: string;
+
+    @Column({
+        type: "boolean",
+        default: false
+    })
+    isPersonaJuridica: boolean;
      
     @Column({
         type: 'int',

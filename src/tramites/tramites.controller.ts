@@ -24,7 +24,6 @@ import { UpdateTramiteAplicarVencidosDto } from './dto/update-tramite-aplicar-ve
 export class TramitesController {
   constructor(
     private readonly tramitesService: TramitesService,
-    private readonly usuarioService: UsuarioService,
     private readonly convocadosService: ConvocadosService,
     private readonly vinculadosService: VinculadosService
   ) {}
