@@ -9,6 +9,7 @@ import { ConvocadosService } from '../convocados/convocados.service';
 import { Tramite } from './entities/tramite.entity';
 import { CreateConvocadoSaltaDto } from './dto/create-convocado-salta-tramite.dto';
 import { CreateConvocadoNoSaltaDto } from './dto/create-convocado-nosalta-tramite.dto';
+import { CreateConvocadoPersonaJuridicaDto } from './dto/create-convocado-persona-juridico.dto';
 import { Convocado } from 'src/convocados/entities/convocado.entity';
 import { CreateVinculadoTramiteDto } from './dto/create-vinculado-tramite.dto';
 import { VinculadosService } from 'src/vinculados/vinculados.service';
@@ -16,7 +17,6 @@ import { Vinculado } from 'src/vinculados/entities/vinculado.entity';
 import { UpdateTramiteFinalizacionDto } from './dto/update-tramite-finalizacion.dto';
 import { DateValidationPipe } from 'src/pipes/date-validation.pipe';
 import { AuthGuard } from '@nestjs/passport';
-import { UpdateTramiteAplicarVencidosDto } from './dto/update-tramite-aplicar-vencidos.dto';
 
 
 @UseGuards( AuthGuard() )
@@ -36,11 +36,13 @@ export class TramitesController {
     createConvocadoSaltaDto?: CreateConvocadoSaltaDto[],
     @Body('createConvocadoNoSaltaDto', new ParseArrayPipe({ items: CreateConvocadoNoSaltaDto })) 
     createConvocadoNoSaltaDto?: CreateConvocadoNoSaltaDto[],
+    @Body('createConvocadoPersonaJuridicaDto', new ParseArrayPipe({ items: CreateConvocadoPersonaJuridicaDto })) 
+    createConvocadoPersonaJuridicaDto?: CreateConvocadoPersonaJuridicaDto[],
     @Body('createVinculadoTramiteDto', new ParseArrayPipe({ items: CreateVinculadoTramiteDto })) 
-    createVinculadoTramiteDto?: CreateVinculadoTramiteDto[]
+    createVinculadoTramiteDto?: CreateVinculadoTramiteDto[],
   ) {
     //controlar que envie por lo menos un convocado
-    if(createConvocadoSaltaDto.length == 0 && createConvocadoNoSaltaDto.length == 0) throw new BadRequestException ("Debe enviar un convocado");
+    if(createConvocadoSaltaDto.length == 0 && createConvocadoNoSaltaDto.length == 0 && createConvocadoPersonaJuridicaDto.length == 0) throw new BadRequestException ("Debe enviar un convocado");
 
     //cargar datos por defecto
     let fecha_actual: any = new Date().toISOString().split('T')[0];    
@@ -65,6 +67,18 @@ export class TramitesController {
         convocados.push(...noSalta);
       }
 
+      if(createConvocadoPersonaJuridicaDto.length > 0) {
+        //cargar el numero de tramite para todos los convocados
+        for (let convocado of createConvocadoPersonaJuridicaDto){
+          convocado.isPersonaJuridica = true;
+          convocado.sexo_id = 3;
+        }
+        
+        console.log("pesrsonas juridicas", createConvocadoPersonaJuridicaDto);
+        let personaJuridica: any[]= createConvocadoPersonaJuridicaDto;
+        convocados.push(...personaJuridica);
+      }
+
       //cargar el numero de tramite para todos los convocados
       for (let convocado of convocados){
         convocado.tramite_numero = tramiteCreado.numero_tramite;
@@ -73,7 +87,7 @@ export class TramitesController {
       //crear convocados
       convocadosCreados =  await this.convocadosService.createConvocados(convocados);
 
-      if(convocadosCreados.length < (createConvocadoSaltaDto.length + createConvocadoNoSaltaDto.length)){
+      if(convocadosCreados.length < (createConvocadoSaltaDto.length + createConvocadoNoSaltaDto.length + createConvocadoPersonaJuridicaDto.length)){
         await this.convocadosService.removeByTramite(tramiteCreado.numero_tramite);
         const verConvocados = await this.convocadosService.findXTramite(tramiteCreado.numero_tramite);
         convocadosCreados = verConvocados[0];
