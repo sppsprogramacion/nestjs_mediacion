@@ -83,7 +83,7 @@ export class TramitesController {
       for (let convocado of convocados){
         convocado.tramite_numero = tramiteCreado.numero_tramite;
       }
-
+      
       //crear convocados
       convocadosCreados =  await this.convocadosService.createConvocados(convocados);
 
