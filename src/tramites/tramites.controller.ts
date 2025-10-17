@@ -74,7 +74,6 @@ export class TramitesController {
           convocado.sexo_id = 3;
         }
         
-        console.log("pesrsonas juridicas", createConvocadoPersonaJuridicaDto);
         let personaJuridica: any[]= createConvocadoPersonaJuridicaDto;
         convocados.push(...personaJuridica);
       }
