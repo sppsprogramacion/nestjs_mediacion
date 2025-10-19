@@ -1,4 +1,4 @@
-import { IsDateString, IsInt, IsString, Length, MaxLength, IsOptional } from 'class-validator';
+import { IsDateString, IsInt, IsString, Length, MaxLength, IsOptional, Matches } from 'class-validator';
 
 export class CreateAudienciaDto {
 
@@ -15,10 +15,12 @@ export class CreateAudienciaDto {
     fecha_inicio: Date;
    
     @IsString()
-    hora_inicio: Date;
+    @Matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, {message: 'La hora de inicio no es válida. Recuerde tambien que debe tener el formato HH:mm:ss (por ejemplo, 14:59:59 , 15:00:01).',})
+    hora_inicio: string;
     
     @IsString()
-    hora_fin: Date;      
+    @Matches(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/, {message: 'La hora de fin no es válida. Recuerde tambien que debe tener el formato HH:mm:ss (por ejemplo, 14:59:59 , 15:00:01).',})
+    hora_fin: string;      
    
     @IsInt({message: "El tipo_audiencia_id debe ser un número entero."})
     tipo_audiencia_id: number;   

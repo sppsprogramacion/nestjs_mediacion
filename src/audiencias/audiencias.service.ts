@@ -25,6 +25,15 @@ export class AudienciasService {
   async create(data: CreateAudienciaDto): Promise<Audiencia> {
     let num_audiencia_nuevo:number = 0;
     let audiencia: Audiencia = new Audiencia;
+    
+    //fecha actual
+    let fecha_actual: any = new Date().toISOString().split('T')[0];
+
+    //controlar si la fecha_inicio < fecha_actual. No se pueden dar cuando la fecha_ininio es anterior a la fecha_actual
+    if( data.fecha_inicio < fecha_actual) throw new ConflictException("La fecha de audiencia no puede ser anterior a la fecha actual.")
+    //controlar que la hora_fin no sea anterior a la hora_inicio
+    if( data.hora_fin <= data.hora_inicio) throw new ConflictException("La hora de fin de la audiencia no puede ser anterior o igual a la hora de inicio.")
+        
 
     //controlar si se especifico la modalidad
     if(data.modalidad_id == 1){
@@ -61,7 +70,7 @@ export class AudienciasService {
     }
     //fin control de modalidad de la audiencia..........................
 
-        
+    //controlar que el mediador no tenga una audiencia con la fecha y hora enviada
     //obtener cantidad de audiencias abiertas sin concluir en un horario
     const cant_audiencias_horario = await this.audienciaRepository.createQueryBuilder('audiencias')
       .select('count(audiencias.num_audiencia)','cantidad')
@@ -104,8 +113,7 @@ export class AudienciasService {
     num_audiencia_nuevo = num_audiencia_max.num_max + 1;
     //FIN obtener numero de audiencia maximo
 
-    //cargar datos por defecto
-    let fecha_actual: any = new Date().toISOString().split('T')[0];    
+    //cargar datos por defecto   
     data.fecha_creacion = fecha_actual;  
 
     data.num_audiencia = num_audiencia_nuevo;
