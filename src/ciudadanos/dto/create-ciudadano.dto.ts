@@ -1,4 +1,4 @@
-import { IsDateString, IsInt, IsNotEmpty, IsString, Length, Matches, MaxLength } from "class-validator";
+import { IsDateString, IsInt, IsNotEmpty, IsOptional, IsString, Length, Matches, MaxLength, ValidateIf } from "class-validator";
 
 export class CreateCiudadanoDto {
 
@@ -20,9 +20,10 @@ export class CreateCiudadanoDto {
     @IsDateString({message: "El formato de la fecha de nacimiento ingresada no es válida."})
     fecha_nac: Date;
 
+    @ValidateIf(o => o.email !== '' && o.email !== null && o.email !== undefined)
     @Matches(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/,{message:'El formato del email no es válido'})
-    @Length(1,200,{message: "El email debe tener entre $constraint1 y $constraint2 caracteres."})
-    @IsNotEmpty({message: "Debe ingresar el email."})
+    @MaxLength(200,{message: "El email debe tener hasta $constraint1 caracteres."})
+    @IsOptional({message: "Debe ingresar el email."})
     email:string;
 
     @IsString()
