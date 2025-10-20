@@ -30,16 +30,29 @@ export class Convocado {
     @Column({
         type:'varchar',
         length: 100,
-        nullable: false
+        nullable: true
     })
     apellido: string;   
 
     @Column({
         type:'varchar',
         length: 100,
-        nullable: false
+        nullable: true
     })
     nombre: string;
+
+    @Column({
+        type:'varchar',
+        length: 100,
+        nullable: true
+    })
+    razon_social: string;
+
+    @Column({
+        type: "boolean",
+        default: false
+    })
+    isPersonaJuridica: boolean;
      
     @Column({
         type: 'int',
@@ -66,7 +79,7 @@ export class Convocado {
     @Column({
         type: 'int',
         nullable: false,
-        default: 18
+        default: 1
     })
     provincia_id: number;
 

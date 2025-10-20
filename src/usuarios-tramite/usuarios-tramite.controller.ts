@@ -91,7 +91,6 @@ export class UsuariosTramiteController {
   }
   //BUSCAR TRAMITES FINALIZADOS POR USUARIO POR ANIO y estado del tramite....................................................
 
-  
   //BUSCAR TRAMITES FINALIZADOS POR USUARIO-ADMINISTRADO y estado del tramite 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO
   //utilizado por el administrador para ver todos los tramites del usuario que esta administrando
   @Get('buscar-xusuarioadministrado-finalizados')  

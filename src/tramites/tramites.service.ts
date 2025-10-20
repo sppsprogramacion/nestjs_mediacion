@@ -147,18 +147,20 @@ export class TramitesService {
     let tramites_encontrados: Tramite[]=[];   
     let total_registros: number = 0;    
     let tramites: any= {};
+    let fecha_ini_str = fecha_inix.toISOString().split('T')[0];
+    let fecha_fin_str = fecha_finx.toISOString().split('T')[0];
    
     tramites = await this.tramiteRepository.createQueryBuilder('tramites') 
         .leftJoinAndSelect('tramites.centro_mediacion', 'centro_mediacion')
         .leftJoinAndSelect('tramites.ciudadano', 'ciudadano')  
         .leftJoinAndSelect('tramites.objeto', 'objeto')   
-        .where('tramites.fecha_tramite BETWEEN :fecha_inix AND :fecha_finx', { fecha_inix, fecha_finx })
+        .where('tramites.fecha_tramite BETWEEN :fecha_ini_str AND :fecha_fin_str', { fecha_ini_str, fecha_fin_str })
         .orderBy('tramites.numero_tramite', 'ASC')
         .getManyAndCount();
     
     tramites_encontrados = tramites[0];
     total_registros = tramites[1];   
-    
+
     return [tramites_encontrados, total_registros];
   }
   //FIN TODOS LOS TRAMITES x fecha del tramite..............................
@@ -210,7 +212,7 @@ export class TramitesService {
   }
   //FIN BUSCAR TRAMITES NUEVOS..........................................
 
-  //BUSCAR TRAMITES X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
+  //BUSCAR TRAMITES X ESTADO --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO - 4 VENCIDO
   async findxestado(id_estado: number) {
     const tramites = await this.tramiteRepository.findAndCount(
       {        
@@ -315,7 +317,7 @@ export class TramitesService {
 
     return tramites;
   }
-  //FIN BUSCAR TRAMITES NUEVOS..........................................
+  //FIN CONTAR TRAMITES..........................................
 
   //BUSCAR TRAMITES ASIGNADOS Usuario - (2 CON MEDIADOR) -  
   async findAsignadosConDatos() {
@@ -331,8 +333,47 @@ export class TramitesService {
 
     return tramites;
   }
-  //FIN BUSCAR TRAMITES NUEVOS..........................................
+  //FIN BUSCAR TRAMITES ASIGNADOS Usuario - (2 CON MEDIADOR) -..........................................
   
+//BUSCAR TRAMITES X AÑO X USUARIO XESTADO_TRAMITE --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
+  async findTramitesXUsuarioXEstadoTramiteXAnio(id_usuario:number, id_estado:number, anio: number){
+    
+    let usuario: Usuario = await this.usuarioService.findOne(id_usuario);    
+    if(usuario.rol_id === "administrador" || usuario.rol_id === "supervisor") {
+      const tramites = await this.tramiteRepository.createQueryBuilder('tramite')
+        .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+        .leftJoinAndSelect('tramite.centro_mediacion', 'centro_mediacion')
+        .leftJoinAndSelect('tramite.objeto', 'objeto')  
+        .where('tramite.estado_tramite_id = :estado_tramite_id', {estado_tramite_id: id_estado})
+        .andWhere('YEAR(tramite.fecha_tramite) = :aniox', {aniox: anio})
+        .orderBy('tramite.numero_tramite', 'DESC')
+        .getManyAndCount();
+  
+      return tramites;
+    }
+    
+  }
+  //FIN BUSCAR TRAMITES X AÑO X USUARIO XESTADO_TRAMITE.......................................................
+
+  //BUSCAR TRAMITES A VENCER EN DIAS --- 1 NUEVO - 2 CON MEDIADOR - 3 FINALIZADO 
+  async findTramitesAVencerEnDias( diasControl: number){
+    let fecha_aux: any = new Date(); 
+    fecha_aux.setDate(fecha_aux.getDate() - diasControl);
+    const fechaAuxString = fecha_aux.toISOString().split('T')[0];
+
+    const tramites = await this.tramiteRepository.createQueryBuilder('tramite')
+      .leftJoinAndSelect('tramite.ciudadano', 'ciudadano')  
+      .leftJoinAndSelect('tramite.centro_mediacion', 'centro_mediacion')
+      .leftJoinAndSelect('tramite.objeto', 'objeto')  
+      .where('tramite.estado_tramite_id = :estado_tramite_id', {estado_tramite_id: 1})
+      .andWhere('tramite.fecha_tramite < :fechaAuxiliar', {fechaAuxiliar: fechaAuxString})
+      .orderBy('tramite.numero_tramite', 'DESC')
+      .getManyAndCount();
+
+    return tramites;    
+    
+  }
+  //FIN BUSCAR TRAMITES X AÑO X USUARIO XESTADO_TRAMITE.................................................
 
   //BUSCAR  Xnumero tramite
   async findXNumeroTramite(numero_tramitex: number) {
@@ -459,6 +500,28 @@ export class TramitesService {
     }
     catch(error){
       throw new NotFoundException('Error al finalizar el tramite: ',error.message);
+    }
+  }
+
+  async aplicarControlTramitesVencidos(diasControl:number) {
+    let fecha_aux: any = new Date(); 
+    fecha_aux.setDate(fecha_aux.getDate() - diasControl);
+    const fechaAuxString = fecha_aux.toISOString().split('T')[0];
+
+    try{      
+      const respuesta = await this.tramiteRepository.createQueryBuilder()
+        .update('tramites')
+        .set({ estado_tramite_id: 4 }) // 👈 columnas a actualizar
+        .where('fecha_tramite < :fechaAux', { fechaAux: fechaAuxString })
+        .andWhere('estado_tramite_id = :estado_tramite_id', {estado_tramite_id: 1})
+        .execute();
+      
+      if((respuesta).affected == 0) throw new NotFoundException("No se vencio ningun tramite.");
+
+      return respuesta;
+    }
+    catch(error){
+      throw new NotFoundException('Error al realizar los cambios: ',error.message);
     }
   }
 
